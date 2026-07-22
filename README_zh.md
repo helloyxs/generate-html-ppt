@@ -3,6 +3,7 @@
 一个用于创建精美、交互式 HTML 演示文稿（PPT）的 AI Coding-Agent Skill（编程助手技能），支持从零开始生成或转换现有的 PowerPoint (`.pptx`) 文件。本技能专为本地编程助手（如 Claude Code, Antigravity, Gemini CLI 等）打包设计，具备固定 16:9 舞台布局、原生多主题切换、内置导航控制、代码高亮、Markdown 渲染、Mermaid 矢量图表以及独立的双窗口演讲者视图（Speaker View）。
 
 ---
+![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/demo_pic.png)
 
 ## 功能特性
 
