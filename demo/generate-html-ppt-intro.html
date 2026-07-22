@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>generate-html-ppt Skill 开源介绍</title>
+<!-- Optional CDNs: Highlight.js, Marked, Mermaid (gracefully degrades offline) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+<style>
+  :root {
+    --navy: #0B1D33;
+    --navy-light: #142E4C;
+    --blue: #1565C0;
+    --blue-deep: #0D47A1;
+    --blue-light: #42A5F5;
+    --blue-pale: #BBDEFB;
+    --blue-wash: #E3F2FD;
+    --teal: #0D9488;
+    --teal-light: #14B8A6;
+    --teal-pale: #CCFBF1;
+    --teal-wash: #F0FDFA;
+    --violet: #7C3AED;
+    --violet-pale: #EDE9FE;
+    --violet-wash: #F5F3FF;
+    --gray-900: #111827;
+    --gray-700: #374151;
+    --gray-600: #4B5563;
+    --gray-500: #6B7280;
+    --gray-400: #9CA3AF;
+    --gray-300: #D1D5DB;
+    --gray-200: #E5E7EB;
+    --gray-100: #F3F4F6;
+    --gray-50: #F9FAFB;
+    --red: #DC2626;
+    --red-light: #FEE2E2;
+    --amber: #D97706;
+    --amber-light: #FEF3C7;
+    --green: #059669;
+    --green-light: #D1FAE5;
+    --cover-bg: linear-gradient(145deg, #020817 0%, #052047 38%, #0B3A78 68%, #06172B 100%);
+    --cover-blob1: rgba(37,99,235,0.18);
+    --cover-blob2: rgba(20,184,166,0.16);
+    --cover-grid: rgba(255,255,255,0.045);
+    --cover-text-main: #ffffff;
+    --cover-text-dim: rgba(255,255,255,0.86);
+    --cover-text-label: rgba(255,255,255,0.74);
+    --cover-accent: #5EEAD4;
+    --cover-accent-grad: linear-gradient(90deg, #FFFFFF 0%, #5EEAD4 48%, #BFDBFE 100%);
+    --cover-accent-grad-b: linear-gradient(90deg, #5EEAD4, #BFDBFE);
+    --cover-accent-shadow: rgba(94,234,212,0.35);
+    --cover-highlight: #FDE68A;
+    --cover-highlight-shadow: rgba(253,230,138,0.32);
+    --cover-border: rgba(255,255,255,0.18);
+    --cover-text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    --font-body: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    --font-display: var(--font-body);
+    --font-mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; }
+  body { font-family: var(--font-body); background: #0a0a0a; overflow: hidden; -webkit-font-smoothing: antialiased; }
+
+  /* ===========================================
+     FIXED 16:9 STAGE (mandatory base)
+     Every slide is authored at 1920x1080. JavaScript scales the whole
+     stage with a single transform to fit the window, so the layout is
+     identical on every screen: smaller screens see the same slide scaled
+     down (letterboxed), never reflowed. All slide-internal sizes are
+     fixed pixels at the 1920x1080 design size. Do not add media queries,
+     vw/vh units, or clamp() to slide content.
+     =========================================== */
+  .deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--viewport-bg, #0a0a0a); transition: background 0.5s ease; }
+  .deck { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; }
+  .slide { position: absolute; inset: 0; width: 1920px; height: 1080px; background: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 54px 115px; overflow: hidden; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 0.5s ease, visibility 0s linear 0.5s; }
+  .slide.active { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; transition: opacity 0.5s ease, visibility 0s; }
+  /* Escape hatch for dense slides: enables vertical scrolling. Prefer splitting content across slides. */
+  .slide.scroll { overflow-y: auto; justify-content: flex-start; }
+
+  /* Presentation chrome lives outside the stage, so it is never scaled. */
+  .nav { position: fixed; bottom: calc(24px * var(--chrome-scale, 1)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: calc(6px * var(--chrome-scale, 1)); z-index: 100; flex-wrap: wrap; max-width: 80vw; justify-content: center; }
+  .nav .dot { width: calc(8px * var(--chrome-scale, 1)); height: calc(8px * var(--chrome-scale, 1)); border-radius: 50%; border: calc(2px * var(--chrome-scale, 1)) solid var(--navy); background: transparent; cursor: pointer; transition: all 0.3s; padding: 0; }
+  .nav .dot.on { background: var(--navy); transform: scale(1.25); }
+  .page-num { position: fixed; bottom: calc(24px * var(--chrome-scale, 1)); right: calc(32px * var(--chrome-scale, 1)); font-size: calc(12px * var(--chrome-scale, 1)); color: var(--gray-400); z-index: 100; }
+  .nav-arrows { position: fixed; bottom: calc(24px * var(--chrome-scale, 1)); left: calc(32px * var(--chrome-scale, 1)); display: flex; gap: calc(8px * var(--chrome-scale, 1)); z-index: 100; }
+  .nav-arrows button, .fs-btn { width: calc(32px * var(--chrome-scale, 1)); height: calc(32px * var(--chrome-scale, 1)); border-radius: 50%; border: calc(1.5px * var(--chrome-scale, 1)) solid var(--gray-200); background: rgba(255,255,255,0.95); color: var(--gray-500); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; }
+  .nav-arrows button svg, .fs-btn svg { width: calc(14px * var(--chrome-scale, 1)); height: calc(14px * var(--chrome-scale, 1)); }
+  .nav-arrows button:hover, .fs-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .fs-btn { position: fixed; top: calc(24px * var(--chrome-scale, 1)); left: calc(32px * var(--chrome-scale, 1)); z-index: 100; }
+  .speaker-btn { position: fixed; top: calc(24px * var(--chrome-scale, 1)); left: calc(72px * var(--chrome-scale, 1)); z-index: 100; width: calc(32px * var(--chrome-scale, 1)); height: calc(32px * var(--chrome-scale, 1)); border-radius: 50%; border: calc(1.5px * var(--chrome-scale, 1)) solid var(--gray-200); background: rgba(255,255,255,0.95); color: var(--gray-500); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; padding: 0; }
+  .speaker-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .speaker-btn svg { width: calc(14px * var(--chrome-scale, 1)); height: calc(14px * var(--chrome-scale, 1)); }
+  .notes { display: none; }
+  .watermark { position: fixed; top: calc(24px * var(--chrome-scale, 1)); right: calc(32px * var(--chrome-scale, 1)); font-size: calc(11px * var(--chrome-scale, 1)); letter-spacing: 0.5px; color: var(--gray-400); z-index: 100; font-weight: 500; }
+
+  .slide-label { font-size: 16px; letter-spacing: 4px; color: var(--blue); text-transform: uppercase; margin-bottom: 15px; font-weight: 700; }
+  .slide-title { font-family: var(--font-display); font-size: 54px; font-weight: 800; color: var(--gray-900); line-height: 1.35; text-align: center; margin-bottom: 13px; }
+  .slide-subtitle { font-size: 22px; color: var(--gray-500); line-height: 1.7; text-align: center; max-width: 1420px; margin-bottom: 22px; }
+  .em { color: var(--blue); font-weight: 700; }
+  .em-teal { color: var(--teal); font-weight: 700; }
+  .em-red { color: var(--red); font-weight: 700; }
+  .em-amber { color: var(--amber); font-weight: 700; }
+
+  /* SVG vector animations */
+  @keyframes dash14 { to { stroke-dashoffset: -28; } }
+  @keyframes dash12 { to { stroke-dashoffset: -24; } }
+  .flow-anim { stroke-dasharray: 8 6; animation: dash14 1.6s linear infinite; }
+  .flow-anim-slow { stroke-dasharray: 7 5; animation: dash12 2.4s linear infinite; }
+  @keyframes softPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .pulse-dot { animation: softPulse 2.2s ease-in-out infinite; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .slide.active .a { animation: fadeUp 0.45s ease forwards; }
+  .slide.active .a1 { animation-delay: 0.06s; opacity: 0; }
+  .slide.active .a2 { animation-delay: 0.18s; opacity: 0; }
+  .slide.active .a3 { animation-delay: 0.30s; opacity: 0; }
+  .slide.active .a4 { animation-delay: 0.42s; opacity: 0; }
+  .slide.active .a5 { animation-delay: 0.55s; opacity: 0; }
+  .slide.active .a6 { animation-delay: 0.68s; opacity: 0; }
+
+  /* Cover */
+  .cover-bg { position: absolute; inset: 0; overflow: hidden; background: var(--cover-bg); }
+  .cover-bg::before { content: ''; position: absolute; right: -8%; top: -15%; width: 594px; height: 594px; border-radius: 50%; background: radial-gradient(circle, var(--cover-blob1) 0%, transparent 70%); }
+  .cover-bg::after { content: ''; position: absolute; left: -5%; bottom: -10%; width: 486px; height: 486px; border-radius: 50%; background: radial-gradient(circle, var(--cover-blob2) 0%, transparent 70%); }
+  .cover-grid { position: absolute; inset: 0; background-image: linear-gradient(var(--cover-grid) 1px, transparent 1px), linear-gradient(90deg, var(--cover-grid) 1px, transparent 1px); background-size: 80px 80px; }
+  .cover-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .cover-logo { font-family: var(--font-display); font-size: 25px; font-weight: 700; color: var(--cover-text-dim); letter-spacing: 2px; margin-bottom: 43px; text-shadow: var(--cover-text-shadow); }
+  .cover-logo span { color: var(--cover-accent); font-weight: 800; }
+  .cover-title { font-family: var(--font-display); font-size: 77px; font-weight: 800; color: var(--cover-text-main); line-height: 1.35; margin-bottom: 27px; }
+  .cover-title .h { background: var(--cover-accent-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 3px 14px rgba(0,0,0,0.45)); }
+  .cover-divider { width: 80px; height: 4px; background: var(--cover-accent-grad-b); margin-bottom: 32px; box-shadow: 0 0 18px var(--cover-accent-shadow); }
+  .cover-sub { font-size: 24px; color: var(--cover-text-dim); line-height: 1.9; max-width: 1190px; font-weight: 500; margin-bottom: 43px; text-shadow: var(--cover-text-shadow); }
+  .cover-sub .warm { color: var(--cover-highlight); font-weight: 900; text-shadow: 0 0 16px var(--cover-highlight-shadow), var(--cover-text-shadow); }
+  .cover-stats { display: flex; gap: 58px; }
+  .cover-stat { display: flex; flex-direction: column; align-items: center; padding: 0 38px; border-right: 1px solid var(--cover-border); }
+  .cover-stat:last-child { border-right: none; }
+  .cover-stat .n { font-size: 36px; font-weight: 800; background: var(--cover-accent-grad-b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.35)); }
+  .cover-stat .l { font-size: 16px; color: var(--cover-text-label); margin-top: 5px; font-weight: 500; text-shadow: var(--cover-text-shadow); }
+
+  /* Generic layouts */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 31px; max-width: 1613px; width: 100%; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 27px; max-width: 1651px; width: 100%; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 23px; max-width: 1690px; width: 100%; }
+
+  .card { padding: 22px 27px; border-radius: 12px; border: 1.5px solid var(--gray-200); background: #fff; text-align: left; transition: transform 0.3s, box-shadow 0.3s; }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+  .card .badge { display: inline-block; padding: 3px 13px; border-radius: 4px; font-size: 13px; font-weight: 700; margin-bottom: 9px; background: var(--gray-100); color: var(--gray-700); }
+  .card h3 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin-bottom: 9px; display: flex; align-items: center; gap: 10px; }
+  .card h3 .badge { margin-bottom: 0; padding: 4px 10px; border-radius: 6px; }
+  .card p { font-size: 17px; color: var(--gray-600); line-height: 1.75; }
+  .card ul { list-style: none; margin-top: 7px; }
+  .card li { font-size: 16px; color: var(--gray-600); padding: 3px 0 3px 23px; position: relative; line-height: 1.6; }
+  .card li::before { content: ''; width: 7px; height: 7px; border-radius: 50%; position: absolute; left: 0; top: 10px; }
+  .b-blue li::before { background: var(--blue); }
+  .b-teal li::before { background: var(--teal); }
+  .b-red li::before { background: var(--red); }
+  .b-amber li::before { background: var(--amber); }
+
+  .card.b-blue { border-top: 4px solid var(--blue); }
+  .card.b-teal { border-top: 4px solid var(--teal); }
+  .card.b-red { border-top: 4px solid var(--red); }
+  .card.b-amber { border-top: 4px solid var(--amber); }
+
+  .card.b-blue .badge { background: var(--blue-wash); color: var(--blue-deep); }
+  .card.b-teal .badge { background: var(--teal-wash); color: var(--teal); }
+  .card.b-red .badge { background: var(--red-light); color: var(--red); }
+  .card.b-amber .badge { background: var(--amber-light); color: var(--amber); }
+
+  /* Full-color filled cards */
+  .card.fill-blue { border: 2px solid var(--blue); background: var(--blue-wash); }
+  .card.fill-blue h3 { color: var(--blue); }
+  .card.fill-teal { border: 2px solid var(--teal); background: var(--teal-wash); }
+  .card.fill-teal h3 { color: var(--teal); }
+  .card.fill-red { border: 2px solid var(--red); background: var(--red-light); }
+  .card.fill-red h3 { color: var(--red); }
+  .card.fill-amber { border: 2px solid var(--amber); background: var(--amber-light); }
+  .card.fill-amber h3 { color: var(--amber); }
+  .card.fill-violet { border: 2px solid var(--violet); background: var(--violet-wash); }
+  .card.fill-violet h3 { color: var(--violet); }
+  
+  .card.fill-blue .badge { background: var(--blue); color: #fff; }
+  .card.fill-teal .badge { background: var(--teal); color: #fff; }
+  .card.fill-red .badge { background: var(--red); color: #fff; }
+  .card.fill-amber .badge { background: var(--amber); color: #fff; }
+  .card.fill-violet .badge { background: var(--violet); color: #fff; }
+
+  .bottom-strip { margin-top: 19px; padding: 19px 58px; background: var(--navy); border-radius: 10px; max-width: 1651px; text-align: center; }
+  .bottom-strip p { font-size: 20px; color: rgba(255,255,255,0.92); font-weight: 600; line-height: 1.7; }
+  .bottom-strip .em { color: var(--teal-light); }
+  .bottom-strip .wm { color: #fbbf24; font-weight: 800; }
+
+  .feat-card { padding: 24px 29px; border-radius: 12px; border: 2px solid var(--gray-300); text-align: left; transition: transform 0.3s; }
+  .feat-card:hover { transform: translateY(-3px); box-shadow: 0 6px 24px rgba(0,0,0,0.05); }
+  .feat-card h3 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin-bottom: 9px; }
+  .feat-card p { font-size: 17px; color: var(--gray-600); line-height: 1.75; }
+
+  .tag { display: inline-block; padding: 3px 12px; border-radius: 4px; font-size: 13px; font-weight: 700; background: var(--gray-100); color: var(--gray-700); }
+
+  .stack-col { display: flex; flex-direction: column; gap: 6px; }
+  .stack-row { padding: 8px 13px; border-radius: 7px; font-size: 16px; font-weight: 700; text-align: center; line-height: 1.4; background: var(--gray-100); color: var(--gray-700); }
+  .stack-row small { display: block; font-size: 13px; font-weight: 500; opacity: 0.8; }
+
+  .plat-card { border-radius: 10px; border: 1.6px solid var(--gray-200); background: #fff; padding: 13px 15px; text-align: center; display: flex; flex-direction: column; gap: 4px; }
+  .plat-card h4 { font-size: 19px; font-weight: 800; color: var(--gray-900); line-height: 1.35; }
+  .plat-card p { font-size: 15px; color: var(--gray-500); line-height: 1.5; }
+
+  /* Color variants: pair with .feat-card, .badge, .tag, .stack-row */
+  .feat-blue { border-color: var(--blue); }
+  .feat-blue h3 { color: var(--blue); }
+  .feat-teal { border-color: var(--teal); }
+  .feat-teal h3 { color: var(--teal); }
+  .feat-red { border-color: var(--red); }
+  .feat-red h3 { color: var(--red); }
+  .feat-amber { border-color: var(--amber); }
+  .feat-amber h3 { color: var(--amber); }
+
+  .badge-blue, .tag-blue { background: var(--blue-wash); color: var(--blue-deep); }
+  .badge-teal, .tag-teal { background: var(--teal-wash); color: var(--teal); }
+  .badge-red, .tag-red { background: var(--red-light); color: var(--red); }
+  .badge-amber, .tag-amber { background: var(--amber-light); color: var(--amber); }
+
+  .stack-blue { background: var(--blue-wash); color: var(--blue-deep); }
+  .stack-teal { background: var(--teal-wash); color: var(--teal); }
+  .stack-red { background: var(--red-light); color: var(--red); }
+  .stack-amber { background: var(--amber-light); color: var(--amber); }
+  .stack-navy { background: var(--navy); color: rgba(255,255,255,0.92); }
+
+  /* Images */
+  .slide-img { max-width: 1613px; max-height: 562px; object-fit: contain; border-radius: 10px; }
+  .img-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 23px; max-width: 1651px; width: 100%; }
+  .img-grid img { width: 100%; height: 281px; object-fit: cover; border-radius: 8px; display: block; }
+
+  /* Code & tables */
+  .code-block { background: var(--navy); color: #E5E7EB; border-radius: 10px; padding: 22px 31px; font-family: var(--font-mono); font-size: 17px; line-height: 1.7; text-align: left; max-width: 1613px; width: 100%; overflow-x: auto; white-space: pre; }
+  .card code, li code, p code { font-family: var(--font-mono); font-size: 0.92em; background: var(--gray-100); color: var(--navy); padding: 1px 7px; border-radius: 4px; }
+  .code-block code { background: none; color: inherit; padding: 0; font-size: inherit; }
+  .data-table { border-collapse: collapse; width: 100%; max-width: 1613px; font-size: 17px; text-align: left; }
+  .data-table th { background: var(--navy); color: #fff; padding: 11px 19px; font-weight: 700; white-space: nowrap; }
+  .data-table td { padding: 10px 19px; border-bottom: 1px solid var(--gray-200); color: var(--gray-700); }
+  .data-table tr:nth-child(even) td { background: var(--gray-50); }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+  }
+
+  /* Print to PDF: one fixed-size 16:9 slide per page, all content visible, no nav chrome */
+  @page { size: 1920px 1080px; margin: 0; }
+  @media print {
+    html, body { width: 1920px; height: auto; overflow: visible; background: #fff; }
+    .deck-viewport { position: static; overflow: visible; background: #fff; }
+    .deck { position: static; width: auto; height: auto; overflow: visible; transform: none !important; }
+    .slide { position: relative; inset: auto; visibility: visible; opacity: 1; pointer-events: auto; page-break-after: always; break-after: page; }
+    .slide:last-of-type { page-break-after: auto; break-after: auto; }
+    .slide .a, .slide .a1, .slide .a2, .slide .a3, .slide .a4, .slide .a5, .slide .a6 { opacity: 1 !important; animation: none !important; }
+    .nav, .nav-arrows, .page-num, .watermark, .fs-btn { display: none !important; }
+  }
+
+  /* Theme Switcher */
+  .theme-switcher {
+    position: fixed;
+    top: calc(24px * var(--chrome-scale, 1));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 4px;
+    border-radius: 30px;
+    gap: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+  .theme-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 6px 18px;
+    font-size: calc(13px * var(--chrome-scale, 1));
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: var(--font-body);
+  }
+  .theme-btn:hover {
+    color: #fff;
+  }
+  .theme-btn.active {
+    background: #fff;
+    color: #0f172a;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Themes Variables definitions */
+  body.theme-cyberpunk {
+    --navy: #0B1D33;
+    --navy-light: #142E4C;
+    --blue: #06b6d4; /* cyan */
+    --blue-deep: #0891b2;
+    --blue-light: #67e8f9;
+    --blue-pale: rgba(6, 182, 212, 0.2);
+    --blue-wash: rgba(6, 182, 212, 0.1);
+    --teal: #10b981; /* emerald */
+    --teal-light: #34d399;
+    --teal-pale: rgba(16, 185, 129, 0.2);
+    --teal-wash: rgba(16, 185, 129, 0.1);
+    --violet: #d946ef; /* fuchsia */
+    --violet-pale: rgba(217, 70, 239, 0.2);
+    --violet-wash: rgba(217, 70, 239, 0.1);
+    --gray-900: #f8fafc;
+    --gray-700: #e2e8f0;
+    --gray-600: #cbd5e1;
+    --gray-500: #94a3b8;
+    --gray-400: #64748b;
+    --gray-300: #475569;
+    --gray-200: #334155;
+    --gray-100: #1e293b;
+    --gray-50: #0f172a;
+    --red: #f43f5e; /* rose */
+    --red-light: rgba(244, 63, 94, 0.15);
+    --amber: #fbbf24; /* yellow */
+    --amber-light: rgba(251, 191, 36, 0.15);
+    --green: #10b981;
+    --green-light: rgba(16, 185, 129, 0.15);
+    
+    --cover-bg: linear-gradient(135deg, #05050d 0%, #0d0b21 50%, #15092d 100%);
+    --cover-blob1: rgba(236, 72, 153, 0.15);
+    --cover-blob2: rgba(6, 182, 212, 0.15);
+    --cover-grid: rgba(255, 255, 255, 0.03);
+    --cover-text-main: #ffffff;
+    --cover-text-dim: rgba(255, 255, 255, 0.85);
+    --cover-text-label: rgba(255, 255, 255, 0.65);
+    --cover-accent: #06b6d4;
+    --cover-accent-grad: linear-gradient(90deg, #ec4899 0%, #a855f7 50%, #06b6d4 100%);
+    --cover-accent-grad-b: linear-gradient(90deg, #ec4899, #06b6d4);
+    --cover-accent-shadow: rgba(6, 182, 212, 0.4);
+    --cover-highlight: #facc15;
+    --cover-highlight-shadow: rgba(250, 204, 21, 0.3);
+    --cover-border: rgba(255, 255, 255, 0.12);
+    --cover-text-shadow: 0 0 15px rgba(236, 72, 153, 0.3), 0 0 5px rgba(6, 182, 212, 0.3);
+    --font-body: "SF Mono", Menlo, Consolas, "PingFang SC", "Microsoft YaHei", sans-serif;
+    --font-display: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  body.theme-light {
+    --cover-bg: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 38%, #e2e8f0 68%, #cbd5e1 100%);
+    --cover-blob1: rgba(59,130,246,0.15);
+    --cover-blob2: rgba(16,185,129,0.1);
+    --cover-grid: rgba(0,0,0,0.03);
+    --cover-text-main: #0f172a;
+    --cover-text-dim: #334155;
+    --cover-text-label: #475569;
+    --cover-accent: #2563eb;
+    --cover-accent-grad: linear-gradient(90deg, #1e293b 0%, #2563eb 48%, #0ea5e9 100%);
+    --cover-accent-grad-b: linear-gradient(90deg, #2563eb, #0ea5e9);
+    --cover-accent-shadow: rgba(37,99,235,0.25);
+    --cover-highlight: #d97706;
+    --cover-highlight-shadow: rgba(217,119,6,0.2);
+    --cover-border: rgba(0,0,0,0.1);
+    --cover-text-shadow: none;
+    --font-display: "Georgia", "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+  }
+
+  body.theme-blue {
+    --cover-bg: linear-gradient(145deg, #020817 0%, #052047 38%, #0B3A78 68%, #06172B 100%);
+    --cover-blob1: rgba(37,99,235,0.18);
+    --cover-blob2: rgba(20,184,166,0.16);
+    --cover-grid: rgba(255,255,255,0.045);
+    --cover-text-main: #ffffff;
+    --cover-text-dim: rgba(255,255,255,0.86);
+    --cover-text-label: rgba(255,255,255,0.74);
+    --cover-accent: #5EEAD4;
+    --cover-accent-grad: linear-gradient(90deg, #FFFFFF 0%, #5EEAD4 48%, #BFDBFE 100%);
+    --cover-accent-grad-b: linear-gradient(90deg, #5EEAD4, #BFDBFE);
+    --cover-accent-shadow: rgba(94,234,212,0.35);
+    --cover-highlight: #FDE68A;
+    --cover-highlight-shadow: rgba(253,230,138,0.32);
+    --cover-border: rgba(255,255,255,0.18);
+    --cover-text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    --font-body: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    --font-display: var(--font-body);
+    --font-mono: "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  body.theme-emerald {
+    --cover-bg: linear-gradient(145deg, #022c22 0%, #064e3b 38%, #0f766e 68%, #042f2e 100%);
+    --cover-blob1: rgba(16,185,129,0.15);
+    --cover-blob2: rgba(234,179,8,0.12);
+    --cover-grid: rgba(255,255,255,0.04);
+    --cover-text-main: #ffffff;
+    --cover-text-dim: rgba(255,255,255,0.85);
+    --cover-text-label: rgba(255,255,255,0.7);
+    --cover-accent: #34d399;
+    --cover-accent-grad: linear-gradient(90deg, #f8fafc 0%, #34d399 48%, #a7f3d0 100%);
+    --cover-accent-grad-b: linear-gradient(90deg, #10b981, #34d399);
+    --cover-accent-shadow: rgba(16,185,129,0.3);
+    --cover-highlight: #fde047;
+    --cover-highlight-shadow: rgba(253,224,71,0.25);
+    --cover-border: rgba(255,255,255,0.15);
+    --cover-text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    --font-display: "Arial Rounded MT Bold", "Yuanti SC", "YouYuan", "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+
+  /* Cyberpunk specific visual overrides */
+  body.theme-cyberpunk .slide {
+    background: #07070c !important;
+  }
+  body.theme-cyberpunk .slide-title {
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+  }
+  body.theme-cyberpunk .slide-subtitle {
+    color: #94a3b8;
+  }
+  body.theme-cyberpunk .card {
+    background: rgba(15, 13, 35, 0.6) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+    color: #cbd5e1 !important;
+  }
+  body.theme-cyberpunk .card:hover {
+    transform: translateY(-3px);
+  }
+  body.theme-cyberpunk .card:not([class*="b-"]):not([class*="fill-"]):hover {
+    border-color: var(--blue) !important;
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.3) !important;
+  }
+  body.theme-cyberpunk .card h3 {
+    color: #ffffff !important;
+  }
+  body.theme-cyberpunk .card p, body.theme-cyberpunk .card li {
+    color: #cbd5e1 !important;
+  }
+  body.theme-cyberpunk .card code, body.theme-cyberpunk li code, body.theme-cyberpunk p code {
+    background: rgba(255, 255, 255, 0.08);
+    color: #38bdf8;
+  }
+  body.theme-cyberpunk .card.b-blue { border-top: 4px solid var(--blue) !important; }
+  body.theme-cyberpunk .card.b-teal { border-top: 4px solid var(--teal) !important; }
+  body.theme-cyberpunk .card.b-red { border-top: 4px solid var(--red) !important; }
+  body.theme-cyberpunk .card.b-amber { border-top: 4px solid var(--amber) !important; }
+  body.theme-cyberpunk .card.b-blue:hover { border-color: var(--blue) !important; box-shadow: 0 0 20px rgba(6, 182, 212, 0.4) !important; }
+  body.theme-cyberpunk .card.b-teal:hover { border-color: var(--teal) !important; box-shadow: 0 0 20px rgba(16, 185, 129, 0.4) !important; }
+  body.theme-cyberpunk .card.b-red:hover { border-color: var(--red) !important; box-shadow: 0 0 20px rgba(244, 63, 94, 0.4) !important; }
+  body.theme-cyberpunk .card.b-amber:hover { border-color: var(--amber) !important; box-shadow: 0 0 20px rgba(251, 191, 36, 0.4) !important; }
+  body.theme-cyberpunk .card.fill-blue { border: 2px solid var(--blue) !important; background: rgba(6, 182, 212, 0.1) !important; box-shadow: 0 0 15px rgba(6, 182, 212, 0.25) !important; }
+  body.theme-cyberpunk .card.fill-teal { border: 2px solid var(--teal) !important; background: rgba(16, 185, 129, 0.1) !important; box-shadow: 0 0 15px rgba(16, 185, 129, 0.25) !important; }
+  body.theme-cyberpunk .card.fill-red { border: 2px solid var(--red) !important; background: rgba(244, 63, 94, 0.1) !important; box-shadow: 0 0 15px rgba(244, 63, 94, 0.25) !important; }
+  body.theme-cyberpunk .card.fill-amber { border: 2px solid var(--amber) !important; background: rgba(251, 191, 36, 0.1) !important; box-shadow: 0 0 15px rgba(251, 191, 36, 0.25) !important; }
+  body.theme-cyberpunk .card.fill-violet { border: 2px solid var(--violet) !important; background: rgba(217, 70, 239, 0.1) !important; box-shadow: 0 0 15px rgba(217, 70, 239, 0.25) !important; }
+  body.theme-cyberpunk .bottom-strip {
+    background: rgba(15, 13, 35, 0.8) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+  body.theme-cyberpunk .stack-row {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+  }
+  body.theme-cyberpunk .plat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1.5px solid rgba(255, 255, 255, 0.08);
+  }
+  body.theme-cyberpunk .plat-card h4 { color: #ffffff; }
+  body.theme-cyberpunk .plat-card p { color: #94a3b8; }
+  body.theme-cyberpunk .nav-arrows button, body.theme-cyberpunk .fs-btn, body.theme-cyberpunk .speaker-btn {
+    background: rgba(15, 13, 35, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #cbd5e1 !important;
+  }
+  body.theme-cyberpunk .nav-arrows button:hover, body.theme-cyberpunk .fs-btn:hover, body.theme-cyberpunk .speaker-btn:hover {
+    border-color: var(--blue) !important;
+    color: var(--blue-light) !important;
+    box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+  }
+  body.theme-cyberpunk .nav .dot {
+    border-color: #475569 !important;
+  }
+  body.theme-cyberpunk .nav .dot.on {
+    background: var(--blue) !important;
+    box-shadow: 0 0 8px var(--blue-light);
+  }
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+<div class="deck" id="deck">
+
+
+<!-- s1 -->
+<div class="slide active" id="s1">
+  <div class="cover-bg"><div class="cover-grid"></div></div>
+  <div class="cover-content">
+    <div class="cover-logo a a1">GITHUB<span>OPEN SOURCE</span></div>
+    <div class="cover-title a a2"><span class="h">generate-html-ppt</span></div>
+    <div class="cover-divider a a3"></div>
+    <div class="cover-sub a a3">让 AI 助手一键生成 <span class="warm">1080P 网页级</span>高颜值 PPT</div>
+    <div class="cover-stats a a4">
+      <div class="cover-stat"><span class="n">100%</span><span class="l">响应式缩放</span></div>
+      <div class="cover-stat"><span class="n">Rich</span><span class="l">组件 & 主题</span></div>
+      <div class="cover-stat"><span class="n">HTML</span><span class="l">单文件输出</span></div>
+    </div>
+  </div>
+  <aside class="notes">
+    大家好，我是AI技术博主。今天向大家介绍我们最新开源的项目：generate-html-ppt。这是一款专为AI编码助手定制的幻灯片生成Skill，能够一键把大模型的内容变成1080P、高颜值且完全响应式的网页版演示文稿。
+  </aside>
+</div>
+
+<!-- s2 -->
+<div class="slide" id="s2">
+  <div class="slide-label a a1">PAIN POINTS</div>
+  <div class="slide-title a a2">传统 AI 生成 PPT 的 <span class="em">“翻车现场”</span></div>
+  <div class="slide-subtitle a a3">为什么直接让 AI 生成 PPTX 或 PDF 效果总是差强人意？</div>
+  <div class="grid-3 a a4">
+    <div class="card b-red">
+      <span class="badge badge-red">排版崩塌</span>
+      <h3>格式不受控</h3>
+      <p>传统的 Office 格式转换往往依赖特定引擎，导致字体缺失、元素移位或行高崩塌。</p>
+    </div>
+    <div class="card b-amber">
+      <span class="badge badge-amber">内容截断</span>
+      <h3>文本溢出难自适应</h3>
+      <p>AI 不懂页面物理尺寸，生成过长文本时在容器中被无情截断，内容展示不全。</p>
+    </div>
+    <div class="card b-blue">
+      <span class="badge badge-blue">体验单一</span>
+      <h3>缺乏现代网页交互</h3>
+      <p>传统 PPT 缺乏交互式代码块、流程图等现代技术演示所需的动效与排版组件。</p>
+    </div>
+  </div>
+  <div class="bottom-strip a a5"><p>我们需要一种 <span class="em">网页原生</span>、<span class="wm">布局固定</span> 且 <span class="em">百分之百还原</span> 的 AI PPT 解决方案。</p></div>
+  <aside class="notes">
+    我们经常使用各种AI助手生成PPT，但经常会遇到三个痛点：一是排版崩溃，二是文本溢出，三是缺乏交互。网页原生是解决这些痛点的终极方案。
+  </aside>
+</div>
+
+<!-- s3 -->
+<div class="slide" id="s3">
+  <div class="slide-label a a1">CORE ARCHITECTURE</div>
+  <div class="slide-title a a2">核心机制：16:9 像素级 <span class="em-teal">固定舞台</span></div>
+  <div class="slide-subtitle a a3">基于 CSS transform 缩放，而非复杂的响应式重排，确保在任何屏幕上布局 100% 相同。</div>
+  <div class="grid-2 a a4">
+    <div class="card b-teal">
+      <span class="badge badge-teal">渲染机制</span>
+      <h3>缩放 vs 重排</h3>
+      <ul>
+        <li><strong>Fixed 1920x1080 Stage</strong>：内部尺寸全部使用固定像素（px）编写。</li>
+        <li><strong>Auto Scale Fit</strong>：JS 监听窗口变化，计算最佳比例使用 <code>transform: scale()</code> 整体缩放。</li>
+        <li><strong>Letterboxing</strong>：在非 16:9 屏幕上自动居中并留白边，绝不重排挤压。</li>
+      </ul>
+    </div>
+    <div class="card b-blue" style="display: flex; flex-direction: column; justify-content: center;">
+      <pre class="mermaid" style="background: transparent;">
+graph TD
+    Win[浏览器窗口 Resize] --> Calc[计算缩放比 scale = min W/1920, H/1080]
+    Calc --> Apply[transform: translate... scale...]
+    Apply --> View[100% 还原的 16:9 幻灯片]
+      </pre>
+    </div>
+  </div>
+  <aside class="notes">
+    这个项目的核心机制是“16:9 像素级固定舞台”。我们不是使用媒体查询去重排，而是用 JS 监听缩放，直接用 transform 进行缩放。这样就能保证无论在手机、平板还是大屏上，看到的画面都是像素级一致的。
+  </aside>
+</div>
+
+<!-- s4 -->
+<div class="slide" id="s4">
+  <div class="slide-label a a1">FEATURE SHOWCASE</div>
+  <div class="slide-title a a2">极客专属的 <span class="em-violet">技术表现力</span></div>
+  <div class="slide-subtitle a a3">原生支持代码高亮、数学公式、渐变高亮与多套系统级主题。</div>
+  <div class="grid-3 a a4">
+    <div class="card fill-violet">
+      <span class="badge">CODE HIGHLIGHT</span>
+      <h3>代码块高亮</h3>
+      <p>内置 Highlight.js，对 <code>HTML/JS/Python/Bash</code> 等代码进行像素级精美高亮。</p>
+    </div>
+    <div class="card fill-teal">
+      <span class="badge">MATH & CHART</span>
+      <h3>Mermaid & Markdown</h3>
+      <p>支持原生 Markdown 文本块与 Mermaid 关系图渲染，免去繁琐的切图和导入流程。</p>
+    </div>
+    <div class="card fill-blue">
+      <span class="badge">THEME PRESETS</span>
+      <h3>多款主题与字体</h3>
+      <p>内置 Light、Blue、Emerald、Cyberpunk 主题，支持 Tech、Serif、Rounded 等系统级字体。</p>
+    </div>
+  </div>
+  <div class="bottom-strip a a5"><p>零依赖外部网络，一键导出为 <span class="em">全离线 HTML 文件</span>，支持 PDF 打印。</p></div>
+  <aside class="notes">
+    Slide 4 介绍我们的组件库，支持原生代码块高亮、Markdown 渲染、Mermaid 关系图以及多款内置主题。我们所有的资源都可以全离线运行。
+  </aside>
+</div>
+
+<!-- s5 -->
+<div class="slide" id="s5">
+  <div class="slide-label a a1">LIVE PRESENTATION</div>
+  <div class="slide-title a a2">演讲神器：<span class="em-amber">双屏广播演讲模式</span></div>
+  <div class="slide-subtitle a a3">内置基于 Web BroadcastChannel 的演讲者视图，提供全方位演讲控制。</div>
+  <div class="grid-2 a a4">
+    <div class="card b-amber">
+      <span class="badge badge-amber">双屏同步</span>
+      <h3>演讲者控制面板</h3>
+      <ul>
+        <li><strong>计时器与进度</strong>：清晰展示当前演讲时间及幻灯片总页数。</li>
+        <li><strong>讲稿备注同步</strong>：在独立控制窗口同步显示当前页的 <code>&lt;aside class="notes"&gt;</code> 备注。</li>
+        <li><strong>下一页预览</strong>：实时渲染下一页内容，掌控演讲节奏。</li>
+      </ul>
+    </div>
+    <div class="card b-blue">
+      <span class="badge badge-blue">技术原理</span>
+      <h3>免服务器广播通信</h3>
+      <p>利用浏览器的 <code>BroadcastChannel API</code>，主屏幕与演讲者视图窗口在本地直接通信，零延时且无需任何后台服务器。</p>
+      <pre class="mermaid" style="background: transparent;">
+graph LR
+    Master[主视图窗口] -- BroadcastChannel --> Speaker[演讲者控制台]
+    Speaker -- 键盘/按键事件 --> Master
+      </pre>
+    </div>
+  </div>
+  <aside class="notes">
+    Slide 5 介绍演讲者视图。我们利用了原生的 BroadcastChannel API，不需要网络和服务器，就可以在本地打开两个窗口进行双屏广播同步，包括计时器、讲稿备注 and 下一页预览。
+  </aside>
+</div>
+
+<!-- s6 -->
+<div class="slide" id="s6">
+  <div class="slide-label a a1">GET STARTED</div>
+  <div class="slide-title a a2">开源共建：即刻在你的 <span class="em">AI 助手</span> 中使用</div>
+  <div class="slide-subtitle a a3">欢迎将该 Skill 导入到你的 AI 编码助手，或者在 GitHub 上参与开发。</div>
+  <div class="grid-2 a a4">
+    <div class="card b-blue">
+      <span class="badge badge-blue">CLINE / CURSOR 导入</span>
+      <h3>Skill 声明配置文件</h3>
+      <p>将 <code>SKILL.md</code> 放入 AI 助手的 Skill/Prompts 目录下，AI 即可自动理解并调用此流程生成 PPT。</p>
+    </div>
+    <div class="card b-teal">
+      <span class="badge badge-teal">项目路径</span>
+      <h3>开源项目结构</h3>
+      <ul>
+        <li><code>SKILL.md</code> - AI 提示词与指令规范</li>
+        <li><code>resources/template.html</code> - 精准排版舞台模版</li>
+        <li><code>resources/themes/</code> - 丰富的主题与字体预设</li>
+      </ul>
+    </div>
+  </div>
+  <div class="bottom-strip a a5"><p>GitHub 开源地址: <span class="em">generate-html-ppt</span> ｜ 欢迎 Star ✨ 和 PR 贡献！</p></div>
+  <aside class="notes">
+    Slide 6 介绍如何集成 and 使用。我们将整个 Skill 结构进行了梳理，包括 SKILL.md、template.html 和主题预设，欢迎大家到 GitHub 贡献！
+  </aside>
+</div>
+
+<!-- s7 -->
+<div class="slide" id="s7">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (01)</div>
+  <div class="slide-title a a2">标题 + <span class="em">纯文字段落</span></div>
+  <div class="slide-subtitle a a3">适用于核心定义、名言、关键声明或长句总结。</div>
+  <p class="a a4" style="font-size: 24px; color: var(--gray-600); max-width: 1200px; text-align: center; line-height: 1.8; margin-top: 40px;">
+    “简约是复杂的终极形式。” 本版式聚焦于纯文本的排版美学，通过优雅的字重对比、行高控制与间距设置，让文字内容本身成为视觉中心。在任何屏幕缩放比例下，均能保障文字极佳的可读性。
+  </p>
+  <aside class="notes">
+    第7页展示第一种版式：标题加纯文字段落。适用于核心概念、名言警句或段落性总结，整体排版居中，优雅大方。
+  </aside>
+</div>
+
+<!-- s8 -->
+<div class="slide" id="s8">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (02)</div>
+  <div class="slide-title a a2">标题 + <span class="em">要点列表（单栏）</span></div>
+  <div class="slide-subtitle a a3">适用于单维度要点罗列、步骤分解或特征介绍。</div>
+  <div class="card b-blue a a4" style="max-width: 900px; width: 100%; margin-top: 20px;">
+    <span class="badge badge-blue">SPECIFICATION</span>
+    <h3>单栏要点特征</h3>
+    <ul>
+      <li><strong>视觉聚焦</strong>：单栏卡片宽度合适，内容居中，视线不易发散。</li>
+      <li><strong>样式继承</strong>：列表前缀小圆点自动继承卡片修饰色（如 <code>.b-blue</code> ）。</li>
+      <li><strong>行高适中</strong>：列表项自带适当间距，保障多行文本下的透气感。</li>
+      <li><strong>限制原则</strong>：建议单页列表项控制在 4 个以内，避免内容过载。</li>
+    </ul>
+  </div>
+  <aside class="notes">
+    第8页是标题加单栏要点列表。我们使用单张大卡片来包装列表，小圆点颜色会自动根据卡片主题色变化。
+  </aside>
+</div>
+
+<!-- s9 -->
+<div class="slide" id="s9">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (03)</div>
+  <div class="slide-title a a2">标题 + <span class="em-red">双栏</span>/<span class="em-teal">三栏</span>对比</div>
+  <div class="slide-subtitle a a3">适用于竞品分析、架构优缺点对比或多项方案评估。</div>
+  <div class="grid-2 a a4" style="margin-top: 10px;">
+    <div class="card b-red">
+      <span class="badge badge-red">SAFE DESIGN</span>
+      <h3>稳妥的网页设计风格</h3>
+      <p>整体风格严谨、结构对称。使用标准三色方案，以白灰色作为底色，文字灰度适中。</p>
+      <ul>
+        <li>色彩柔和：避免过于刺眼的颜色</li>
+        <li>对比度合理：符合 Web 可读性标准</li>
+        <li>层级明确：大小标题分明</li>
+      </ul>
+    </div>
+    <div class="card fill-teal">
+      <span class="badge" style="background: var(--teal); color: #fff;">BOLD DESIGN</span>
+      <h3>大胆且惊艳的网页视觉</h3>
+      <p>融合了渐变色、微动效与毛玻璃质感（Glassmorphism）。配合动态主题切换，第一眼就能 WOW 用户。</p>
+      <ul>
+        <li>色彩鲜明：使用 HSL 精调亮色</li>
+        <li>质感高级：背景磨砂透光</li>
+        <li>交互生动：Hover 卡片有微上移和阴影反馈</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    第9页是多栏对比版式。这里我们用 grid-2 展示了左右两栏的对比卡片，左边是带顶部红边的卡片，右边是填充了翡翠绿底色的全彩色卡片。
+  </aside>
+</div>
+
+<!-- s10 -->
+<div class="slide" id="s10">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (04)</div>
+  <div class="slide-title a a2">标题 + <span class="em">左右图文</span></div>
+  <div class="slide-subtitle a a3">适用于系统架构讲解、操作步骤演示或核心模块拆解。</div>
+  <div class="grid-2 a a4" style="align-items: center; margin-top: 10px;">
+    <img class="slide-img" src="ScreenShot_2026-07-22_093711_779.png" alt="PPT 大纲预览" style="width: 100%; border: 1.5px solid var(--gray-200); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <div class="card b-amber">
+      <span class="badge badge-amber">LAYOUT DESCRIPTION</span>
+      <h3>图文组合排版</h3>
+      <p>在 16:9 比例的舞台上，左右图文能够充分利用横向空间：</p>
+      <ul>
+        <li><strong>左图右文</strong>：图片排在前面，用于吸引视觉注意力或展示架构图。</li>
+        <li><strong>高宽契合</strong>：图片被约束在 562px 高度以内，配合右侧卡片高度对齐。</li>
+        <li><strong>动态还原</strong>：不论图片大小，都会使用 Contain 缩放比例，绝不变形。</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    第10页展示图文版式。左边是已有的效果图，右边是关于左右图文排版规则的详细解释卡片。
+  </aside>
+</div>
+
+<!-- s11 -->
+<div class="slide" id="s11">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (05)</div>
+  <div class="slide-title a a2">标题 + <span class="em">全图/大图展示</span></div>
+  <div class="slide-subtitle a a3">适用于界面截图呈现、精美视觉插画或全屏渲染图。</div>
+  <img class="slide-img a a4" src="ScreenShot_2026-07-22_093711_779.png" alt="PPT 大纲预览大图" style="max-height: 500px; border: 1.5px solid var(--gray-200); box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 10px;">
+  <aside class="notes">
+    第11页展示全图大图版式。这里我们使用 slide-img 限制最大宽高，即使是高清大图也能以自适应缩放展现。
+  </aside>
+</div>
+
+<!-- s12 -->
+<div class="slide" id="s12">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (06)</div>
+  <div class="slide-title a a2">标题 + <span class="em">数据表格</span></div>
+  <div class="slide-subtitle a a3">适用于参数规格对比、版本迭代功能对比或业务指标详单。</div>
+  <table class="data-table a a4" style="margin-top: 20px;">
+    <thead>
+      <tr>
+        <th>版式名称</th>
+        <th>典型容器类</th>
+        <th>适用展示内容</th>
+        <th>建议元素上限</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>双栏/三栏对比</strong></td>
+        <td><code>.grid-2</code> / <code>.grid-3</code></td>
+        <td>多方案评估、竞品横向分析</td>
+        <td>2 - 3 个卡片</td>
+      </tr>
+      <tr>
+        <td><strong>图文结合</strong></td>
+        <td><code>.grid-2</code> + <code>.slide-img</code></td>
+        <td>架构分析、流程图、带图段落</td>
+        <td>1 图 + 1 段落卡片</td>
+      </tr>
+      <tr>
+        <td><strong>表格数据</strong></td>
+        <td><code>.data-table</code></td>
+        <td>参数对比、版本更新记录等</td>
+        <td>不超过 6 行 5 列</td>
+      </tr>
+      <tr>
+        <td><strong>图标网格多卡片</strong></td>
+        <td><code>.grid-4</code> + <code>.card</code></td>
+        <td>功能特性矩阵、操作步骤介绍</td>
+        <td>4 - 8 个紧凑卡片</td>
+      </tr>
+    </tbody>
+  </table>
+  <aside class="notes">
+    第12页是表格排版。通过 data-table 类，支持自动斑马线着色，文字对齐也很优雅，确保大数据信息的可读性。
+  </aside>
+</div>
+
+<!-- s13 -->
+<div class="slide" id="s13">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (07)</div>
+  <div class="slide-title a a2">标题 + <span class="em-teal">交互关系图表（Mermaid）</span></div>
+  <div class="slide-subtitle a a3">基于 Mermaid.js 引擎，纯文本定义流程图、时序图、饼图等，告别繁重切图。</div>
+  <div class="grid-2 a a4" style="margin-top: 15px;">
+    <div class="card b-teal" style="display: flex; align-items: center; justify-content: center; min-height: 380px;">
+      <pre class="mermaid" style="background: transparent; width: 100%; text-align: center;">
+      pie title 主题流行度占比
+          "Cyberpunk 极客风" : 42
+          "Light 简约白" : 28
+          "Blue 技术蓝" : 20
+          "Emerald 自然绿" : 10
+      </pre>
+    </div>
+    <div class="card b-blue" style="min-height: 380px;">
+      <span class="badge badge-blue">TIPS</span>
+      <h3>关系图表与配色</h3>
+      <ul>
+        <li><strong>免装插件</strong>：只需在 <code>pre</code> 标签中使用 <code>class="mermaid"</code> 即可渲染。</li>
+        <li><strong>主题融合</strong>：Mermaid 的背景色与图表线条会自动适配当前幻灯片深浅色。</li>
+        <li><strong>排版友好</strong>：结合 <code>.grid-2</code> 左右分栏，左侧放图右侧解释，是极佳的演示实践。</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">
+    第13页展示 Mermaid.js 渲染图表版式。我们在左侧使用一段纯文本定义了饼图，浏览器在加载时会自动解析并绘制为 SVG 图表。
+  </aside>
+</div>
+
+<!-- s14 -->
+<div class="slide" id="s14">
+  <div class="slide-label a a1">LAYOUT SHOWCASE (08)</div>
+  <div class="slide-title a a2">标题 + <span class="em">多卡片网格（功能/步骤）</span></div>
+  <div class="slide-subtitle a a3">适用于展示产品功能矩阵、核心步骤演进或多维度要素矩阵。</div>
+  <div class="grid-4 a a4" style="margin-top: 20px;">
+    <div class="card b-blue">
+      <h3><span class="badge" style="background: var(--blue); color: #fff;">01</span> 确定大纲</h3>
+      <p>第一步：明确演示的目的与主题，AI 会帮助规划最合理的内容排版结构。</p>
+    </div>
+    <div class="card b-teal">
+      <h3><span class="badge" style="background: var(--teal); color: #fff;">02</span> 选定风格</h3>
+      <p>第二步：配置默认主题（如 Cyberpunk）和字体，保证美学质感先声夺人。</p>
+    </div>
+    <div class="card b-amber">
+      <h3><span class="badge" style="background: var(--amber); color: #fff;">03</span> 分批构建</h3>
+      <p>第三步：按照每次 3-5 页的节奏快速写入 HTML，避免单次超长生成卡死。</p>
+    </div>
+    <div class="card b-red">
+      <h3><span class="badge" style="background: var(--red); color: #fff;">04</span> 预览分发</h3>
+      <p>第四步：本地浏览器打开 HTML 校验文本溢出，一键通过 Print 打印成 PDF。</p>
+    </div>
+  </div>
+  <div class="bottom-strip a a5" style="margin-top: 30px;"><p>搭配 staggered 动画类（ <code>.a1</code> - <code>.a4</code> ），可实现各卡片按顺序 <span class="em">渐进淡入</span> 动效。</p></div>
+  <aside class="notes">
+    最后一页展示多卡片网格版式。此处我们用 grid-4 展示了四个并排的卡片，用于演示流程的四个步骤，底部的 bottom-strip 提供了关键总结。
+  </aside>
+</div>
+
+<!-- Example Cover Slide:
+<div class="slide active" id="s1">
+  <div class="cover-bg"><div class="cover-grid"></div></div>
+  <div class="cover-content">
+    <div class="cover-logo a a1">COMPANY<span>LOGO</span></div>
+    <div class="cover-title a a2"><span class="h">Presentation Title</span></div>
+    <div class="cover-divider a a3"></div>
+    <div class="cover-sub a a3">Subtitle or brief description</div>
+  </div>
+</div>
+-->
+<!-- Example Content Slide:
+<div class="slide" id="s2">
+  <div class="slide-label a a1">SECTION</div>
+  <div class="slide-title a a2">Title with <span class="em">emphasis</span></div>
+  <div class="slide-subtitle a a3">One sentence of supporting context for this slide.</div>
+  <div class="grid-3 a a4">
+    <div class="card b-blue">
+      <span class="badge badge-blue">CATEGORY</span>
+      <h3>Card heading</h3>
+      <p>Short description, about two lines.</p>
+      <ul><li>Bullet point one</li><li>Bullet point two</li></ul>
+    </div>
+    <div class="card b-teal">
+      <span class="badge badge-teal">CATEGORY</span>
+      <h3>Card heading</h3>
+      <p>Short description, about two lines.</p>
+    </div>
+    <div class="card b-amber">
+      <span class="badge badge-amber">CATEGORY</span>
+      <h3>Card heading</h3>
+      <p>Short description, about two lines.</p>
+    </div>
+  </div>
+  <div class="bottom-strip a a5"><p>Key takeaway with <span class="em">highlight</span>.</p></div>
+</div>
+-->
+
+</div>
+</div>
+
+
+<div class="theme-switcher">
+  <button class="theme-btn" data-theme="cyberpunk" onclick="selectTheme('cyberpunk')">Cyberpunk</button>
+  <button class="theme-btn" data-theme="light" onclick="selectTheme('light')">Light</button>
+  <button class="theme-btn" data-theme="blue" onclick="selectTheme('blue')">Blue</button>
+  <button class="theme-btn" data-theme="emerald" onclick="selectTheme('emerald')">Emerald</button>
+</div>
+
+<div class="watermark">generate-html-ppt</div>
+
+<button class="fs-btn" onclick="toggleFs()" aria-label="Toggle fullscreen" title="Fullscreen (F)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+<button class="speaker-btn" onclick="openSpeakerView()" aria-label="Speaker View" title="Speaker View (S)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
+<div class="nav-arrows"><button onclick="go(-1)" aria-label="Previous slide"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><button onclick="go(1)" aria-label="Next slide"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div>
+<div class="nav" id="nav"></div>
+<div class="page-num" id="pageNum"></div>
+
+<script>
+  // Immediate theme initialization to prevent flash
+  const savedTheme = localStorage.getItem('ppt-theme') || 'cyberpunk';
+  document.body.className = 'theme-' + savedTheme;
+
+  function selectTheme(name) {
+    document.body.className = 'theme-' + name;
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === name);
+    });
+    localStorage.setItem('ppt-theme', name);
+    if (typeof updateViewportBg === 'function') updateViewportBg();
+  }
+  
+  window.addEventListener('DOMContentLoaded', () => {
+    // Sync the active class for the theme button
+    document.querySelectorAll('.theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+    });
+  });
+
+  // Scale the fixed 1920x1080 stage to fit the window with one transform.
+  // The deck letterboxes on phones or odd aspect ratios; it never reflows.
+  const stage = document.getElementById('deck');
+  function fitStage() {
+    const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    const x = (window.innerWidth - 1920 * f) / 2;
+    const y = (window.innerHeight - 1080 * f) / 2;
+    stage.style.transform = 'translate(' + x + 'px, ' + y + 'px) scale(' + f + ')';
+    
+    // Scale navigation chrome on larger screens (upscale only, keep at least 1x for mobile touch targets)
+    const chromeScale = Math.max(1, f);
+    document.documentElement.style.setProperty('--chrome-scale', chromeScale);
+  }
+  fitStage();
+  window.addEventListener('resize', fitStage);
+
+  const slides = document.querySelectorAll('.slide');
+  const N = slides.length;
+  let cur = 0;
+  const nav = document.getElementById('nav');
+  for (let i = 0; i < N; i++) {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    d.onclick = () => jump(i);
+    nav.appendChild(d);
+  }
+  let speakerChannel = null;
+  if (typeof BroadcastChannel !== 'undefined') {
+    speakerChannel = new BroadcastChannel('deck-speaker-sync');
+    speakerChannel.onmessage = (e) => {
+      if (e.data && e.data.action === 'go') {
+        go(e.data.dir);
+      }
+    };
+  }
+
+  function broadcastSpeakerState() {
+    if (!speakerChannel) return;
+    const curSlide = slides[cur];
+    const nextIdx = (cur + 1) % N;
+    const nextSlide = slides[nextIdx];
+    const notesEl = curSlide ? curSlide.querySelector('.notes') : null;
+    
+    const getTitle = (s) => s ? (s.querySelector('.slide-title')?.innerText || s.querySelector('.cover-title')?.innerText || '未命名') : '';
+    
+    speakerChannel.postMessage({
+      slideIndex: cur + 1,
+      totalSlides: N,
+      notes: notesEl ? notesEl.innerHTML : '<em>暂无讲稿备注</em>',
+      currentTitle: getTitle(curSlide),
+      nextTitle: nextIdx === 0 ? '结束 (返回封面)' : getTitle(nextSlide),
+      nextSlideId: nextSlide ? nextSlide.id : ''
+    });
+  }
+
+  function openSpeakerView() {
+    const win = window.open('', '_blank', 'width=900,height=600');
+    if (!win) return alert('请允许弹出窗口以开启演讲者视图！');
+    const deckUrl = window.location.href.split('#')[0];
+    win.document.write(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>演讲者视图 (Speaker View)</title>
+        <style>
+          body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100vh; box-sizing: border-box; }
+          .panel { background: #1e293b; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
+          .timer { font-size: 32px; font-weight: 800; color: #38bdf8; font-mono: true; margin-bottom: 12px; }
+          .title { font-size: 14px; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px; margin-bottom: 8px; }
+          .slide-name { font-size: 20px; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          .notes-box { font-size: 18px; line-height: 1.6; color: #e2e8f0; background: #090d16; padding: 16px; border-radius: 8px; flex: 1; overflow-y: auto; border: 1px solid #334155; }
+        </style>
+      </head>
+      <body>
+        <div class="panel">
+          <div class="timer" id="timer">00:00:00</div>
+          <div class="title">当前页 (<span id="pageNum">1/1</span>)</div>
+          <div class="slide-name" id="curTitle">-</div>
+          <div class="title">讲稿备注</div>
+          <div class="notes-box" id="notes">加载中...</div>
+        </div>
+        <div class="panel">
+          <div class="title">下一页预览: <span id="nextTitle" style="color:#f1f5f9; font-weight:700; text-transform:none;">-</span></div>
+          <div style="flex:1; position:relative; overflow:hidden; border-radius:8px; border:1px solid #334155; background:#000; margin-top:8px;" id="previewWrapper">
+            <iframe id="nextPreview" src="" style="position:absolute; left:0; top:0; width:1920px; height:1080px; transform-origin:0 0; border:none; pointer-events:none;"></iframe>
+          </div>
+        </div>
+        <script>
+          let seconds = 0;
+          setInterval(() => {
+            seconds++;
+            const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
+            const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+            const s = String(seconds % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = h + ':' + m + ':' + s;
+          }, 1000);
+          
+          const iframe = document.getElementById('nextPreview');
+          const wrapper = document.getElementById('previewWrapper');
+          function resizePreview() {
+            const f = Math.min(wrapper.clientWidth / 1920, wrapper.clientHeight / 1080);
+            iframe.style.transform = 'scale(' + f + ')';
+          }
+          window.addEventListener('resize', resizePreview);
+          setTimeout(resizePreview, 100);
+
+          const deckUrl = "${deckUrl}";
+          const bc = new BroadcastChannel('deck-speaker-sync');
+          bc.onmessage = (e) => {
+            const d = e.data;
+            if (d.action === 'go') return;
+            document.getElementById('pageNum').textContent = d.slideIndex + '/' + d.totalSlides;
+            document.getElementById('curTitle').textContent = d.currentTitle;
+            document.getElementById('nextTitle').textContent = d.nextTitle;
+            document.getElementById('notes').innerHTML = d.notes;
+            
+            const targetUrl = deckUrl + '#' + d.nextSlideId;
+            if (!iframe.src || iframe.src === window.location.href) {
+              iframe.src = targetUrl;
+            } else if (iframe.contentWindow) {
+              iframe.contentWindow.location.replace(targetUrl);
+            }
+          };
+          
+          document.addEventListener('keydown', e => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); bc.postMessage({action: 'go', dir: 1}); }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); bc.postMessage({action: 'go', dir: -1}); }
+          });
+        <\/script>
+      </body>
+      </html>
+    `);
+    setTimeout(broadcastSpeakerState, 300);
+  }
+
+  function jump(i) {
+    if(N === 0) return;
+    slides[cur].classList.remove('active');
+    nav.children[cur].classList.remove('on');
+    cur = (i + N) % N;
+    slides[cur].classList.add('active');
+    nav.children[cur].classList.add('on');
+    document.getElementById('pageNum').textContent = (cur + 1) + ' / ' + N;
+    history.replaceState(null, '', '#' + slides[cur].id);
+    updateViewportBg();
+    broadcastSpeakerState();
+  }
+  function go(d) { jump(cur + d); }
+  function toggleFs() {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen();
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+    if (e.key === 'Home') { e.preventDefault(); jump(0); }
+    if (e.key === 'End') { e.preventDefault(); jump(N - 1); }
+    if (e.key === 'f' || e.key === 'F') toggleFs();
+    if (e.key === 's' || e.key === 'S') openSpeakerView();
+  });
+  let tx = 0;
+  document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); });
+  function updateViewportBg() {
+    if (!slides || slides.length === 0) return;
+    const curSlide = slides[cur];
+    const isCover = curSlide.querySelector('.cover-bg') !== null;
+    let bg = '#fff';
+    if (isCover) {
+      bg = 'var(--cover-bg)';
+    } else {
+      bg = window.getComputedStyle(curSlide).backgroundColor || '#fff';
+    }
+    document.documentElement.style.setProperty('--viewport-bg', bg);
+  }
+
+  // Auto init Markdown, Highlight.js, Mermaid
+  window.addEventListener('DOMContentLoaded', () => {
+    // Markdown
+    if (typeof marked !== 'undefined') {
+      document.querySelectorAll('.markdown').forEach(el => {
+        el.innerHTML = marked.parse(el.textContent.trim());
+      });
+    }
+    // Highlight.js
+    if (typeof hljs !== 'undefined') {
+      document.querySelectorAll('pre code, .code-block').forEach(el => {
+        hljs.highlightElement(el);
+      });
+    }
+    // Mermaid
+    if (typeof mermaid !== 'undefined') {
+      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    }
+  });
+
+  // Restore position from the URL hash (e.g. deck.html#s3) so a refresh keeps the current slide.
+  const hm = location.hash.match(/^#s(\d+)$/);
+  if (hm && N > 0) jump(Math.min(Math.max(parseInt(hm[1], 10) - 1, 0), N - 1));
+  else if(N > 0) {
+    document.getElementById('pageNum').textContent = '1 / ' + N;
+    updateViewportBg();
+    broadcastSpeakerState();
+  }
+  // Remove the watermark element if the placeholder was cleared instead of deleted.
+  const wmEl = document.querySelector('.watermark');
+  if (wmEl && !wmEl.textContent.trim()) wmEl.remove();
+</script>
+</body>
+</html>

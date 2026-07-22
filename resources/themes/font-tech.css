@@ -1,0 +1,9 @@
+/* Font preset: tech-mono.
+   Monospace titles and slide labels for engineering and developer decks.
+   CJK glyphs have no mono form, so they fall back to the body font while
+   Latin letters and digits render monospaced. All system fonts.
+   Paste inside the <style> block, after the template's :root { ... } rule. */
+:root {
+  --font-display: var(--font-mono);
+}
+.slide-label { font-family: var(--font-mono); }

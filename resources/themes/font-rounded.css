@@ -1,0 +1,8 @@
+/* Font preset: rounded.
+   Rounded display titles for friendly, education, and consumer topics.
+   Uses Yuanti SC on macOS and YouYuan on Windows, falling back to the
+   default sans where no rounded font is installed. All system fonts.
+   Paste inside the <style> block, after the template's :root { ... } rule. */
+:root {
+  --font-display: "Arial Rounded MT Bold", "Yuanti SC", "YouYuan", "PingFang SC", "Microsoft YaHei", sans-serif;
+}

@@ -1,0 +1,8 @@
+/* Font preset: business-serif.
+   Serif display titles over a sans body; suits formal reports, finance,
+   policy and executive decks. Latin glyphs use Georgia, CJK glyphs fall
+   through to Songti SC (macOS) or SimSun (Windows). All system fonts.
+   Paste inside the <style> block, after the template's :root { ... } rule. */
+:root {
+  --font-display: "Georgia", "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", "SimSun", serif;
+}
