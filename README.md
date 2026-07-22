@@ -2,12 +2,13 @@
 
 A coding-agent skill for creating stunning, interactive HTML presentations — from scratch or by converting PowerPoint (`.pptx`) files. Packaged for local coding assistants (such as Claude Code, Antigravity, Gemini CLI, etc.), it features a fixed 16:9 stage layout, native multi-theme switching, built-in navigation controls, syntax highlighting, markdown rendering, vector diagrams, and a dedicated dual-window Speaker View.
 
+![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/demo_pic.png)
 ---
 
 ## What This Does
 
 **Generate HTML PPT** helps you create gorgeous, web-based presentations without writing complex CSS or JavaScript. It provides a structured workflow for AI agents to craft clean slides and offers readers a premium, responsive presentation experience directly in the browser.
-![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/demo_pic.png)
+
 
 ### Key Features
 
