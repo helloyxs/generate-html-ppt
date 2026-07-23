@@ -6,6 +6,31 @@
 
 ---
 
+
+## 🟣 Beautiful.ai 风格额外检查
+
+以下检查适用于默认的 Beautiful.ai-inspired 模板 (`template-beautiful.html`)。
+
+### B-0. 默认使用 Beautiful 模板
+如果用户没有明确指定风格，应使用 `resources/template-beautiful.html`，并选择 `theme-indigo` 作为默认主题。
+
+### B-1. 页面必须带 `light` 或 `dark` 主题类
+每个 `<div class="slide">` 必须同时包含 `light` 或 `dark`。`hero` 页必须写成 `hero light` 或 `hero dark`，不能只写 `hero`。
+
+### B-2. 主题节奏
+连续同主题不超过 3 页；8 页以上必须至少包含 1 个 `hero dark` 和 1 个 `hero light`，以及至少 1 个非 hero 的 `dark` 页。
+
+### B-3. 动画标记
+每页至少给 kicker、主标题、lead、卡片/图表等 3 个以上元素加 `.anim` 与 `.d1`~`.d8` 延迟类。Hero 页核心块必须全部加动画。
+
+### B-4. 智能图表与数字动画
+- `.smart-chart` 必须包含合法的 `data-chart` JSON。
+- `.count-up` 必须包含 `data-value`。
+
+### B-5. 图片与图标
+- 图片路径使用相对路径 `images/xxx.png`。
+- 不使用 emoji 作图标；使用 Lucide 图标。
+- 不给图片加厚重阴影或边框；使用 `.frame-img` 容器。
 ## 🔴 P0 · 一定不能犯的错
 
 ### 0-S. Swiss locked mode:正文页必须来自原始 22P

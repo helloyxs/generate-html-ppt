@@ -2,7 +2,7 @@
 
 An AI Coding-Agent Skill for creating stunning, interactive HTML presentations — from scratch or by converting PowerPoint (`.pptx`) files. Packaged for local coding assistants (such as Claude Code, Antigravity, Gemini CLI, etc.), it features a fixed 16:9 stage layout, dual visual styles (Cyberpunk and Swiss International), native multi-theme switching, built-in navigation controls, syntax highlighting, markdown rendering, vector/chart diagrams (Mermaid & ECharts), and a dedicated dual-window Speaker View.
 
-![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/demo_pic.png)
+![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/beautiful-demo.gif)
 ---
 
 ## What This Does

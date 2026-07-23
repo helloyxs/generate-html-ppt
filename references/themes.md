@@ -1,15 +1,31 @@
 # Themes & Fonts
 
-The template's visual style is driven by CSS variables for colors (e.g., `--cover-bg`) and fonts (e.g., `--font-body`). These styles are configured via small CSS snippets in the `resources/themes/` directory. To apply a style, paste the contents of the chosen `.css` file into the `<style>` block right after the template's `:root { ... }` rule.
+The template's visual style is driven by CSS variables for colors and fonts. These styles are configured via small CSS snippets in the `resources/themes/` directory.
 
-**Style Configuration:** 
-- **Cyberpunk Dark / Tech Blue / Light / Emerald**: Uses `resources/template.html`. You can apply different font presets by pasting `font-*.css` contents into the `<style>` block.
-- **Swiss International Style**: Uses the independent remote template. Do not apply the local theme/font snippets to it unless explicitly requested, as it has its own built-in design system.
+## Beautiful.ai-inspired Themes
 
-**Font Presets (`font-*.css`):**
-- `font-modern.css` — Standard sans (default).
-- `font-serif.css` — Serif display titles.
-- `font-tech.css` — Monospace titles.
-- `font-rounded.css` — Rounded titles.
+The Beautiful template (`resources/template-beautiful.html`) uses the CSS variables defined in `resources/themes/theme-beautiful.css`. Apply a preset by replacing `{{THEME}}` with one of the following body classes:
 
-Apply these by pasting into the template's `<style>` block if requested by the user.
+- `theme-indigo` — default modern indigo-blue
+- `theme-teal` — fresh teal gradient
+- `theme-rose` — energetic rose-to-amber
+- `theme-amber` — warm amber-to-orange
+- `theme-deep` — dark premium mode
+- `theme-warm` — warm cream with serif display
+
+The preset class is applied to `<body>`, e.g. `<body class="theme-indigo">`.
+
+## Cyberpunk / Tech / Light / Emerald Themes
+
+The Cyberpunk template (`resources/template.html`) uses font presets in `resources/themes/`:
+
+- `font-modern.css` — standard sans (default)
+- `font-serif.css` — serif display titles
+- `font-tech.css` — monospace titles
+- `font-rounded.css` — rounded titles
+
+Paste the contents of the chosen font preset into the template's `<style>` block if requested by the user.
+
+## Swiss International Style
+
+The Swiss template (`resources/template-swiss.html`) has its own built-in design system. Do not apply the local theme/font snippets to it unless explicitly requested.
