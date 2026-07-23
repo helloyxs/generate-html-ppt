@@ -43,6 +43,8 @@ Do not generate all slides in a single pass, and do not start building before th
    - 6. Which theme color preset?
    - 7. Any hard constraints?
    
+2.5 **Brand Asset Protocol (品牌嗅探)**
+   **CRITICAL RULE**: 如果用户提供或暗示了特定的公司/品牌，必须优先通过 Web Search 或读取本地资料，提取其核心品牌色（HEX/RGB）和字体风格，并将其注入为 CSS Variables（例如覆盖默认的 `var(--theme-primary)`），使 PPT 天然契合用户的企业 VI。
 3. **Draft the Outline (Narrative Arc)**
    Based on the aligned requirements, draft the outline using a Narrative Arc:
    - Hook (1 slide)
@@ -60,16 +62,25 @@ Do not generate all slides in a single pass, and do not start building before th
    - If they need AI generated photos, infographics, or evidence charts, read `references/image-prompts.md` for standardized prompts.
    - Do NOT proceed to Phase 2 until all visual assets are prepared or the user declines.
 
-### Phase 2: Build Complete Presentation
+### Phase 2: Wireframing (灰度骨架) & Setup
 
-3. **Set Up the File**
+5. **Set Up the File**
    Depending on the user's chosen style:
    - If **Cyberpunk Dark**, copy `resources/template.html` into the workspace.
    - If **Swiss International Style**, completely use the local independent template `resources/template-swiss.html`.
    Replace the placeholders (like `{{LANG}}`, `{{TITLE}}`, `{{WATERMARK}}`) in the chosen template.
 
-4. **Generate Complete Deck in Batches**
-   Build the slides following the confirmed outline using the **chosen style only**, inserting each batch in place of the `<!-- SLIDES_GO_HERE -->` marker and re-adding the marker after the inserted slides until the deck is complete. Each slide must be wrapped in a `<div class="slide" id="s{N}">...</div>` with sequential numbering; only the first slide gets the `active` class (e.g., `<div class="slide active" id="s1">...</div>`). Keep style and density consistent. Report progress briefly after each batch and continue until complete.
+6. **Generate Wireframe (骨架确认)**
+   **CRITICAL: Do NOT generate the full detailed content yet.** First, generate a **Wireframe** of the presentation.
+   - Build the HTML structure for the slides according to the outline, but **only** include slide titles, structural layout classes (e.g., `.grid-2`, `.card`), and image placeholders.
+   - Use placeholder text (e.g., "Content goes here" or `lorem ipsum`) for detailed paragraphs.
+   - Stop and show this wireframe HTML to the user (e.g., open it in the browser). Ask: "Is this layout rhythm and information hierarchy correct?"
+   - Do NOT proceed to content filling until the user approves the wireframe.
+
+### Phase 2.5: Content Filling & Batch Generation
+
+7. **Generate Complete Deck in Batches**
+   Once the wireframe is approved, fill in the detailed copy and actual content. Insert each batch into the established slide structures (replacing the placeholders). Each slide must remain wrapped in a `<div class="slide" id="s{N}">...</div>` with sequential numbering; only the first slide gets the `active` class (e.g., `<div class="slide active" id="s1">...</div>`). Keep style and density consistent. Report progress briefly after each batch and continue until complete.
 
 ### Phase 3: Verify and Open
 

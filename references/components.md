@@ -14,7 +14,7 @@ Use the CSS classes provided in the template to create a visually appealing pres
 - **Images**: `.slide-img` for a single image (contain-fit, max 562px tall); wrap multiple `<img>` in `.img-grid` for an auto-fitting image grid. Always include descriptive `alt` text.
 - **Code & Tables**: `.code-block` on a `<pre><code>` for automatic syntax highlighting (via Highlight.js); `.data-table` on a `<table>` (with `<th>` header cells) for data tables; inline `<code>` inside cards, lists, and paragraphs is styled automatically.
 - **Diagrams, Charts & Markdown**:
-  - **Mermaid.js** (Logical Diagrams): Wrap text diagrams in `<pre class="mermaid">` (e.g. `graph TD`, sequence diagrams, mindmaps).
+  - **Mermaid.js** (Logical Diagrams): Wrap text diagrams in `<pre class="mermaid">` (e.g. `graph TD`, sequence diagrams, mindmaps). **WARNING**: If you place a Mermaid diagram inside an HTML comment `<!-- ... -->` for any reason, you MUST use thick arrows `==>` or dotted arrows `-.->` instead of thin arrows `-->`. The thin arrow `-->` will prematurely close the HTML comment and break the page layout!
   - **Apache ECharts** (Data Visualizations): Wrap JSON option configuration in `<div class="echarts" data-option='{...}'></div>` or `<pre class="echarts">{...}</pre>` for interactive bar, line, pie, radar, or sankey charts.
   - **Markdown**: Wrap markdown text blocks in elements with `class="markdown"` (rendered by Marked.js).
 - **Speaker Notes**: Add `<aside class="notes">Speaker notes content here</aside>` inside any slide. Notes are invisible in the presentation view but displayed in Speaker View.
