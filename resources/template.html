@@ -260,43 +260,6 @@
     .nav, .nav-arrows, .page-num, .watermark, .fs-btn { display: none !important; }
   }
 
-  /* Theme Switcher */
-  .theme-switcher {
-    position: fixed;
-    top: calc(24px * var(--chrome-scale, 1));
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    display: flex;
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    padding: 4px;
-    border-radius: 30px;
-    gap: 4px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  }
-  .theme-btn {
-    background: transparent;
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
-    padding: 6px 18px;
-    font-size: calc(13px * var(--chrome-scale, 1));
-    font-weight: 600;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-    font-family: var(--font-body);
-  }
-  .theme-btn:hover {
-    color: #fff;
-  }
-  .theme-btn.active {
-    background: #fff;
-    color: #0f172a;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-  }
 
   /* Themes Variables definitions */
   body.theme-cyberpunk {
@@ -491,7 +454,7 @@
   }
 </style>
 </head>
-<body>
+<body class="theme-{{THEME}}">
 <div class="deck-viewport">
 <div class="deck" id="deck">
 
@@ -562,13 +525,6 @@ graph TD
 </div>
 
 
-<div class="theme-switcher">
-  <button class="theme-btn" data-theme="cyberpunk" onclick="selectTheme('cyberpunk')">Cyberpunk</button>
-  <button class="theme-btn" data-theme="light" onclick="selectTheme('light')">Light</button>
-  <button class="theme-btn" data-theme="blue" onclick="selectTheme('blue')">Blue</button>
-  <button class="theme-btn" data-theme="emerald" onclick="selectTheme('emerald')">Emerald</button>
-</div>
-
 <div class="watermark">{{WATERMARK}}</div>
 
 <button class="fs-btn" onclick="toggleFs()" aria-label="Toggle fullscreen" title="Fullscreen (F)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
@@ -578,26 +534,6 @@ graph TD
 <div class="page-num" id="pageNum"></div>
 
 <script>
-  // Immediate theme initialization to prevent flash
-  const savedTheme = localStorage.getItem('ppt-theme') || 'cyberpunk';
-  document.body.className = 'theme-' + savedTheme;
-
-  function selectTheme(name) {
-    document.body.className = 'theme-' + name;
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.theme === name);
-    });
-    localStorage.setItem('ppt-theme', name);
-    if (typeof updateViewportBg === 'function') updateViewportBg();
-  }
-  
-  window.addEventListener('DOMContentLoaded', () => {
-    // Sync the active class for the theme button
-    document.querySelectorAll('.theme-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.theme === savedTheme);
-    });
-  });
-
   // Scale the fixed 1920x1080 stage to fit the window with one transform.
   // The deck letterboxes on phones or odd aspect ratios; it never reflows.
   const stage = document.getElementById('deck');

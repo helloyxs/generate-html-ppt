@@ -68,7 +68,7 @@ Do not generate all slides in a single pass, and do not start building before th
    Depending on the user's chosen style:
    - If **Cyberpunk Dark**, copy `resources/template.html` into the workspace.
    - If **Swiss International Style**, completely use the local independent template `resources/template-swiss.html`.
-   Replace the placeholders (like `{{LANG}}`, `{{TITLE}}`, `{{WATERMARK}}`) in the chosen template.
+   Replace the placeholders (like `{{LANG}}`, `{{TITLE}}`, `{{WATERMARK}}`, `{{THEME}}`) in the chosen template. For example, replace `{{THEME}}` with the chosen style preset like `cyberpunk`, `blue`, etc.
 
 6. **Generate Wireframe (骨架确认)**
    **CRITICAL: Do NOT generate the full detailed content yet.** First, generate a **Wireframe** of the presentation.
