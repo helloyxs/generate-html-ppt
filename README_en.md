@@ -1,6 +1,6 @@
 # Generate HTML PPT
 
-An AI Coding-Agent Skill for creating stunning, interactive HTML presentations — from scratch or by converting PowerPoint (`.pptx`) files. Packaged for local coding assistants (such as Claude Code, Antigravity, Gemini CLI, etc.), it features a fixed 16:9 stage layout, dual visual styles (Cyberpunk and Swiss International), native multi-theme switching, built-in navigation controls, syntax highlighting, markdown rendering, vector/chart diagrams (Mermaid & ECharts), and a dedicated dual-window Speaker View.
+An AI Coding-Agent Skill for creating stunning, interactive HTML presentations — from scratch or by converting PowerPoint (`.pptx`) files. Packaged for local coding assistants (such as Claude Code, Antigravity, Gemini CLI, etc.), it features a fixed 16:9 stage layout, three visual styles (Cyberpunk, Swiss International, and Beautiful.ai Style), native multi-theme switching, built-in navigation controls, syntax highlighting, markdown rendering, vector/chart diagrams (Mermaid & ECharts), and a dedicated dual-window Speaker View.
 
 ![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/beautiful-demo.gif)
 ---
@@ -11,7 +11,7 @@ An AI Coding-Agent Skill for creating stunning, interactive HTML presentations �
 
 ### Key Features
 
-- **Dual Visual Systems** — Choose between high-impact *Cyberpunk* and highly rigorous *Swiss International Style*, covering everything from geeky tech talks to commercial design showcases.
+- **Three Visual Systems** — Choose between high-impact *Cyberpunk*, highly rigorous *Swiss International Style*, and the elegant, modern *Beautiful Style* (Beautiful.ai aesthetic), covering everything from geeky tech talks to high-end commercial pitch decks.
 - **Zero Dependencies** — Outputs a single, self-contained HTML file (with inline CSS/JS and CDN fallbacks). No npm, build systems, or framework setup required. Works offline instantly.
 - **Interactive Style Switching** — The Cyberpunk style features a built-in theme switcher overlay that allows readers to toggle between 4 visual themes and 4 typography presets on the fly.
 - **Fixed 16:9 Stage Scaling** — Authored at a fixed `1920x1080` pixel resolution. The viewport dynamically scales the entire stage via CSS transforms to fit any screen size or aspect ratio without layout reflows (True WYSIWYG).
@@ -35,6 +35,7 @@ generate-html-ppt/
 ├── resources/
 │   ├── template.html         # Base template for the Cyberpunk style
 │   ├── template-swiss.html   # Base template for the Swiss International Style
+│   ├── template-beautiful.html # Base template for the Beautiful.ai Style
 │   ├── screenshot-backgrounds/ # High-res backgrounds for wrapping/beautifying software screenshots
 │   └── themes/               # CSS theme variables and typography definitions (for Cyberpunk)
 └── scripts/
@@ -89,7 +90,7 @@ Run the command or describe your topic to the AI:
 /generate-html-ppt "I want to create a pitch deck for a new open-source database project"
 ```
 The agent will follow a strict workflow:
-1. **Style Selection & Outline**: The AI asks a 7-question checklist to align on audience, length, and style (*Cyberpunk* vs *Swiss*).
+1. **Style Selection & Outline**: The AI asks a 7-question checklist to align on audience, length, and style (*Cyberpunk*, *Swiss*, or *Beautiful*).
 2. **Visual Assets**: Beautifies user-provided screenshots using the `screenshot-framing` guide or generates AI illustrations using `image-prompts`.
 3. **Batch Generation**: Builds the slides in batches of 3–5 to prevent code generation errors.
 4. **Validation**: If using the Swiss style, the AI automatically runs `validate-swiss-deck.mjs` to fix any layout anomalies before opening the HTML in a browser.
@@ -112,7 +113,7 @@ The AI will extract the core message and use its image generation capabilities b
 
 ## Design System & UI Components
 
-The HTML PPT uses two distinct layout systems based on your chosen template.
+The HTML PPT uses distinct layout systems based on your chosen template.
 
 ### A. Cyberpunk Style (`template.html`)
 Highly flexible grid system with abundant components:
@@ -124,6 +125,12 @@ Highly flexible grid system with abundant components:
 Highly locked and rigorous design system:
 * **22 Locked Layouts (`S01-S22`)**: Strict compliance with Bauhaus and Swiss grid principles. Every page `<section data-layout="Sxx">` requires specific child tags (e.g., `.main-content`, `.visual-area`). The AI is instructed never to invent custom CSS or layouts.
 * **Minimalism & Negative Space**: Prioritizes pure typography and white space without relying on bounding card containers.
+
+### C. Beautiful Style (`template-beautiful.html`)
+Elegant and modern premium pitch deck system:
+* **12 Premium Layouts (`L01-L12`)**: High-end structural foundations including hero covers, big number statistics, and image grids.
+* **Alternating Theme Rhythm**: Seamlessly mix `light`, `dark`, and `hero` styles with gradient orbs to create a dynamic presentation flow.
+* **Smart Animations & Charts**: Native support for spring physics entry animations (`.anim`, etc.), counting up numbers (`.count-up`), and data-driven auto-rendering charts (`.smart-chart`).
 
 ### Common Components
 * **Vector Diagrams (Mermaid.js)**: Wrap flowchart/sequence diagram syntax in `<pre class="mermaid">` to render vector graphics natively.
