@@ -115,7 +115,8 @@ The base template includes ready-to-use utility classes to design layouts. Alway
   - `.card` + `.b-blue` / `.b-teal` / `.b-red` / `.b-amber` — Adds a colored top border and colors bullet dots inside. Use these side-by-side in grids to group different categories.
   - `.card` + `.fill-blue` / `.fill-teal` / `.fill-red` / `.fill-amber` / `.fill-violet` — High-contrast variant with full border outline and soft wash backgrounds.
   - `.feat-card` + `.feat-blue` / `.feat-teal` / `.feat-red` / `.feat-amber` — Fully stylized feature card blocks.
-* **Vector Diagrams**: Wrap your flowchart syntax in `<pre class="mermaid">` to render vector charts.
+* **Vector Diagrams (Mermaid.js)**: Wrap your flowchart/sequence diagram syntax in `<pre class="mermaid">` to render vector diagrams.
+* **Data Visualizations (ECharts)**: Declare JSON configuration in `<div class="echarts" data-option='...'>` or `<pre class="echarts">` to render interactive bar, line, pie, radar, or sankey charts.
 * **Animations**: Apply `.a` together with staggered entry delays `.a1` through `.a6` to slide children to animate items in sequentially.
 * **Architecture Stacks**: Group layered system components using `.stack-col` and `.stack-row` (modified with `.stack-blue` / `.stack-teal` / etc.).
 

@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{TITLE}}</title>
-<!-- Optional CDNs: Highlight.js, Marked, Mermaid (gracefully degrades offline) -->
+<!-- Optional CDNs: Highlight.js, Marked, Mermaid, ECharts (gracefully degrades offline) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
 <style>
   :root {
     --navy: #0B1D33;
@@ -720,6 +721,8 @@
     history.replaceState(null, '', '#' + slides[cur].id);
     updateViewportBg();
     broadcastSpeakerState();
+    setTimeout(resizeECharts, 50);
+    setTimeout(resizeECharts, 350);
   }
   function go(d) { jump(cur + d); }
   function toggleFs() {
@@ -750,7 +753,50 @@
     document.documentElement.style.setProperty('--viewport-bg', bg);
   }
 
-  // Auto init Markdown, Highlight.js, Mermaid
+  // ECharts Auto Initializer
+  const echartsInstances = [];
+  function initECharts() {
+    if (typeof echarts === 'undefined') return;
+    const elements = document.querySelectorAll('.echart-box, .echarts');
+    elements.forEach(el => {
+      if (el.dataset.echartsInited === 'true') return;
+      let optionObj = null;
+      if (el.dataset && el.dataset.option) {
+        try { optionObj = JSON.parse(el.dataset.option); } catch(e) { console.error('ECharts JSON parse error:', e); }
+      } else {
+        const txt = el.textContent.trim();
+        if (txt) {
+          try { optionObj = JSON.parse(txt); } catch(e) { console.error('ECharts JSON parse error:', e); }
+        }
+      }
+      if (optionObj) {
+        let container = el;
+        if (el.tagName.toLowerCase() === 'pre') {
+          container = document.createElement('div');
+          container.className = el.className;
+          container.style.cssText = el.style.cssText || 'width:100%; height:380px;';
+          el.parentNode.replaceChild(container, el);
+        }
+        if (!container.style.height) container.style.height = '380px';
+        if (!container.style.width) container.style.width = '100%';
+        if (!optionObj.backgroundColor) optionObj.backgroundColor = 'transparent';
+        
+        const chart = echarts.init(container, 'dark');
+        chart.setOption(optionObj);
+        container.dataset.echartsInited = 'true';
+        echartsInstances.push(chart);
+      }
+    });
+  }
+
+  function resizeECharts() {
+    initECharts();
+    echartsInstances.forEach(chart => {
+      try { chart.resize(); } catch(e) {}
+    });
+  }
+
+  // Auto init Markdown, Highlight.js, Mermaid, ECharts
   window.addEventListener('DOMContentLoaded', () => {
     // Markdown
     if (typeof marked !== 'undefined') {
@@ -768,6 +814,8 @@
     if (typeof mermaid !== 'undefined') {
       mermaid.initialize({ startOnLoad: true, theme: 'dark' });
     }
+    // ECharts
+    initECharts();
   });
 
   // Restore position from the URL hash (e.g. deck.html#s3) so a refresh keeps the current slide.

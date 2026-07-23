@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>generate-html-ppt Skill 开源介绍</title>
-<!-- Optional CDNs: Highlight.js, Marked, Mermaid (gracefully degrades offline) -->
+<!-- Optional CDNs: Highlight.js, Marked, Mermaid, ECharts (gracefully degrades offline) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
 <style>
   :root {
     --navy: #0B1D33;
@@ -728,7 +729,7 @@ graph LR
   <div class="slide-title a a2">标题 + <span class="em">左右图文</span></div>
   <div class="slide-subtitle a a3">适用于系统架构讲解、操作步骤演示或核心模块拆解。</div>
   <div class="grid-2 a a4" style="align-items: center; margin-top: 10px;">
-    <img class="slide-img" src="ScreenShot_2026-07-22_093711_779.png" alt="PPT 大纲预览" style="width: 100%; border: 1.5px solid var(--gray-200); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <img class="slide-img" src="demo_pic.png" alt="PPT 大纲预览" style="width: 100%; border: 1.5px solid var(--gray-200); box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
     <div class="card b-amber">
       <span class="badge badge-amber">LAYOUT DESCRIPTION</span>
       <h3>图文组合排版</h3>
@@ -750,7 +751,7 @@ graph LR
   <div class="slide-label a a1">LAYOUT SHOWCASE (05)</div>
   <div class="slide-title a a2">标题 + <span class="em">全图/大图展示</span></div>
   <div class="slide-subtitle a a3">适用于界面截图呈现、精美视觉插画或全屏渲染图。</div>
-  <img class="slide-img a a4" src="ScreenShot_2026-07-22_093711_779.png" alt="PPT 大纲预览大图" style="max-height: 500px; border: 1.5px solid var(--gray-200); box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 10px;">
+  <img class="slide-img a a4" src="demo_pic.png" alt="PPT 大纲预览大图" style="max-height: 500px; border: 1.5px solid var(--gray-200); box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin-top: 10px;">
   <aside class="notes">
     第11页展示全图大图版式。这里我们使用 slide-img 限制最大宽高，即使是高清大图也能以自适应缩放展现。
   </aside>
@@ -805,30 +806,36 @@ graph LR
 <!-- s13 -->
 <div class="slide" id="s13">
   <div class="slide-label a a1">LAYOUT SHOWCASE (07)</div>
-  <div class="slide-title a a2">标题 + <span class="em-teal">交互关系图表（Mermaid）</span></div>
-  <div class="slide-subtitle a a3">基于 Mermaid.js 引擎，纯文本定义流程图、时序图、饼图等，告别繁重切图。</div>
+  <div class="slide-title a a2">双图表引擎：<span class="em-teal">Mermaid 逻辑图</span> + <span class="em">ECharts 数据图表</span></div>
+  <div class="slide-subtitle a a3">组合使用 Mermaid.js（文本驱动逻辑图）与 Apache ECharts（数据可视化与高质感交互图表）。</div>
   <div class="grid-2 a a4" style="margin-top: 15px;">
-    <div class="card b-teal" style="display: flex; align-items: center; justify-content: center; min-height: 380px;">
+    <div class="card b-teal" style="display: flex; flex-direction: column; justify-content: center; min-height: 380px;">
+      <span class="badge badge-teal" style="align-self: flex-start; margin-bottom: 12px;">MERMAID.JS 逻辑架构</span>
       <pre class="mermaid" style="background: transparent; width: 100%; text-align: center;">
-      pie title 主题流行度占比
-          "Cyberpunk 极客风" : 42
-          "Light 简约白" : 28
-          "Blue 技术蓝" : 20
-          "Emerald 自然绿" : 10
+      graph TD
+          A[用户输入需求] --> B[LLM 智能排版大纲]
+          B --> C[生成 HTML 演示文稿]
+          C --> D[Mermaid + ECharts 双引擎]
       </pre>
     </div>
-    <div class="card b-blue" style="min-height: 380px;">
-      <span class="badge badge-blue">TIPS</span>
-      <h3>关系图表与配色</h3>
-      <ul>
-        <li><strong>免装插件</strong>：只需在 <code>pre</code> 标签中使用 <code>class="mermaid"</code> 即可渲染。</li>
-        <li><strong>主题融合</strong>：Mermaid 的背景色与图表线条会自动适配当前幻灯片深浅色。</li>
-        <li><strong>排版友好</strong>：结合 <code>.grid-2</code> 左右分栏，左侧放图右侧解释，是极佳的演示实践。</li>
-      </ul>
+    <div class="card b-blue" style="display: flex; flex-direction: column; justify-content: center; min-height: 380px;">
+      <span class="badge badge-blue" style="align-self: flex-start; margin-bottom: 12px;">ECHARTS 数据可视化</span>
+      <div class="echart-box" style="width: 100%; height: 300px;" data-option='{
+        "tooltip": { "trigger": "axis" },
+        "grid": { "top": 30, "bottom": 30, "left": 40, "right": 20 },
+        "xAxis": { "type": "category", "data": ["流程图", "架构图", "柱状图", "折线图", "雷达图"] },
+        "yAxis": { "type": "value" },
+        "series": [{
+          "name": "推荐索引",
+          "type": "bar",
+          "data": [95, 90, 88, 92, 85],
+          "itemStyle": { "color": "#06b6d4" }
+        }]
+      }'></div>
     </div>
   </div>
   <aside class="notes">
-    第13页展示 Mermaid.js 渲染图表版式。我们在左侧使用一段纯文本定义了饼图，浏览器在加载时会自动解析并绘制为 SVG 图表。
+    第13页展示双图表引擎结合版式。左侧使用 Mermaid.js 自动绘制逻辑流程图，右侧使用 Apache ECharts 渲染高质感交互柱状图。
   </aside>
 </div>
 
@@ -1086,6 +1093,8 @@ graph LR
     history.replaceState(null, '', '#' + slides[cur].id);
     updateViewportBg();
     broadcastSpeakerState();
+    setTimeout(resizeECharts, 50);
+    setTimeout(resizeECharts, 350);
   }
   function go(d) { jump(cur + d); }
   function toggleFs() {
@@ -1116,7 +1125,50 @@ graph LR
     document.documentElement.style.setProperty('--viewport-bg', bg);
   }
 
-  // Auto init Markdown, Highlight.js, Mermaid
+  // ECharts Auto Initializer
+  const echartsInstances = [];
+  function initECharts() {
+    if (typeof echarts === 'undefined') return;
+    const elements = document.querySelectorAll('.echart-box, .echarts');
+    elements.forEach(el => {
+      if (el.dataset.echartsInited === 'true') return;
+      let optionObj = null;
+      if (el.dataset && el.dataset.option) {
+        try { optionObj = JSON.parse(el.dataset.option); } catch(e) { console.error('ECharts JSON parse error:', e); }
+      } else {
+        const txt = el.textContent.trim();
+        if (txt) {
+          try { optionObj = JSON.parse(txt); } catch(e) { console.error('ECharts JSON parse error:', e); }
+        }
+      }
+      if (optionObj) {
+        let container = el;
+        if (el.tagName.toLowerCase() === 'pre') {
+          container = document.createElement('div');
+          container.className = el.className;
+          container.style.cssText = el.style.cssText || 'width:100%; height:380px;';
+          el.parentNode.replaceChild(container, el);
+        }
+        if (!container.style.height) container.style.height = '380px';
+        if (!container.style.width) container.style.width = '100%';
+        if (!optionObj.backgroundColor) optionObj.backgroundColor = 'transparent';
+        
+        const chart = echarts.init(container, 'dark');
+        chart.setOption(optionObj);
+        container.dataset.echartsInited = 'true';
+        echartsInstances.push(chart);
+      }
+    });
+  }
+
+  function resizeECharts() {
+    initECharts();
+    echartsInstances.forEach(chart => {
+      try { chart.resize(); } catch(e) {}
+    });
+  }
+
+  // Auto init Markdown, Highlight.js, Mermaid, ECharts
   window.addEventListener('DOMContentLoaded', () => {
     // Markdown
     if (typeof marked !== 'undefined') {
@@ -1134,6 +1186,8 @@ graph LR
     if (typeof mermaid !== 'undefined') {
       mermaid.initialize({ startOnLoad: true, theme: 'dark' });
     }
+    // ECharts
+    initECharts();
   });
 
   // Restore position from the URL hash (e.g. deck.html#s3) so a refresh keeps the current slide.

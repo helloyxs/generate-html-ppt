@@ -29,8 +29,8 @@
 ```text
 generate-html-ppt/
 ├── SKILL.md                  # AI 编程助手的工作流地图与生成规则
-├── README.md                 # 英文官方文档
-├── README_zh.md              # 中文官方文档
+├── README_en.md              # 英文官方文档
+├── README.md              # 中文官方文档
 ├── resources/
 │   ├── template.html         # 包含导航、基础样式和 JS 交互核心的 HTML PPT 模版
 │   └── themes/               # CSS 主题变量及字体排版定义
@@ -115,7 +115,8 @@ AI 助手将执行以下步骤：
   - `.card` + `.b-blue` / `.b-teal` / `.b-red` / `.b-amber` — 顶部带有对应色块的卡片，内部列表的项目符号自动变色。非常适合并排在网格中以区分不同要点。
   - `.card` + `.fill-blue` / `.fill-teal` / `.fill-red` / `.fill-amber` / `.fill-violet` — 带有完整高对比边框和淡色背景水洗效果的卡片。适合强调某个核心板块。
   - `.feat-card` + `.feat-blue` / `.feat-teal` / `.feat-red` / `.feat-amber` — 完整高质感特色卡片。
-* **矢量图表 (Mermaid)**：直接在 `<pre class="mermaid">` 中编写 Mermaid 语法，即可渲染矢量关系图或流程图。
+* **矢量图表 (Mermaid.js)**：直接在 `<pre class="mermaid">` 中编写 Mermaid 文本语法，即可渲染矢量关系图、流程图、架构图或甘特图。
+* **数据可视化 (ECharts)**：直接在 `<div class="echarts" data-option='...'>` 或 `<pre class="echarts">` 中声明 JSON 配置，即可渲染交互式柱状图、折线图、饼图、雷达图、桑基图等。
 * **动效支持 (Animations)**：给幻灯片元素添加 `.a` 基础类，并配合 `.a1` 至 `.a6` 等级，即可实现内容按顺序延迟渐显入场。
 * **架构层级**：使用 `.stack-col` 与 `.stack-row`（配合 `.stack-blue` / `.stack-teal` 等）快速搭建垂直层级架构图。
 

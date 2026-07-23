@@ -66,7 +66,10 @@ Use the CSS classes provided in the template to create a visually appealing pres
   - `.stack-row` + `.stack-blue` / `.stack-teal` / `.stack-red` / `.stack-amber` / `.stack-navy` (for layered architecture diagrams).
 - **Images**: `.slide-img` for a single image (contain-fit, max 562px tall); wrap multiple `<img>` in `.img-grid` for an auto-fitting image grid. Always include descriptive `alt` text.
 - **Code & Tables**: `.code-block` on a `<pre><code>` for automatic syntax highlighting (via Highlight.js); `.data-table` on a `<table>` (with `<th>` header cells) for data tables; inline `<code>` inside cards, lists, and paragraphs is styled automatically.
-- **Diagrams & Markdown**: Wrap inline diagrams in `<pre class="mermaid">` (rendered by Mermaid.js); wrap markdown text blocks in elements with `class="markdown"` (rendered by Marked.js).
+- **Diagrams, Charts & Markdown**:
+  - **Mermaid.js** (Logical Diagrams): Wrap text diagrams in `<pre class="mermaid">` (e.g. `graph TD`, sequence diagrams, mindmaps).
+  - **Apache ECharts** (Data Visualizations): Wrap JSON option configuration in `<div class="echarts" data-option='{...}'></div>` or `<pre class="echarts">{...}</pre>` for interactive bar, line, pie, radar, or sankey charts.
+  - **Markdown**: Wrap markdown text blocks in elements with `class="markdown"` (rendered by Marked.js).
 - **Speaker Notes**: Add `<aside class="notes">Speaker notes content here</aside>` inside any slide. Notes are invisible in the presentation view but displayed in Speaker View.
 - **Cover Slide**: Use `.cover-bg`, `.cover-grid`, `.cover-content`, `.cover-logo` (accent word inside `<span>`), `.cover-title` (gradient text via `<span class="h">`), `.cover-divider`, `.cover-sub` (highlight via `<span class="warm">`), and `.cover-stats` with `.cover-stat` items (`.n` = number, `.l` = label) for key metrics.
 - **Footers**: Use `.bottom-strip` for key takeaways at the bottom of a slide; inside it, `.em` renders teal and `.wm` renders amber.
