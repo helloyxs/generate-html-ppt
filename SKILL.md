@@ -49,7 +49,7 @@ Do not generate all slides in a single pass, and do not start building before th
    3. What is the presentation length?
    4. Are there raw materials/documents?
    5. Are there images/screenshots, and how should they be processed?
-   6. Which theme color preset? (Beautiful: `indigo`, `teal`, `rose`, `amber`, `deep`, `warm`; Cyberpunk: see `resources/themes/`)
+   6. Which theme color preset? (For Beautiful style, default is `indigo` and no theme switcher is generated. If another is requested, replace the `:root` variables with those from `resources/themes/theme-beautiful.css`. Cyberpunk: see `resources/themes/`)
    7. Any hard constraints?
 
 3. **Brand Asset Protocol (品牌嗅探)**
@@ -76,7 +76,7 @@ Do not generate all slides in a single pass, and do not start building before th
 
 6. **Set Up the File**
    Based on the chosen/default style:
-   - **Beautiful.ai-inspired (default)**: copy `resources/template-beautiful.html`. Replace `{{THEME}}` with one of `indigo`, `teal`, `rose`, `amber`, `deep`, `warm`. Replace `{{LANG}}`, `{{TITLE}}`, `{{WATERMARK}}`.
+   - **Beautiful.ai-inspired (default)**: copy `resources/template-beautiful.html`. If the user selected a theme other than `indigo`, replace the `:root` CSS variables in the template with the corresponding ones from `resources/themes/theme-beautiful.css`. Replace `{{LANG}}`, `{{TITLE}}`, `{{WATERMARK}}`.
    - **Cyberpunk Dark**: copy `resources/template.html`. Replace `{{THEME}}` with the chosen preset (e.g., `cyberpunk`, `blue`, etc.).
    - **Swiss International Style**: copy `resources/template-swiss.html`.
 

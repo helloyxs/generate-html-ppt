@@ -909,40 +909,6 @@
    }
 
    /* ==========================================================
-      THEME SWITCHER
-      ========================================================== */
-   .theme-switcher {
-     position: fixed;
-     top: calc(28px * var(--chrome-scale, 1));
-     left: 50%;
-     transform: translateX(-50%);
-     z-index: 100;
-     display: flex;
-     background: rgba(15, 23, 42, 0.65);
-     backdrop-filter: blur(12px);
-     -webkit-backdrop-filter: blur(12px);
-     border: 1px solid rgba(255, 255, 255, 0.12);
-     padding: 4px;
-     border-radius: 30px;
-     gap: 4px;
-     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-   }
-   .theme-btn {
-     background: transparent;
-     border: none;
-     color: rgba(255, 255, 255, 0.7);
-     padding: 7px 18px;
-     font-size: calc(12px * var(--chrome-scale, 1));
-     font-weight: 600;
-     border-radius: 20px;
-     cursor: pointer;
-     transition: all 0.25s var(--ease-out);
-     font-family: var(--font-body);
-   }
-   .theme-btn:hover { color: #fff; }
-   .theme-btn.active { background: #fff; color: #0f172a; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); }
-
-   /* ==========================================================
       ANIMATIONS
       ========================================================== */
    @keyframes springUp {
@@ -1041,12 +1007,11 @@
      .deck { position: static; width: auto; height: auto; overflow: visible; transform: none !important; }
      .slide { position: relative; inset: auto; visibility: visible; opacity: 1; pointer-events: auto; page-break-after: always; break-after: page; }
      .slide:last-of-type { page-break-after: auto; break-after: auto; }
-     .slide .anim { opacity: 1 !important; animation: none !important; }
-     .nav, .nav-arrows, .page-num, .watermark, .fs-btn, .speaker-btn, .theme-switcher { display: none !important; }
+     .nav, .nav-arrows, .page-num, .watermark, .fs-btn, .speaker-btn { display: none !important; }
    }
  </style>
  </head>
- <body class="theme-{{THEME}}">
+ <body>
  <div class="deck-viewport">
  <div class="deck" id="deck">
 
@@ -1119,13 +1084,6 @@
  </div>
 
  <div class="watermark">{{WATERMARK}}</div>
-
- <div class="theme-switcher" id="themeSwitcher" aria-label="Theme switcher">
-   <button class="theme-btn active" data-theme="indigo">Indigo</button>
-   <button class="theme-btn" data-theme="teal">Teal</button>
-   <button class="theme-btn" data-theme="rose">Rose</button>
-   <button class="theme-btn" data-theme="amber">Amber</button>
- </div>
 
  <button class="fs-btn" onclick="toggleFs()" aria-label="Toggle fullscreen" title="Fullscreen (F)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
  <button class="speaker-btn" onclick="openSpeakerView()" aria-label="Speaker View" title="Speaker View (S)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
@@ -1335,33 +1293,6 @@
    document.addEventListener('touchend', e => {
      const dx = e.changedTouches[0].clientX - tx;
      if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
-   });
-
-   /* ==========================================================
-      THEME SWITCHER
-      ========================================================== */
-   const themeColors = {
-     indigo: { accent: '#4f46e5', accent600: '#4338ca', accentLight: '#e0e7ff', accentSoft: 'rgba(79,70,229,0.12)' },
-     teal: { accent: '#0d9488', accent600: '#0f766e', accentLight: '#ccfbf1', accentSoft: 'rgba(13,148,136,0.12)' },
-     rose: { accent: '#e11d48', accent600: '#be123c', accentLight: '#ffe4e6', accentSoft: 'rgba(225,29,72,0.12)' },
-     amber: { accent: '#d97706', accent600: '#b45309', accentLight: '#fef3c7', accentSoft: 'rgba(217,119,6,0.12)' }
-   };
-   document.querySelectorAll('.theme-btn').forEach(btn => {
-     btn.addEventListener('click', () => {
-       const theme = btn.dataset.theme;
-       const colors = themeColors[theme];
-       if (!colors) return;
-       document.documentElement.style.setProperty('--b-accent', colors.accent);
-       document.documentElement.style.setProperty('--b-accent-600', colors.accent600);
-       document.documentElement.style.setProperty('--b-accent-light', colors.accentLight);
-       document.documentElement.style.setProperty('--b-accent-soft', colors.accentSoft);
-       document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-       btn.classList.add('active');
-       echartsInstances.forEach(chart => chart.dispose());
-       echartsInstances.length = 0;
-       document.querySelectorAll('.smart-chart').forEach(el => { el.innerHTML = ''; el.dataset.chartInited = ''; });
-       initSmartCharts();
-     });
    });
 
    /* ==========================================================
