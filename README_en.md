@@ -31,13 +31,12 @@ generate-html-ppt/
 ├── SKILL.md                  # Workflow map and rules for the AI coding agent
 ├── README.md                 # English & Chinese Documentation
 ├── README_en.md
-├── references/               # Detailed agent handbooks (layouts, components, themes, prompts)
+├── references/               # Detailed agent handbooks (layouts, components, prompts)
 ├── resources/
 │   ├── template.html         # Base template for the Cyberpunk style
 │   ├── template-swiss.html   # Base template for the Swiss International Style
 │   ├── template-beautiful.html # Base template for the Beautiful.ai Style
-│   ├── screenshot-backgrounds/ # High-res backgrounds for wrapping/beautifying software screenshots
-│   └── themes/               # CSS theme variables and typography definitions (for Cyberpunk)
+│   └── screenshot-backgrounds/ # High-res backgrounds for wrapping/beautifying software screenshots
 └── scripts/
     ├── extract-pptx.py       # Python script to extract slides, images, and notes from PPTX
     └── validate-swiss-deck.mjs # Strict Node.js validation script for Swiss layout compliance

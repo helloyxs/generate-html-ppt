@@ -63,7 +63,7 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; }
-  body { font-family: var(--font-body); background: #0a0a0a; overflow: hidden; -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--font-body); background: var(--viewport-bg, #0a0a0a); overflow: hidden; -webkit-font-smoothing: antialiased; transition: background 0.5s ease; }
 
   /* ===========================================
      FIXED 16:9 STAGE (mandatory base)
@@ -708,7 +708,10 @@ graph TD
     if (isCover) {
       bg = 'var(--cover-bg)';
     } else {
-      bg = window.getComputedStyle(curSlide).backgroundColor || '#fff';
+      const computed = window.getComputedStyle(curSlide);
+      bg = (computed.backgroundImage && computed.backgroundImage !== 'none')
+        ? computed.backgroundImage
+        : (computed.backgroundColor || '#fff');
     }
     document.documentElement.style.setProperty('--viewport-bg', bg);
   }

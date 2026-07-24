@@ -31,13 +31,12 @@ generate-html-ppt/
 ├── SKILL.md                  # AI 编程助手的工作流地图与生成规则
 ├── README.md                 # 中英文文档
 ├── README_en.md
-├── references/               # AI 助手的详细工作手册 (排版, 组件, 主题, 配图提示词等)
+├── references/               # AI 助手的详细工作手册 (排版, 组件, 配图提示词等)
 ├── resources/
 │   ├── template.html         # 赛博朋克风格 (Cyberpunk) 的主模版
 │   ├── template-swiss.html   # 瑞士国际主义风格 (Swiss) 的主模版
 │   ├── template-beautiful.html # Beautiful.ai 商业风格的主模版
-│   ├── screenshot-backgrounds/ # 用于自动包裹、美化软件截图的高清底图
-│   └── themes/               # CSS 主题变量及字体排版定义 (适用于 Cyberpunk)
+│   └── screenshot-backgrounds/ # 用于自动包裹、美化软件截图的高清底图
 └── scripts/
     ├── extract-pptx.py       # 用于从 PPTX 中提取文字、图片和讲稿的 Python 脚本
     └── validate-swiss-deck.mjs # 严格校验瑞士风格排版合规性的 Node.js 脚本

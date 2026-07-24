@@ -1,6 +1,6 @@
 ---
 name: generate-html-ppt
-description: When the user asks to create an HTML PPT, presentation slides, or a deck, or convert an existing PowerPoint (.pptx) file, use this skill to generate a modern, responsive HTML presentation based on the predefined template. This includes Chinese requests such as 做PPT、幻灯片、演示文稿、网页版PPT、PPT转换.
+description: When the user asks to create an HTML PPT, presentation slides, or a deck, or convert an existing PowerPoint (.pptx) file, use this skill to generate a modern, responsive HTML presentation based on design system specifications (design.md). This includes Chinese requests such as 做PPT、幻灯片、演示文稿、网页版PPT、PPT转换.
 ---
 
 # HTML PPT Generation Skill
@@ -9,21 +9,16 @@ When the user requests an HTML presentation or PPT, follow these instructions to
 
 ## Overview
 
-You have three independent presentation styles available, each with its own complete template:
+Presentations are generated using a **Design System Specification (`design.md`)** architecture combined with **Progressive Disclosure**. Rather than relying on rigid, hardcoded HTML templates, visual styles are authored as comprehensive design recipes specifying fonts, color palettes, elevation shadows, typography scales, layout rules, and animation patterns.
 
-1. **Beautiful.ai-inspired modern premium** (default) — `resources/template-beautiful.html`
-2. **Cyberpunk Dark / Tech / Light / Emerald** — `resources/template.html`
-3. **Swiss International Style** — `resources/template-swiss.html`
+### Core Principles
+1. **Design System Specification (`design.md`) Architecture**: Access over 34+ distinct aesthetic design recipes (e.g., Beautiful Modern, Swiss International, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, Neo Grid, Monochrome, Retro Zine) defined in `designs/bold-template-pack/` and `designs/STYLE_PRESETS.md`.
+2. **Progressive Disclosure**: High token efficiency. First read `designs/bold-template-pack/selection-index.json` to match styles based on text metadata. Only after the style is chosen, read that specific template's single `design.md` file to construct the presentation.
+3. **Fixed 16:9 Stage (NON-NEGOTIABLE)**: Every slide canvas is authored inside a 1920×1080 stage scaled uniformly to the viewport using JavaScript (`updateScale()`). Content never reflows per device.
+4. **Seamless Viewport Rule (视口无缝融合规范)**: All presentations must use CSS variables (`--viewport-bg`) on `body` / `.deck-viewport` and dynamic JavaScript (`updateViewportBg()`) to synchronize the outer screen background with the active slide's background.
+5. **Text-First Workflow**: Preserves the signature 3-stage user workflow: **Text-based requirement alignment ➔ Design-guided wireframing (灰度骨架确认) ➔ Guided batch content filling ➔ Verification**.
 
-Every slide is laid out on a fixed 1920×1080 stage that JavaScript scales as a whole to fit any window, so the layout is identical on every screen.
-
-Generation follows a staged workflow: confirm a slide-by-slide outline with the user first, build the deck in small batches, then verify the whole file.
-
-## Default Style Decision Tree
-
-- If the user explicitly asks for **Cyberpunk / 赛博朋克 / tech dark**, use `resources/template.html`.
-- If the user explicitly asks for **Swiss / 瑞士国际主义 / Swiss Style**, use `resources/template-swiss.html`.
-- Otherwise, including when no style is specified, **default to Beautiful.ai-inspired** using `resources/template-beautiful.html`.
+---
 
 ## Phase 0: Mode Detection
 
@@ -32,106 +27,103 @@ Determine what the user wants:
 - **Mode B: PPT Conversion** — Convert a PowerPoint (`.pptx`) file to HTML. Go to Phase 4.
 - **Mode C: Cover Generation** — Generate multi-platform social media covers based on a PPT or article. Go to Phase 5.
 
-Do not generate all slides in a single pass, and do not start building before the outline is confirmed.
+Do not generate all slides in a single pass, and do not start building content before the wireframe is confirmed.
 
-## Phase 1: Outline & Style Preview
+---
 
-1. **Read the Templates**
-   Read the template that matches the chosen/default style:
-   - **Beautiful.ai-inspired (default)**: read `resources/template-beautiful.html` and `references/layouts-beautiful.md`. You are locked to the 12 pre-defined layout components (L01-L12) and the CSS classes in the template. Do not invent new layouts or classes.
-   - **Cyberpunk Dark**: read `resources/template.html` and `references/layouts.md`.
-   - **Swiss International Style**: read `resources/template-swiss.html`, `references/layouts-swiss.md`, and `references/swiss-layout-lock.md`. You are strictly locked to the 22 pre-defined layouts (S01-S22). Every `<section class="slide">` must set `data-layout="Sxx"`.
+## Phase 1: Outline & Style Alignment (Text-Based)
 
-2. **Requirements Alignment (7-Question Checklist)**
-   Before drafting anything, ask the user to clarify their requirements if they haven't provided a complete outline. Use these 7 questions, with Beautiful.ai as the default style:
-   1. **Style** — Beautiful.ai-inspired modern premium (default). Want Cyberpunk or Swiss instead?
-   2. Who is the audience / what is the scenario?
-   3. What is the presentation length?
-   4. Are there raw materials/documents?
-   5. Are there images/screenshots, and how should they be processed?
-   6. Which theme color preset? (For Beautiful style, default is `indigo` and no theme switcher is generated. If another is requested, replace the `:root` variables with those from `resources/themes/theme-beautiful.css`. Cyberpunk: see `resources/themes/`)
-   7. Any hard constraints?
+1. **Requirements Alignment (7-Question Checklist)**
+   Clarify requirements via text conversation:
+   1. **Style Preference** — Match against available design recipes (Default: Beautiful Modern. Alternatives: Swiss Minimalist, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, etc.).
+   2. **Audience & Scenario** — Pitch deck / Conference talk / Internal report / Teaching-Tutorial.
+   3. **Presentation Length** — Short (5-10) / Medium (10-20) / Long (20+).
+   4. **Raw Materials** — Documents, notes, topic outline.
+   5. **Visual Assets** — Logos, screenshots, diagrams.
+   6. **Theme & Density Mode**:
+      - *Low density / Speaker-led*: Large headings, minimal text, generous negative space, 1-3 bullets max.
+      - *High density / Reading-first*: Detailed grids, comparisons, tables, 4-8 bullets per slide.
+   7. **Hard Constraints** — Specific brand colors, typography requirements, or deadline constraints.
 
-3. **Brand Asset Protocol (品牌嗅探)**
-   **CRITICAL RULE**: If the user provides or implies a specific company/brand, prioritize extracting its core brand colors (HEX/RGB) and font style via web search or local materials, and inject them as CSS variables (e.g., override the default `--b-accent`) so the deck naturally matches the corporate VI.
+2. **Brand Asset Protocol (品牌嗅探)**
+   **CRITICAL RULE**: If the user provides a specific company or brand, extract core brand colors (HEX/RGB) and typography via search or local files, injecting them into the selected `design.md` CSS variables (e.g. `--brand-accent`).
 
-4. **Draft the Outline (Narrative Arc)**
-   Based on the aligned requirements, draft an outline using a Narrative Arc:
-   - Hook (1 slide)
-   - Context (1-2 slides)
-   - Core (3-5 slides)
-   - Shift (1 slide)
-   - Takeaway (1-2 slides)
-   If the user is unsure about the style, generate two separate preview HTML files (e.g., Beautiful vs. Cyberpunk) and stop for confirmation.
+3. **Text-Based Style Matching**
+   Read `designs/bold-template-pack/selection-index.json`. Recommend 2-3 style options in text with short descriptions matching the user's mood and scenario. Confirm the selected style name with the user.
+
+4. **Draft Narrative Arc Outline**
+   Draft a slide-by-slide outline using a classic Narrative Arc:
+   - **Hook** (1 slide)
+   - **Context** (1-2 slides)
+   - **Core** (3-5 slides)
+   - **Shift** (1 slide)
+   - **Takeaway** (1-2 slides)
+
+---
 
 ## Phase 1.5: Image Generation & Screenshot Beautification
 
-5. **Prepare Visual Assets**
-   Once the outline is confirmed, actively ask the user if they want to generate AI images or beautify screenshots.
-   - If they have raw screenshots, read `references/screenshot-framing.md`.
-   - If they need AI generated photos, infographics, or evidence charts, read `references/image-prompts.md`.
-   - Do NOT proceed to Phase 2 until all visual assets are prepared or the user declines.
+Prepare visual assets before building wireframes:
+- If screenshots are provided, consult `references/screenshot-framing.md`.
+- If AI images or diagrams are needed, consult `references/image-prompts.md`.
 
-## Phase 2: Wireframing (灰度骨架) & Setup
+---
 
-6. **Set Up the File**
-   Based on the chosen/default style:
-   - **Beautiful.ai-inspired (default)**: copy `resources/template-beautiful.html`. If the user selected a theme other than `indigo`, replace the `:root` CSS variables in the template with the corresponding ones from `resources/themes/theme-beautiful.css`. Replace `{{LANG}}`, `{{TITLE}}`, `{{WATERMARK}}`.
-   - **Cyberpunk Dark**: copy `resources/template.html`. Replace `{{THEME}}` with the chosen preset (e.g., `cyberpunk`, `blue`, etc.).
-   - **Swiss International Style**: copy `resources/template-swiss.html`.
+## Phase 2: Design-System-Guided Wireframing (灰度骨架确认)
 
-7. **Generate Wireframe (骨架确认)**
-   **CRITICAL: Do NOT generate the full detailed content yet.** Build the HTML structure for the slides according to the outline, but only include slide titles, structural layout classes, and image placeholders. Use placeholder text for detailed paragraphs. Stop and show this wireframe to the user. Do NOT proceed until approved.
+1. **Single-Point Reading of `design.md`**
+   Read **ONLY** the single `design.md` specification corresponding to the selected style (e.g. `designs/bold-template-pack/templates/<slug>/design.md` or `designs/STYLE_PRESETS.md`). Extract:
+   - Font family imports (Google Fonts / Fontshare)
+   - Color tokens (`:root` CSS variables)
+   - Typography scale & clamp values
+   - Elevation shadows, borders, card styles
+   - Animation classes & micro-interactions
 
-## Phase 2.5: Content Filling & Batch Generation
+2. **Build Stage Wireframe HTML File (骨架代码)**
+   Generate the single-file HTML presentation structure:
+   - Embed full contents of `designs/viewport-base.css` in the `<style>` block.
+   - Include the extracted `design.md` CSS design system tokens and classes.
+   - Set up the 1920×1080 `.deck-stage` canvas and scaling script (`updateScale()`, `updateViewportBg()`).
+   - Create slide containers (`<div class="slide" id="s{N}">...</div>`).
+   - Include slide titles, structural grid/card layout classes, and placeholder text/images.
+   - **DO NOT fill detailed paragraphs yet.**
 
-8. **Generate Complete Deck in Batches**
-   Once the wireframe is approved, fill in detailed copy and actual content. Insert each batch into the established slide structures, replacing placeholders. Each slide must remain wrapped in `<div class="slide ..." id="s{N}">...</div>` (Beautiful/Cyberpunk) or `<section class="slide ..." id="s{N}">...</section>` (Swiss), with sequential numbering; only the first slide gets the `active` class. Keep style and density consistent.
+3. **Stop & Present Wireframe for Approval (骨架确认)**
+   Show the wireframe HTML to the user and explain the layout structure. **STOP and wait for user approval** before proceeding to fill detailed content.
+
+---
+
+## Phase 2.5: Content Batch Filling
+
+Once the wireframe is approved:
+1. Batch-fill complete copy, data tables, code snippets, and visual assets into each slide structure.
+2. Adhere to the selected density mode (Low density vs. High density).
+3. Ensure no text or cards overflow their slide boundaries at 1920×1080 resolution.
+
+---
 
 ## Phase 3: Verify and Open
 
-9. **Verify the Result and Open**
-   - **Swiss**: run `node scripts/validate-swiss-deck.mjs <file.html>` and fix any errors.
-   - **Beautiful.ai-inspired**: run `node scripts/validate-beautiful-deck.mjs <file.html>` and fix any errors. Also open the generated HTML in a browser to verify that all `.anim` elements animate on entry, smart charts render, count-up numbers animate, and no content is clipped.
-   - **Cyberpunk**: open the generated HTML in a browser and check each slide for clipped, crowded, or overlapping content.
-   - Finally, ensure the completed presentation is opened in the browser for the user to view.
+1. **Verify Presentation Features**:
+   - Fixed 16:9 stage scaling (`updateScale()` on window resize).
+   - Seamless Viewport Background synchronization (`--viewport-bg`).
+   - All `.anim` elements trigger entry animations correctly.
+   - Zero text clipping, zero vertical scrolling inside slides, zero panel overlap.
+2. **Open in Browser**:
+   - Ensure the completed HTML file is opened in the browser for user review.
 
-## Reference Documents
+---
 
-Before generating the presentation, consult the relevant references for the chosen style:
+## Reference Documents & Supporting Assets
 
-- **Beautiful.ai-inspired**: `references/layouts-beautiful.md`, `references/components.md`, `references/checklist.md` (and its Beautiful section)
-- **Cyberpunk**: `references/layouts.md`, `references/components.md`, `references/checklist.md`, `references/themes.md`
-- **Swiss**: `references/layouts-swiss.md`, `references/swiss-layout-lock.md`, `references/checklist.md`
+All relative paths from skill root:
 
-## Phase 4: PPT Conversion
-
-When converting PowerPoint files:
-
-1. **Extract content** — Run:
-   ```bash
-   python scripts/extract-pptx.py <input.pptx> <output_dir>
-   ```
-   *(Requires `python-pptx`: `pip install python-pptx`)*
-2. **Confirm with user** — Present extracted slide titles, content summaries, speaker notes, and image counts.
-3. **Style Selection** — Proceed to Phase 1 to confirm the visual theme and outline. Default to Beautiful.ai-inspired unless the user requests another style.
-4. **Generate HTML** — Map the JSON structure (`extracted-slides.json`) to HTML slides. Use the appropriate layout classes and components, embed images from `assets/`, and insert speaker notes into `<aside class="notes">`.
-
-## Phase 5: Cover Generation
-
-When the user requests platform covers (e.g., WeChat banner 21:9, Xiaohongshu 3:4, etc.):
-1. **Extract Core Message**: Analyze the provided article, text, or PPT content.
-2. **Consult Reference**: Read `references/covers.md`.
-3. **Generate Images**: Produce the actual image assets to the `images/` directory.
-
-## Supporting Files
-
-All paths are relative to the skill root:
-
-- `scripts/extract-pptx.py` — PowerPoint content extraction.
-- `scripts/validate-swiss-deck.mjs` — Swiss style validator.
-- `scripts/validate-beautiful-deck.mjs` — Beautiful style validator.
-- `resources/template.html` — Cyberpunk / Tech base template.
-- `resources/template-swiss.html` — Swiss International template.
-- `resources/template-beautiful.html` — Beautiful.ai-inspired premium template (default).
-- `resources/themes/theme-beautiful.css` — Beautiful style color presets.
+- `designs/bold-template-pack/selection-index.json` — Compact metadata index of 34 bold design templates.
+- `designs/bold-template-pack/templates/*/design.md` — Detailed Design System recipes (read only the selected one).
+- `designs/viewport-base.css` — Mandatory 16:9 stage scaling and seamless viewport CSS base.
+- `designs/STYLE_PRESETS.md` — Core safe preset recipes (Beautiful Modern, Swiss Style, Cyberpunk Dark).
+- `designs/animation-patterns.md` — Animation and micro-interaction guide.
+- `references/checklist.md` — Presentation quality checklist.
+- `references/screenshot-framing.md` — Screenshot framing and mockup guide.
+- `references/image-prompts.md` — Prompt generation guide for presentation visuals.
+- `scripts/extract-pptx.py` — PowerPoint content extraction script.

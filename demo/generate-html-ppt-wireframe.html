@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>generate-html-ppt 功能与亮点介绍</title>
+    <!-- Google Fonts: Newsreader & DM Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&display=swap" rel="stylesheet">
+    <style>
+        /* === VIEWPORT BASE CSS (Mandatory 16:9 Stage Scaling & Seamless Viewport) === */
+        html, body {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            background: var(--viewport-bg, #F0EBDE);
+            transition: background 0.5s ease;
+            font-family: 'DM Mono', monospace;
+        }
+        .deck-viewport {
+            position: fixed; inset: 0; overflow: hidden;
+            background: var(--viewport-bg, #F0EBDE);
+            transition: background 0.5s ease;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .deck-stage {
+            position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+            overflow: hidden; transform-origin: 0 0;
+            background: var(--slide-bg, #F0EBDE);
+            box-shadow: 0 25px 50px -12px rgba(31, 43, 224, 0.15);
+        }
+        .slide {
+            position: absolute; inset: 0; width: 1920px; height: 1080px;
+            overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none;
+            background: var(--slide-bg, #F0EBDE);
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            padding: 80px 100px; box-sizing: border-box;
+        }
+        .slide.active {
+            visibility: visible; opacity: 1; pointer-events: auto; z-index: 1;
+        }
+
+        /* === COBALT GRID DESIGN SYSTEM TOKENS === */
+        :root {
+            --paper: #F0EBDE;
+            --paper-2: #E6E0CE;
+            --ink: #1F2BE0;
+            --ink-soft: #5560E5;
+            --grid: rgba(31, 43, 224, 0.08);
+            --ink-faint: rgba(31, 43, 224, 0.15);
+            --viewport-bg: var(--paper);
+            --slide-bg: var(--paper);
+        }
+
+        /* Background Grid Overlay */
+        .slide::before {
+            content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 0;
+            background-image: 
+                linear-gradient(to right, var(--grid) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .slide-content {
+            position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        /* Typography Styles */
+        .display-hero {
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 110px; font-weight: 400; line-height: 0.95; color: var(--ink);
+            letter-spacing: -0.02em; margin: 0 0 24px 0;
+        }
+        .display-chapter {
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 72px; font-weight: 400; line-height: 1.05; color: var(--ink);
+            margin: 0 0 20px 0;
+        }
+        .tagline {
+            font-family: 'DM Mono', monospace; font-size: 22px; text-transform: uppercase;
+            letter-spacing: 0.2em; color: var(--ink-soft); margin-bottom: 20px;
+        }
+        .eyebrow {
+            font-family: 'DM Mono', monospace; font-size: 18px; text-transform: uppercase;
+            letter-spacing: 0.25em; color: var(--ink-soft); display: inline-block;
+            border-bottom: 1.5px solid var(--ink); padding-bottom: 6px; margin-bottom: 30px;
+        }
+        .body-desc {
+            font-family: 'DM Mono', monospace; font-size: 24px; line-height: 1.6; color: var(--ink); opacity: 0.9;
+        }
+
+        /* Wireframe Structure Cards & Grids */
+        .grid-2col {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 40px;
+        }
+        .grid-3col {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-top: 40px;
+        }
+        .wireframe-card {
+            border: 1.5px solid var(--ink); padding: 40px; background: rgba(240, 235, 222, 0.6);
+            backdrop-filter: blur(4px); position: relative;
+        }
+        .wireframe-card::after {
+            content: "STRUCTURE PLACEHOLDER"; position: absolute; top: 12px; right: 16px;
+            font-size: 11px; letter-spacing: 0.15em; color: var(--ink-soft); opacity: 0.6;
+        }
+        .card-num {
+            font-family: 'Newsreader', Georgia, serif; font-size: 48px; color: var(--ink); margin-bottom: 12px;
+        }
+        .card-title {
+            font-family: 'DM Mono', monospace; font-size: 26px; font-weight: 500; color: var(--ink); margin-bottom: 16px;
+        }
+        .placeholder-box {
+            background: var(--ink-faint); border: 1px dashed var(--ink); height: 120px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; letter-spacing: 0.1em; color: var(--ink); margin-top: 20px;
+        }
+
+        /* Navigation Chrome */
+        .nav-chrome {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 20px; z-index: 100; background: var(--paper-2);
+            border: 1.5px solid var(--ink); padding: 10px 24px; border-radius: 40px;
+        }
+        .nav-btn {
+            background: none; border: none; font-family: 'DM Mono', monospace;
+            font-size: 14px; color: var(--ink); cursor: pointer; font-weight: 500;
+        }
+        .page-counter {
+            font-family: 'DM Mono', monospace; font-size: 14px; color: var(--ink); margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="deck-viewport">
+        <div class="deck-stage" id="stage">
+            
+            <!-- Slide 1: Cover / Hook -->
+            <div class="slide active" id="s1">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow">FEATURE & HIGHLIGHT DEMO</div>
+                        <h1 class="display-hero">generate-html-ppt</h1>
+                        <p class="tagline">基于 Design System 架构的下一代网页演示文稿引擎</p>
+                    </div>
+                    <div>
+                        <p class="body-desc" style="max-width: 900px;">
+                            [骨架占位] 重新定义 Web 演示文稿生成体验 — 34+ 种专业设计系统、固定 16:9 画质、视口无缝融合与人类级 3 阶段协作流程。
+                        </p>
+                        <div class="placeholder-box" style="height: 80px; margin-top: 40px;">
+                            [HERO SLIDE DECORATION & ANIMATION PLACEHOLDER]
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Pain Points & Shift -->
+            <div class="slide" id="s2">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow">01 / PAIN POINTS & SHIFT</div>
+                        <h2 class="display-chapter">告别 AI 同质化与不可控全自动</h2>
+                        <p class="body-desc">[骨架占位] 传统 AI PPT 生成常见两大痛点：千篇一律的视觉同质化，以及一键全自动的黑色盒失控。</p>
+                    </div>
+                    <div class="grid-2col">
+                        <div class="wireframe-card">
+                            <div class="card-num">01</div>
+                            <div class="card-title">同质化审美疲劳</div>
+                            <div class="placeholder-box">[痛点 1 结构框：默认字体、单一配色、组件死板]</div>
+                        </div>
+                        <div class="wireframe-card">
+                            <div class="card-num">02</div>
+                            <div class="card-title">破局：Design System 架构</div>
+                            <div class="placeholder-box">[解法 1 结构框：解耦设计 Recipes 与结构排版]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Core Highlight 1 (design.md & Progressive Disclosure) -->
+            <div class="slide" id="s3">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow">02 / CORE ARCHITECTURE</div>
+                        <h2 class="display-chapter">design.md 规范与渐进式加载</h2>
+                        <p class="body-desc">[骨架占位] 详细拆解 Design Tokens、字体库导入、色盘与渐进式 Token 优化机制。</p>
+                    </div>
+                    <div class="grid-3col">
+                        <div class="wireframe-card">
+                            <div class="card-title">34+ 设计规范</div>
+                            <div class="placeholder-box">[8-Bit / Swiss / Emerald 等全套 Recipes]</div>
+                        </div>
+                        <div class="wireframe-card">
+                            <div class="card-title">Progressive Disclosure</div>
+                            <div class="placeholder-box">[轻量索引 ➔ 选定单点加载，超高 Token 效率]</div>
+                        </div>
+                        <div class="wireframe-card">
+                            <div class="card-title">自由编排 Layout</div>
+                            <div class="placeholder-box">[彻底摆脱硬编码组件限制]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Core Highlight 2 (Fixed Stage & Seamless Viewport) -->
+            <div class="slide" id="s4">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow">03 / VISUAL & EXPERIENCE</div>
+                        <h2 class="display-chapter">16:9 固定 Stage 与视口无缝融合</h2>
+                        <p class="body-desc">[骨架占位] 1920×1080 原生像素级精度，完美兼容 21:9 超宽屏、16:10 及各类大屏展示。</p>
+                    </div>
+                    <div class="grid-2col">
+                        <div class="wireframe-card">
+                            <div class="card-title">1920×1080 画质不乱序</div>
+                            <div class="placeholder-box">[全屏比例缩放，设备间表现完全一致]</div>
+                        </div>
+                        <div class="wireframe-card">
+                            <div class="card-title">Seamless Viewport</div>
+                            <div class="placeholder-box">[--viewport-bg 动态背景无缝融合，告别尴尬黑边]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 5: Human-centric Workflow -->
+            <div class="slide" id="s5">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow">04 / WORKFLOW</div>
+                        <h2 class="display-chapter">人类级 3 阶段协作流程</h2>
+                        <p class="body-desc">[骨架占位] 需求对齐 ➔ 骨架确认 ➔ 细节填充，全程透明可控。</p>
+                    </div>
+                    <div class="grid-3col">
+                        <div class="wireframe-card">
+                            <div class="card-num">STEP 1</div>
+                            <div class="card-title">7 问对齐与品牌嗅探</div>
+                            <div class="placeholder-box">[文本沟通风格与 VI 提取]</div>
+                        </div>
+                        <div class="wireframe-card">
+                            <div class="card-num">STEP 2</div>
+                            <div class="card-title">灰度骨架确认 (Wireframe)</div>
+                            <div class="placeholder-box">[预览 HTML 结构，确认后再写内容]</div>
+                        </div>
+                        <div class="wireframe-card">
+                            <div class="card-num">STEP 3</div>
+                            <div class="card-title">密度与文案填充</div>
+                            <div class="placeholder-box">[高/低信息密度精准匹配]</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 6: Closing / Summary -->
+            <div class="slide" id="s6">
+                <div class="slide-content" style="justify-content: center; text-align: center; align-items: center;">
+                    <div class="eyebrow" style="margin-bottom: 20px;">SUMMARY</div>
+                    <h1 class="display-hero" style="font-size: 100px; margin-bottom: 30px;">开启 Web 演示文稿新体验</h1>
+                    <p class="body-desc" style="max-width: 800px; text-align: center; margin-bottom: 50px;">
+                        [骨架占位] 简洁、优雅、极具个性化的 HTML 演示文稿生成解决方案。
+                    </p>
+                    <div class="placeholder-box" style="width: 600px; height: 80px;">
+                        [CLOSING CALL-TO-ACTION & REPO LINK PLACEHOLDER]
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Navigation Chrome Controls -->
+    <div class="nav-chrome">
+        <button class="nav-btn" onclick="prevSlide()">← PREV</button>
+        <span class="page-counter" id="counter">01 / 06</span>
+        <button class="nav-btn" onclick="nextSlide()">NEXT →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 6;
+
+        function updateScale() {
+            const stage = document.getElementById('stage');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const scaleX = windowWidth / 1920;
+            const scaleY = windowHeight / 1080;
+            const scale = Math.min(scaleX, scaleY);
+            
+            const left = (windowWidth - 1920 * scale) / 2;
+            const top = (windowHeight - 1080 * scale) / 2;
+            
+            stage.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+        }
+
+        function showSlide(index) {
+            document.querySelectorAll('.slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i + 1 === index);
+            });
+            currentSlide = index;
+            document.getElementById('counter').innerText = `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            if (currentSlide > 1) showSlide(currentSlide - 1);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        window.addEventListener('resize', updateScale);
+        updateScale();
+    </script>
+</body>
+</html>

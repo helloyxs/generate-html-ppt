@@ -1,9 +1,0 @@
-/* Font preset: modern (default sans).
-   This is the template's built-in look; injecting it is optional and simply
-   re-affirms the defaults. Paste inside the <style> block, after the
-   template's :root { ... } rule. */
-:root {
-  --font-body: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
-  --font-display: var(--font-body);
-  --font-mono: "SF Mono", Menlo, Consolas, monospace;
-}

@@ -7,15 +7,17 @@
 ---
 
 
-## 🟣 Beautiful.ai 风格额外检查
+## 🟣 Design System Specification (`design.md`) 架构自检
 
-以下检查适用于默认的 Beautiful.ai-inspired 模板 (`template-beautiful.html`)。
+以下检查适用于使用 `design.md` 设计规范体系生成的 HTML 演示文稿。
 
-### B-0. 默认使用 Beautiful 模板
-如果用户没有明确指定风格，应使用 `resources/template-beautiful.html`，并选择 `theme-indigo` 作为默认主题。
+### B-0. 设计系统与渐进式加载（Progressive Disclosure）
+- 生成前先读取 `designs/bold-template-pack/selection-index.json` 索引进行风格匹配。
+- 选定风格后，只单点读取该风格对应的单份 `design.md`（如 `designs/bold-template-pack/templates/<slug>/design.md` 或 `designs/STYLE_PRESETS.md`）。
+- 严格遵循 `design.md` 中定义的 Design Tokens（Google Fonts / Fontshare 字体导入、色盘、阴影堆栈、字号 `clamp` 规范）。
 
-### B-1. 页面必须带 `light` 或 `dark` 主题类
-每个 `<div class="slide">` 必须同时包含 `light` 或 `dark`。`hero` 页必须写成 `hero light` 或 `hero dark`，不能只写 `hero`。
+### B-1. 页面必须带主题/色彩规范
+每个 `<div class="slide">` 应遵循 `design.md` 中的主题规范。Hero 页与过渡页应与正文页形成视觉对比与律动。
 
 ### B-2. 主题节奏
 连续同主题不超过 3 页；8 页以上必须至少包含 1 个 `hero dark` 和 1 个 `hero light`，以及至少 1 个非 hero 的 `dark` 页。

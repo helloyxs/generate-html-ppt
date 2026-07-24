@@ -37,7 +37,7 @@
    }
    * { margin: 0; padding: 0; box-sizing: border-box; }
    html, body { width: 100%; height: 100%; }
-   body { font-family: var(--font-body); background: #000; overflow: hidden; color: var(--b-text); }
+   body { font-family: var(--font-body); background: var(--viewport-bg); overflow: hidden; color: var(--b-text); transition: background 0.7s var(--ease-smooth); }
    .deck-viewport { position: fixed; inset: 0; overflow: hidden; background: var(--viewport-bg); transition: background 0.7s var(--ease-smooth); }
    .deck { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0; }
    .slide { position: absolute; inset: 0; width: 1920px; height: 1080px; display: flex; flex-direction: column; padding: 80px 120px; overflow: hidden; visibility: hidden; opacity: 0; pointer-events: none; background: var(--b-bg); transition: opacity 0.5s var(--ease-smooth), visibility 0s linear 0.5s; }
@@ -440,8 +440,11 @@
      const isDark = s.classList.contains('dark');
      const isHero = s.classList.contains('hero');
      let bg = 'var(--b-bg)';
-     if (isDark) bg = '#0f172a';
-     else if (isHero) bg = 'radial-gradient(ellipse 80% 60% at 20% 40%, rgba(79,70,229,0.15), transparent), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(13,148,136,0.12), transparent), linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)';
+     if (isDark) {
+       bg = 'radial-gradient(ellipse 80% 60% at 20% 40%, rgba(99,102,241,0.22), transparent), radial-gradient(ellipse 60% 50% at 80% 20%, rgba(20,184,166,0.18), transparent), linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)';
+     } else if (isHero) {
+       bg = 'radial-gradient(ellipse 80% 60% at 20% 40%, rgba(79,70,229,0.15), transparent), radial-gradient(ellipse 60% 50% at 80% 80%, rgba(13,148,136,0.12), transparent), linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)';
+     }
      document.documentElement.style.setProperty('--viewport-bg', bg);
    }
 
