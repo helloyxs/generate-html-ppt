@@ -247,12 +247,57 @@
    /* ==========================================================
       12-COLUMN GRID SYSTEM
       ========================================================== */
-   .frame {
-     width: 100%;
-     height: 100%;
-     display: grid;
-     gap: var(--space-6);
-   }
+    .frame {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: var(--space-6);
+    }
+    .frame.between {
+      justify-content: space-between;
+      gap: 0;
+    }
+    .frame.center {
+      justify-content: center;
+      align-items: center;
+    }
+    .frame.center-group, .slide-content.center-group {
+      justify-content: center;
+      gap: var(--space-6);
+    }
+
+    /* Middle Bridge Feature Chips */
+    .hero-middle-bridge {
+      display: flex;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+      margin-top: calc(-1 * var(--space-2));
+      margin-bottom: var(--space-1);
+    }
+    .hero-chip {
+      padding: 10px 22px;
+      border-radius: 30px;
+      background: var(--b-surface);
+      border: 1px solid var(--b-border-strong);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--b-text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s var(--ease-out);
+    }
+    .hero-chip:hover {
+      background: var(--b-accent-soft);
+      border-color: var(--b-accent);
+      color: var(--b-text);
+      transform: translateY(-2px);
+    }
+    .chip-dot { color: var(--b-accent); font-size: 16px; }
    .grid-12 {
      display: grid;
      grid-template-columns: repeat(12, 1fr);

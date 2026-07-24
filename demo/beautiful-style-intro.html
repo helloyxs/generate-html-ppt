@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Modern 设计语言与 HTML PPT 解决方案</title>
+    <!-- Google Fonts: Outfit (Display) & Plus Jakarta Sans / Noto Sans SC (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
+    <style>
+        /* === BEAUTIFUL MODERN DESIGN SYSTEM TOKENS === */
+        :root {
+            --b-bg-light: #f8fafc;
+            --b-bg-dark: #0f172a;
+            --b-surface-light: rgba(255, 255, 255, 0.85);
+            --b-surface-dark: rgba(30, 41, 59, 0.75);
+            --b-text-dark: #0f172a;
+            --b-text-light: #f8fafc;
+            --b-text-muted: #64748b;
+            --b-border-light: rgba(15, 23, 42, 0.08);
+            --b-border-dark: rgba(255, 255, 255, 0.12);
+
+            --b-accent: #4f46e5;
+            --b-accent-600: #4338ca;
+            --b-accent-cyan: #06b6d4;
+            --b-accent-light: #e0e7ff;
+            --b-accent-soft: rgba(79, 70, 229, 0.12);
+
+            --b-teal: #0d9488;
+            --b-rose: #e11d48;
+            --b-amber: #d97706;
+            --b-violet: #7c3aed;
+
+            --b-grad-accent: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+            --b-grad-dark: radial-gradient(ellipse 80% 60% at 20% 30%, rgba(99,102,241,0.25), transparent),
+                           radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6,182,212,0.20), transparent),
+                           linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --b-grad-light: radial-gradient(ellipse 80% 60% at 20% 30%, rgba(79,70,229,0.08), transparent),
+                            radial-gradient(ellipse 60% 50% at 80% 80%, rgba(6,182,212,0.08), transparent),
+                            linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+
+            --viewport-bg: #0f172a;
+            --slide-bg: #0f172a;
+
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', 'Noto Sans SC', sans-serif;
+
+            --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+            --radius-md: 24px;
+            --radius-lg: 32px;
+        }
+
+        /* === FIXED 16:9 STAGE BASE CSS === */
+        html, body {
+            width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
+            background: var(--viewport-bg);
+            transition: background 0.5s var(--ease-smooth);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+        }
+        .deck-viewport {
+            position: fixed; inset: 0; overflow: hidden;
+            background: var(--viewport-bg);
+            transition: background 0.5s var(--ease-smooth);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .deck-stage {
+            position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+            overflow: hidden; transform-origin: 0 0;
+            background: var(--slide-bg);
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+        }
+        .slide {
+            position: absolute; inset: 0; width: 1920px; height: 1080px;
+            overflow: hidden; display: block; visibility: hidden; opacity: 0; pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            padding: 90px 110px; box-sizing: border-box;
+        }
+        .slide.active {
+            visibility: visible; opacity: 1; pointer-events: auto; z-index: 1;
+        }
+
+        /* Slide Theme Modes */
+        .slide.dark {
+            background: var(--b-grad-dark);
+            color: var(--b-text-light);
+            --card-bg: var(--b-surface-dark);
+            --card-border: var(--b-border-dark);
+            --text-color: var(--b-text-light);
+            --text-sub: #94a3b8;
+        }
+        .slide.light {
+            background: #ffffff;
+            color: var(--b-text-dark);
+            --card-bg: var(--b-surface-light);
+            --card-border: var(--b-border-light);
+            --text-color: var(--b-text-dark);
+            --text-sub: var(--b-text-muted);
+        }
+
+        /* Flexible Layout Rules (Scheme 1 vs Scheme 2) */
+        .slide-content {
+            position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 40px;
+        }
+        .slide-content.between {
+            justify-content: space-between; gap: 0;
+        }
+        .slide-content.center {
+            justify-content: center; align-items: center; text-align: center;
+        }
+        .slide-content.center-group {
+            justify-content: center; gap: 40px;
+        }
+
+        /* Middle Bridge Feature Chips */
+        .hero-middle-bridge {
+            display: flex; gap: 16px; flex-wrap: wrap; margin-top: -8px; margin-bottom: 4px;
+        }
+        .hero-chip {
+            padding: 10px 22px; border-radius: 30px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px); font-size: 17px; font-weight: 600; color: #cbd5e1;
+            display: flex; align-items: center; gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .hero-chip:hover {
+            background: rgba(79, 70, 229, 0.15); border-color: rgba(6, 182, 212, 0.4); color: #fff;
+            transform: translateY(-2px);
+        }
+        .chip-dot { color: var(--b-accent-cyan); font-size: 16px; }
+
+        /* Typography */
+        .display-hero {
+            font-family: var(--font-display);
+            font-size: 96px; font-weight: 800; line-height: 1.05;
+            letter-spacing: -0.03em; margin: 0 0 20px 0;
+            background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .display-chapter {
+            font-family: var(--font-display);
+            font-size: 58px; font-weight: 700; line-height: 1.1; margin: 0 0 16px 0;
+            letter-spacing: -0.02em; color: var(--text-color);
+        }
+        .eyebrow-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 22px; border-radius: 30px;
+            background: var(--b-accent-soft); border: 1px solid rgba(79, 70, 229, 0.3);
+            font-family: var(--font-display); font-size: 15px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.15em; color: var(--b-accent-cyan);
+            margin-bottom: 16px; width: fit-content;
+        }
+        .tagline {
+            font-family: var(--font-body); font-size: 24px; font-weight: 600;
+            color: #94a3b8; margin-bottom: 20px; letter-spacing: -0.01em;
+        }
+        .body-desc {
+            font-family: var(--font-body); font-size: 21px; line-height: 1.6;
+            color: var(--text-sub); max-width: 1200px; margin: 0;
+        }
+
+        /* Grid System */
+        .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .grid-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+        .grid-4col { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+        /* Glassmorphic Beautiful Cards */
+        .b-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md); padding: 36px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.35s var(--ease-spring), box-shadow 0.35s ease;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .b-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.22);
+        }
+        .b-card.accent-top { border-top: 4px solid var(--b-accent); }
+        .b-card.teal { --b-accent: var(--b-teal); }
+        .b-card.rose { --b-accent: var(--b-rose); }
+        .b-card.amber { --b-accent: var(--b-amber); }
+        .b-card.violet { --b-accent: var(--b-violet); }
+
+        .card-num-badge {
+            width: 44px; height: 44px; border-radius: 14px;
+            background: var(--b-grad-accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-size: 18px; font-weight: 700;
+            margin-bottom: 18px;
+        }
+        .icon-box {
+            width: 52px; height: 52px; border-radius: 14px;
+            background: var(--b-accent-soft); color: var(--b-accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+        }
+        .icon-box.teal { background: rgba(13, 148, 136, 0.12); color: var(--b-teal); }
+        .icon-box.rose { background: rgba(225, 29, 72, 0.12); color: var(--b-rose); }
+        .icon-box.amber { background: rgba(217, 119, 6, 0.12); color: var(--b-amber); }
+        .icon-box.violet { background: rgba(124, 58, 237, 0.12); color: var(--b-violet); }
+
+        .card-title {
+            font-family: var(--font-display); font-size: 26px; font-weight: 700;
+            margin: 0 0 12px 0; color: var(--text-color);
+        }
+        .card-body {
+            font-size: 18px; line-height: 1.6; color: var(--text-sub); margin: 0;
+        }
+
+        /* Pipeline Steps (Scheme 2 Component) */
+        .pipeline {
+            display: flex; gap: 24px; width: 100%; margin: 10px 0;
+        }
+        .pipeline-step {
+            flex: 1; background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius-md); padding: 28px; position: relative;
+            backdrop-filter: blur(16px);
+        }
+        .pipeline-step::after {
+            content: ''; position: absolute; top: 50%; right: -18px;
+            width: 14px; height: 14px;
+            border-top: 3px solid var(--b-accent-cyan); border-right: 3px solid var(--b-accent-cyan);
+            transform: translateY(-50%) rotate(45deg); opacity: 0.8;
+        }
+        .pipeline-step:last-child::after { display: none; }
+        .step-nb {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--b-grad-accent); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-weight: 800; margin-bottom: 14px;
+        }
+
+        /* Stat Cards */
+        .stat-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: var(--radius-md); padding: 24px 28px; backdrop-filter: blur(16px);
+        }
+        .stat-label {
+            font-size: 14px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px;
+        }
+        .stat-nb {
+            font-family: var(--font-display); font-size: 48px; font-weight: 800;
+            background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        /* Quote / Callout Block */
+        .quote-block {
+            background: var(--card-bg); border-left: 6px solid var(--b-accent);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 36px 44px; backdrop-filter: blur(16px); position: relative;
+        }
+        .quote-text {
+            font-family: var(--font-display); font-size: 32px; font-weight: 600;
+            line-height: 1.45; color: var(--text-color); margin: 0 0 16px 0;
+        }
+        .quote-author {
+            font-size: 18px; font-weight: 600; color: var(--b-accent-cyan);
+        }
+
+        /* Glowing Orbs for Cover Slide */
+        .cover-orb {
+            position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; pointer-events: none;
+        }
+        .cover-orb-1 { width: 600px; height: 600px; background: rgba(79, 70, 229, 0.3); top: -100px; right: -100px; }
+        .cover-orb-2 { width: 500px; height: 500px; background: rgba(6, 182, 212, 0.25); bottom: -80px; left: -80px; }
+
+        /* Animations Physics */
+        @keyframes springUp {
+            0% { opacity: 0; transform: translateY(45px) scale(0.95); }
+            60% { opacity: 1; transform: translateY(-6px) scale(1.015); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes springLeft {
+            0% { opacity: 0; transform: translateX(-60px); }
+            60% { opacity: 1; transform: translateX(8px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .anim { opacity: 0; }
+        .slide.active .anim { animation: springUp 0.85s var(--ease-spring) forwards; }
+        .slide.active .anim-left { animation-name: springLeft; }
+        .slide.active .anim-float { animation: float 4s ease-in-out infinite; opacity: 1; }
+
+        .slide.active .d1 { animation-delay: 0.08s; }
+        .slide.active .d2 { animation-delay: 0.18s; }
+        .slide.active .d3 { animation-delay: 0.30s; }
+        .slide.active .d4 { animation-delay: 0.42s; }
+        .slide.active .d5 { animation-delay: 0.54s; }
+
+        /* Navigation Chrome Controls */
+        .controls-bar {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 16px;
+            background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 8px 24px; border-radius: 40px; backdrop-filter: blur(12px);
+            z-index: 100; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .ctrl-btn {
+            background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;
+            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .ctrl-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; transform: scale(1.1); }
+        .slide-counter {
+            font-family: var(--font-display); font-size: 16px; font-weight: 700;
+            color: #f8fafc; letter-spacing: 0.05em; min-width: 60px; text-align: center;
+        }
+        .dots-container { display: flex; gap: 8px; align-items: center; }
+        .dot {
+            width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .dot.active { background: var(--b-accent-cyan); transform: scale(1.3); box-shadow: 0 0 10px var(--b-accent-cyan); }
+    </style>
+</head>
+<body>
+    <div class="deck-viewport">
+        <div class="deck-stage" id="stage">
+
+            <!-- SLIDE 1: HOOK / HERO COVER -->
+            <div class="slide dark active" id="s1" data-bg="#0f172a">
+                <div class="cover-orb cover-orb-1 anim-float"></div>
+                <div class="cover-orb cover-orb-2 anim-float"></div>
+                <div class="slide-content center-group">
+                    <div>
+                        <div class="eyebrow-pill anim d1">Beautiful Modern Design System</div>
+                        <h1 class="display-hero anim d2">Beautiful 样式<br>重新定义 HTML 演示文稿</h1>
+                        <p class="tagline anim d3">用极具现代感的视觉语言，打造高保真、沉浸式的网页幻灯片体验</p>
+                    </div>
+
+                    <!-- Middle Bridge: Feature Chips -->
+                    <div class="hero-middle-bridge anim d4">
+                        <div class="hero-chip"><span class="chip-dot">✦</span> Viewport 视口无缝同步</div>
+                        <div class="hero-chip"><span class="chip-dot">✦</span> 1920×1080 物理自适应缩放</div>
+                        <div class="hero-chip"><span class="chip-dot">✦</span> Spring Physics 弹簧物理缓动</div>
+                        <div class="hero-chip"><span class="chip-dot">✦</span> Design.md 规范全集驱动</div>
+                    </div>
+
+                    <div class="grid-3col anim d5" style="width: 100%;">
+                        <div class="stat-card">
+                            <div class="stat-label">Canvas Stage</div>
+                            <div class="stat-nb">1920×1080</div>
+                            <div style="color: #94a3b8; margin-top: 8px; font-size: 15px;">固定比例自适应物理缩放</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Motion Engine</div>
+                            <div class="stat-nb">Spring Physics</div>
+                            <div style="color: #94a3b8; margin-top: 8px; font-size: 15px;">cubic-bezier 弹性缓动曲线</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Visual Surface</div>
+                            <div class="stat-nb">Glassmorphism</div>
+                            <div style="color: #94a3b8; margin-top: 8px; font-size: 15px;">毛玻璃层次与流光光晕</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: CONTEXT / PROBLEM & SOLUTION -->
+            <div class="slide dark" id="s2" data-bg="#0f172a">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow-pill anim d1">Context & Comparison</div>
+                        <h2 class="display-chapter anim d2">传统 PPT 痛点 vs Beautiful 样式解法</h2>
+                        <p class="body-desc anim d3">打破传统 Web 演示文稿的僵硬与空白陷阱，重构专业级视觉品质</p>
+                    </div>
+
+                    <div class="grid-2col anim d4">
+                        <div class="b-card rose">
+                            <div>
+                                <div class="icon-box rose">✕</div>
+                                <h3 class="card-title">传统 Web 演示文稿痛点</h3>
+                                <ul style="padding-left: 20px; color: #94a3b8; font-size: 18px; line-height: 1.8;">
+                                    <li><strong>中间中空断层</strong>：流式布局导致不同分辨率下中间大面积尴尬空白</li>
+                                    <li><strong>黑框割裂感</strong>：视口边缘与幻灯片画布背景色不匹配，边界生硬</li>
+                                    <li><strong>动效死板</strong>：使用线性渐变或机械位移，缺乏现代 App 的弹性回响</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="b-card teal">
+                            <div>
+                                <div class="icon-box teal">✓</div>
+                                <h3 class="card-title">Beautiful Modern 解决之道</h3>
+                                <ul style="padding-left: 20px; color: #94a3b8; font-size: 18px; line-height: 1.8;">
+                                    <li><strong>Scheme 1/2 密度控制</strong>：紧凑分组与中间连通桥，彻底消除尴尬留白</li>
+                                    <li><strong>Seamless Viewport Sync</strong>：视口背景与当前页沉浸式同步</li>
+                                    <li><strong>Spring 弹性物理微交互</strong>：采用 60fps 弹簧曲线与微光悬浮</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: CORE ARCHITECTURE 1 / DESIGN TOKENS -->
+            <div class="slide dark" id="s3" data-bg="#0f172a">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow-pill anim d1">Design System Specifications</div>
+                        <h2 class="display-chapter anim d2">核心设计规范：字体、色彩与层次</h2>
+                        <p class="body-desc anim d3">严格的 Design Tokens 构建出高级、和谐且富有生命力的视觉基底</p>
+                    </div>
+
+                    <div class="grid-3col anim d4">
+                        <div class="b-card">
+                            <div>
+                                <div class="card-num-badge">01</div>
+                                <h3 class="card-title">Typography 双核字体</h3>
+                                <p class="card-body"><strong>Display</strong>: Outfit (800/700) 现代几何标题字体<br><br><strong>Body</strong>: Plus Jakarta Sans / Noto Sans SC 中英文高清晰度正文搭配</p>
+                            </div>
+                        </div>
+
+                        <div class="b-card violet">
+                            <div>
+                                <div class="card-num-badge">02</div>
+                                <h3 class="card-title">Saturated Accent 调色盘</h3>
+                                <p class="card-body">以靛蓝/青蓝色主渐变（Indigo-Cyan Gradient）为核心，辅以 Teal/Rose/Amber/Violet 四色标点，增强信息辨识度</p>
+                            </div>
+                        </div>
+
+                        <div class="b-card teal">
+                            <div>
+                                <div class="card-num-badge">03</div>
+                                <h3 class="card-title">Glassmorphism 毛玻璃</h3>
+                                <p class="card-body">多层级 `backdrop-filter: blur(16px)`，搭配高细度微发光边框 (`rgba(255,255,255,0.12)`)，营造晶莹质感</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: CORE ARCHITECTURE 2 / LAYOUT DENSITY -->
+            <div class="slide dark" id="s4" data-bg="#0f172a">
+                <div class="slide-content center-group">
+                    <div>
+                        <div class="eyebrow-pill anim d1">Layout Density Strategy</div>
+                        <h2 class="display-chapter anim d2">防止中间尴尬中空：Scheme 1 vs Scheme 2</h2>
+                        <p class="body-desc anim d3">根据内容区块数量动态匹配最佳垂直空间分配法则，消除页面视觉稀疏与断层</p>
+                    </div>
+
+                    <!-- Pipeline Flow Bridge Component (Scheme 2 Example) -->
+                    <div class="pipeline anim d4">
+                        <div class="pipeline-step">
+                            <div class="step-nb">1</div>
+                            <h3 style="margin: 0 0 10px 0; font-size: 22px;">2 区块场景 (Scheme 1)</h3>
+                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                                <li>标题 + 卡片两组顶端对齐</li>
+                                <li>使用 `gap: 40px` 紧凑靠拢</li>
+                                <li>底部自然留出呼吸空间</li>
+                            </ul>
+                        </div>
+                        <div class="pipeline-step">
+                            <div class="step-nb">2</div>
+                            <h3 style="margin: 0 0 10px 0; font-size: 22px;">3 区块场景 (Scheme 2)</h3>
+                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                                <li>三层结构使用 `.between` 铺满</li>
+                                <li>中间插入 Pipeline 或 Stat 连通桥</li>
+                                <li>强行拉紧上下元素视觉关联</li>
+                            </ul>
+                        </div>
+                        <div class="pipeline-step">
+                            <div class="step-nb">3</div>
+                            <h3 style="margin: 0 0 10px 0; font-size: 22px;">全视口无缝统一</h3>
+                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                                <li>JS 实时提取幻灯片背景底色</li>
+                                <li>动态同步屏幕视口 `--viewport-bg`</li>
+                                <li>彻底消除边缘黑框与视觉分界</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="quote-block anim d5">
+                        <p class="quote-text">“真正的设计系统不仅提供好颜色，更通过空间密度算法解决实际的排版尴尬。”</p>
+                        <div class="quote-author">— Beautiful Modern Design Principles</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: CORE ARCHITECTURE 3 / MOTION & CHARTS -->
+            <div class="slide dark" id="s5" data-bg="#0f172a">
+                <div class="slide-content">
+                    <div>
+                        <div class="eyebrow-pill anim d1">Interactive Components</div>
+                        <h2 class="display-chapter anim d2">弹性物理缓动与图表自适应</h2>
+                        <p class="body-desc anim d3">赋予每一个数据点与转场画面顺滑的生命力</p>
+                    </div>
+
+                    <div class="grid-2col anim d4">
+                        <div class="b-card">
+                            <h3 class="card-title" style="margin-bottom: 20px;">Spring Physics Motion Curve</h3>
+                            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); padding: 20px; border-radius: 16px; font-family: monospace; color: var(--b-accent-cyan); font-size: 16px; line-height: 1.8;">
+                                transition: transform 0.85s<br>
+                                &nbsp;&nbsp;cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                            </div>
+                            <p class="card-body" style="margin-top: 16px;">利用物理弹簧超越效果（Overshoot），元素入场时微微超越目标点后回弹，带来极其自然的灵动感。</p>
+                        </div>
+
+                        <!-- ECharts Container Demo -->
+                        <div class="b-card" style="padding: 24px;">
+                            <div id="chart-demo" style="width: 100%; height: 260px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: TAKEAWAY & CTA / SUMMARY -->
+            <div class="slide dark" id="s6" data-bg="#0f172a">
+                <div class="slide-content center">
+                    <div class="eyebrow-pill anim d1">Ready to Create</div>
+                    <h1 class="display-hero anim d2" style="font-size: 80px; margin-bottom: 16px;">立即开启 Beautiful HTML PPT 创作</h1>
+                    <p class="tagline anim d3" style="max-width: 900px; margin-bottom: 40px;">用 Design System Specification (`design.md`) 的标准，让你的下一次 Presentation 震撼全场</p>
+
+                    <div class="grid-3col anim d4" style="width: 100%; text-align: left; margin-bottom: 30px;">
+                        <div class="stat-card">
+                            <div class="stat-label">Workflow</div>
+                            <div class="stat-nb" style="font-size: 36px;">Text-First</div>
+                            <div style="color: #94a3b8; margin-top: 6px; font-size: 15px;">需求对齐 ➔ 骨架确认 ➔ 填充</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Template Recipe</div>
+                            <div class="stat-nb" style="font-size: 36px;">Beautiful Modern</div>
+                            <div style="color: #94a3b8; margin-top: 6px; font-size: 15px;">内嵌设计 Tokens & 组件库</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Export</div>
+                            <div class="stat-nb" style="font-size: 36px;">HTML / PDF</div>
+                            <div style="color: #94a3b8; margin-top: 6px; font-size: 15px;">零依赖双击即开，无缝演播</div>
+                        </div>
+                    </div>
+
+                    <div style="font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--b-accent-cyan); letter-spacing: 0.1em; text-transform: uppercase;" class="anim d5">
+                        按键盘键盘 ← → 键切换页面 ｜ generate-html-ppt Skill
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- NAVIGATION CHROME CONTROLS -->
+    <div class="controls-bar">
+        <button class="ctrl-btn" onclick="prevSlide()" title="上一页 (Left Arrow)">◄</button>
+        <div class="dots-container" id="dots"></div>
+        <span class="slide-counter" id="counter">01 / 06</span>
+        <button class="ctrl-btn" onclick="nextSlide()" title="下一页 (Right Arrow / Space)">►</button>
+        <button class="ctrl-btn" onclick="toggleFullScreen()" title="全屏演示 (F)">⛶</button>
+    </div>
+
+    <!-- CORE JAVASCRIPT SCALING & VIEWPORT SYNC -->
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        let chartInstance = null;
+
+        function updateScale() {
+            const stage = document.getElementById('stage');
+            const scaleX = window.innerWidth / 1920;
+            const scaleY = window.innerHeight / 1080;
+            const scale = Math.min(scaleX, scaleY);
+            const left = (window.innerWidth - 1920 * scale) / 2;
+            const top = (window.innerHeight - 1080 * scale) / 2;
+            stage.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+        }
+
+        function updateViewportBg(slideIndex) {
+            const slide = document.getElementById(`s${slideIndex}`);
+            if (slide) {
+                const bg = slide.getAttribute('data-bg') || (slide.classList.contains('dark') ? '#0f172a' : '#f8fafc');
+                document.documentElement.style.setProperty('--viewport-bg', bg);
+            }
+        }
+
+        function renderDots() {
+            const container = document.getElementById('dots');
+            container.innerHTML = '';
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i === currentSlide ? 'active' : ''}`;
+                dot.onclick = () => showSlide(i);
+                container.appendChild(dot);
+            }
+        }
+
+        function initChartDemo() {
+            const chartDom = document.getElementById('chart-demo');
+            if (!chartDom || typeof echarts === 'undefined') return;
+            if (!chartInstance) {
+                chartInstance = echarts.init(chartDom, 'dark');
+            }
+            const option = {
+                backgroundColor: 'transparent',
+                tooltip: { trigger: 'axis' },
+                grid: { top: 30, right: 20, bottom: 30, left: 40 },
+                xAxis: {
+                    type: 'category',
+                    data: ['Scheme 1', 'Scheme 2', 'Spring', 'Viewport', 'Glass'],
+                    axisLine: { lineStyle: { color: 'rgba(255,255,255,0.2)' } }
+                },
+                yAxis: {
+                    type: 'value',
+                    splitLine: { lineStyle: { color: 'rgba(255,255,255,0.08)' } }
+                },
+                series: [{
+                    data: [85, 96, 92, 98, 95],
+                    type: 'bar',
+                    itemStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            { offset: 0, color: '#4f46e5' },
+                            { offset: 1, color: '#06b6d4' }
+                        ]),
+                        borderRadius: [8, 8, 0, 0]
+                    }
+                }]
+            };
+            chartInstance.setOption(option);
+        }
+
+        function showSlide(index) {
+            document.querySelectorAll('.slide').forEach((slide, i) => {
+                slide.classList.toggle('active', i + 1 === index);
+            });
+            currentSlide = index;
+            const counter = document.getElementById('counter');
+            if (counter) counter.innerText = `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+            renderDots();
+            updateViewportBg(currentSlide);
+
+            if (currentSlide === 5) {
+                setTimeout(initChartDemo, 300);
+            }
+        }
+
+        function nextSlide() { if (currentSlide < totalSlides) showSlide(currentSlide + 1); }
+        function prevSlide() { if (currentSlide > 1) showSlide(currentSlide - 1); }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'f' || e.key === 'F') toggleFullScreen();
+        });
+
+        window.addEventListener('resize', () => {
+            updateScale();
+            if (chartInstance) chartInstance.resize();
+        });
+
+        updateScale();
+        showSlide(1);
+    </script>
+</body>
+</html>

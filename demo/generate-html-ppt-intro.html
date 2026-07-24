@@ -90,8 +90,13 @@
             --text-sub: var(--b-text-muted);
         }
 
+        /* Flexible Layout Rules (Scheme 1 vs Scheme 2) */
         .slide-content {
-            position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: space-between;
+            position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; gap: 40px;
+        }
+        /* Scheme 2: 3-Section Full Spread Layout */
+        .slide-content.between {
+            justify-content: space-between; gap: 0;
         }
 
         /* Typography */
@@ -103,7 +108,7 @@
         }
         .display-chapter {
             font-family: var(--font-display);
-            font-size: 64px; font-weight: 700; line-height: 1.1; margin: 0 0 16px 0;
+            font-size: 60px; font-weight: 700; line-height: 1.1; margin: 0 0 16px 0;
             letter-spacing: -0.02em; color: var(--text-color);
         }
         .eyebrow-pill {
@@ -112,28 +117,28 @@
             background: var(--b-accent-soft); border: 1px solid rgba(79, 70, 229, 0.3);
             font-family: var(--font-display); font-size: 15px; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.15em; color: var(--b-accent-cyan);
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
         .tagline {
             font-family: var(--font-body); font-size: 24px; font-weight: 600;
             color: #94a3b8; margin-bottom: 24px; letter-spacing: -0.01em;
         }
         .body-desc {
-            font-family: var(--font-body); font-size: 22px; line-height: 1.6;
-            color: var(--text-sub); max-width: 1200px;
+            font-family: var(--font-body); font-size: 21px; line-height: 1.6;
+            color: var(--text-sub); max-width: 1200px; margin: 0;
         }
 
         /* Glassmorphic Beautiful Cards */
         .grid-2col {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 10px;
         }
         .grid-3col {
-            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-top: 30px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-top: 10px;
         }
         .b-card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 24px; padding: 40px;
+            border-radius: 24px; padding: 36px;
             backdrop-filter: blur(16px);
             box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -144,45 +149,73 @@
             box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.18);
         }
         .card-num-badge {
-            width: 48px; height: 48px; border-radius: 14px;
+            width: 44px; height: 44px; border-radius: 14px;
             background: var(--b-grad-accent); color: #fff;
             display: flex; align-items: center; justify-content: center;
-            font-family: var(--font-display); font-size: 20px; font-weight: 700;
-            margin-bottom: 20px;
+            font-family: var(--font-display); font-size: 18px; font-weight: 700;
+            margin-bottom: 18px;
         }
         .card-title {
             font-family: var(--font-display); font-size: 24px; font-weight: 700;
-            color: var(--text-color); margin-bottom: 14px;
+            color: var(--text-color); margin-bottom: 12px;
         }
         .card-text {
-            font-size: 17px; line-height: 1.6; color: var(--text-sub); margin: 0;
+            font-size: 16px; line-height: 1.65; color: var(--text-sub); margin: 0;
         }
         .b-list {
-            list-style: none; padding: 0; margin: 0; font-size: 17px; line-height: 1.7; color: var(--text-sub);
+            list-style: none; padding: 0; margin: 0; font-size: 16px; line-height: 1.7; color: var(--text-sub);
         }
         .b-list li {
-            position: relative; padding-left: 24px; margin-bottom: 12px;
+            position: relative; padding-left: 24px; margin-bottom: 10px;
         }
         .b-list li::before {
             content: ""; position: absolute; left: 0; top: 10px; width: 8px; height: 8px;
             border-radius: 50%; background: var(--b-accent-cyan);
         }
 
+        /* Scheme 2 Component: Step Process Flow Bar */
+        .step-flow-bar {
+            display: flex; align-items: center; justify-content: space-between;
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 20px; padding: 22px 40px; backdrop-filter: blur(16px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05); margin: 10px 0;
+        }
+        .step-item {
+            display: flex; align-items: center; gap: 16px;
+        }
+        .step-badge {
+            width: 40px; height: 40px; border-radius: 12px; background: var(--b-grad-accent);
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-weight: 700; font-size: 18px;
+        }
+        .step-info {
+            display: flex; flex-direction: column;
+        }
+        .step-title {
+            font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--text-color);
+        }
+        .step-desc {
+            font-family: var(--font-body); font-size: 14px; color: var(--text-sub); margin-top: 2px;
+        }
+        .step-arrow {
+            font-size: 26px; color: var(--b-accent-cyan); font-weight: 800; opacity: 0.7;
+        }
+
         /* Hero Badges / Stat Items */
         .hero-stats {
-            display: flex; gap: 50px; margin-top: 40px;
+            display: flex; gap: 50px; margin-top: 36px;
         }
         .stat-item {
             background: rgba(255, 255, 255, 0.05); border: 1px solid var(--b-border-dark);
             padding: 20px 32px; border-radius: 20px; backdrop-filter: blur(10px);
         }
         .stat-val {
-            font-family: var(--font-display); font-size: 56px; font-weight: 800;
+            font-family: var(--font-display); font-size: 52px; font-weight: 800;
             background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             line-height: 1;
         }
         .stat-lbl {
-            font-family: var(--font-body); font-size: 14px; font-weight: 600;
+            font-family: var(--font-body); font-size: 13px; font-weight: 600;
             text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; margin-top: 8px;
         }
 
@@ -262,34 +295,34 @@
                 </div>
             </div>
 
-            <!-- Slide 2: Context - Pain Points & Breakthrough (Light Glass Theme) -->
+            <!-- Slide 2: Layout Scheme 1 - Compact Layout for 2-Block Slides (Light Glass Theme) -->
             <div class="slide light" id="s2" data-bg="#f8fafc">
                 <div class="slide-content">
                     <div>
-                        <div class="eyebrow-pill anim d1">01 / PAIN POINTS & BREAKTHROUGH</div>
-                        <h2 class="display-chapter anim d2">告别 AI 同质化与不可控全自动</h2>
-                        <p class="body-desc anim d3">传统 AI 演示文稿生成工具常陷入“审美同质化”与“一键生成不可控”的双重瓶颈。</p>
+                        <div class="eyebrow-pill anim d1">01 / LAYOUT OPTIMIZATION · SCHEME 1</div>
+                        <h2 class="display-chapter anim d2">方案一：无扩展内容时的紧凑顶部对齐</h2>
+                        <p class="body-desc anim d3">当页面仅包含标题与两块总结卡片（无数据指标/流程图）时，采用 `justify-content: flex-start; gap: 40px;` 让内容自然在上中区域紧致对齐，杜绝中空断层。</p>
                     </div>
                     <div class="grid-2col anim d4">
                         <div class="b-card">
                             <div>
                                 <div class="card-num-badge">01</div>
-                                <div class="card-title">🔴 传统 AI PPT 的两大痛点</div>
+                                <div class="card-title">🔴 传统 space-between 痛点</div>
                                 <ul class="b-list">
-                                    <li><b>审美同质化疲劳</b>：默认 Inter 字体、紫白渐变、千篇一律的仪表盘卡片，缺乏表达力。</li>
-                                    <li><b>黑盒生成不可控</b>：一键全自动不可预测，文案错乱或结构排版崩坏后难以二次调整。</li>
-                                    <li><b>画面缩放错乱</b>：在不同比例大屏上重新排版，导致图片文案重叠错位。</li>
+                                    <li><b>中间形成巨幅空白</b>：仅有标题与底部卡片时，上下元素被强制顶到两端。</li>
+                                    <li><b>视觉重心分散</b>：300px+ 的大面积无意义中空，破坏视觉视线连贯性。</li>
+                                    <li><b>布局僵化呆板</b>：不区分页面内容量，统一拉伸充满全屏。</li>
                                 </ul>
                             </div>
                         </div>
                         <div class="b-card">
                             <div>
                                 <div class="card-num-badge">02</div>
-                                <div class="card-title">🟢 generate-html-ppt 的解法</div>
+                                <div class="card-title">🟢 Scheme 1 紧凑对齐解法</div>
                                 <ul class="b-list">
-                                    <li><b>Design Recipe 解耦</b>：字体、色盘、阴影堆栈、微交互写成独立的 `design.md`。</li>
-                                    <li><b>3 阶段透明协作</b>：文本需求对齐 ➔ 灰度骨架确认 (Wireframe) ➔ 细节填充。</li>
-                                    <li><b>16:9 原生画质</b>：1920×1080 Canvas 整体等比缩放，绝不打乱版式。</li>
+                                    <li><b>`flex-start` 顶部靠拢</b>：内容自然从顶部按顺序排列，视觉呼吸感极佳。</li>
+                                    <li><b>统一间距管控</b>：使用 `gap: 40px;` 控制标题与卡片距离，结构严密统一。</li>
+                                    <li><b>留白放在底部</b>：多余空间自然留在页面底部，符合人类阅读习惯。</li>
                                 </ul>
                             </div>
                         </div>
@@ -297,21 +330,49 @@
                 </div>
             </div>
 
-            <!-- Slide 3: Core 1 - design.md & Progressive Disclosure (Light Theme) -->
+            <!-- Slide 3: Layout Scheme 2 - 3-Section Full Spread Layout (Light Glass Theme) -->
             <div class="slide light" id="s3" data-bg="#f8fafc">
-                <div class="slide-content">
+                <div class="slide-content between">
                     <div>
-                        <div class="eyebrow-pill anim d1">02 / CORE ARCHITECTURE</div>
-                        <h2 class="display-chapter anim d2">design.md 规范与渐进式加载</h2>
-                        <p class="body-desc anim d3">将视觉设计规则书与代码解耦，实现极致审美表达与超高 Token 效率。</p>
+                        <div class="eyebrow-pill anim d1">02 / LAYOUT OPTIMIZATION · SCHEME 2</div>
+                        <h2 class="display-chapter anim d2">方案二：含流程图/数据指标的满幅三段式</h2>
+                        <p class="body-desc anim d3">当页面需要展示核心流程或关键统计数据时，插入中间视觉桥梁，激活 `space-between` 的纵向张力美感。</p>
                     </div>
+                    
+                    <!-- Middle Component: Workflow Process Flow Bar -->
+                    <div class="step-flow-bar anim d4">
+                        <div class="step-item">
+                            <div class="step-badge">1</div>
+                            <div class="step-info">
+                                <div class="step-title">需求文本对齐</div>
+                                <div class="step-desc">7 问确认场景与风格</div>
+                            </div>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="step-item">
+                            <div class="step-badge">2</div>
+                            <div class="step-info">
+                                <div class="step-title">灰度骨架确认</div>
+                                <div class="step-desc">Wireframe HTML 暂停确认</div>
+                            </div>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="step-item">
+                            <div class="step-badge">3</div>
+                            <div class="step-info">
+                                <div class="step-title">密度与细节填充</div>
+                                <div class="step-desc">批量填充文案与数据</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid-3col anim d4">
                         <div class="b-card">
                             <div>
                                 <div class="card-num-badge">A</div>
                                 <div class="card-title">34+ 专属设计规范</div>
                                 <p class="card-text">
-                                    覆盖 8-Bit 像素风、Swiss 国际主义、Emerald 典雅杂志、Cobalt 极客风等，每套包含专属 Google Fonts/Fontshare 字体组合与 HSL 色盘。
+                                    覆盖 8-Bit 像素风、Swiss 国际主义、Emerald 典雅杂志、Cobalt 极客风等，独立注入 Google Fonts 与 HSL 色盘。
                                 </p>
                             </div>
                         </div>
@@ -320,7 +381,7 @@
                                 <div class="card-num-badge">B</div>
                                 <div class="card-title">Progressive Disclosure</div>
                                 <p class="card-text">
-                                    先读取轻量级 `selection-index.json` 索引匹配风格调性，仅在选中后单点加载单份 `design.md`，极大节省 Context Window。
+                                    先读取 `selection-index.json` 索引匹配风格调性，选定后再加载单份 `design.md`，极大节省 Token 窗口。
                                 </p>
                             </div>
                         </div>
@@ -329,7 +390,7 @@
                                 <div class="card-num-badge">C</div>
                                 <div class="card-title">自由版式编排</div>
                                 <p class="card-text">
-                                    AI 在 Design Recipe 的规范与约束下自由组合 DOM 结构，彻底摆脱硬编码 HTML 组件编号（L01-L12）的刻板束缚。
+                                    AI 在 Design Recipe 约束下自由组合 DOM 结构，彻底摆脱传统固化模板组件库的刻板束缚。
                                 </p>
                             </div>
                         </div>
@@ -372,12 +433,40 @@
 
             <!-- Slide 5: Workflow - Human-centric 3-Stage Workflow (Light Theme) -->
             <div class="slide light" id="s5" data-bg="#f8fafc">
-                <div class="slide-content">
+                <div class="slide-content between">
                     <div>
-                        <div class="eyebrow-pill anim d1">04 / WORKFLOW</div>
+                        <div class="eyebrow-pill anim d1">04 / TRANSPARENT WORKFLOW</div>
                         <h2 class="display-chapter anim d2">人类级 3 阶段透明协作流程</h2>
                         <p class="body-desc anim d3">把掌控权交还给创作者，确保每一页结构与文案都精准符合预期。</p>
                     </div>
+
+                    <!-- Step Timeline Flow Visual (Scheme 2 Component) -->
+                    <div class="step-flow-bar anim d4">
+                        <div class="step-item">
+                            <div class="step-badge">01</div>
+                            <div class="step-info">
+                                <div class="step-title">Phase 1: 文本对齐</div>
+                                <div class="step-desc">品牌色嗅探 & 架构模式选择</div>
+                            </div>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="step-item">
+                            <div class="step-badge">02</div>
+                            <div class="step-info">
+                                <div class="step-title">Phase 2: 灰度骨架</div>
+                                <div class="step-desc">Wireframe HTML 渲染确认</div>
+                            </div>
+                        </div>
+                        <div class="step-arrow">➔</div>
+                        <div class="step-item">
+                            <div class="step-badge">03</div>
+                            <div class="step-info">
+                                <div class="step-title">Phase 3: 细节填充</div>
+                                <div class="step-desc">Speaker-led / Reading-first 密度</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid-3col anim d4">
                         <div class="b-card">
                             <div>

@@ -1,184 +1,185 @@
 # Generate HTML PPT (网页版 PPT 生成工具)
 
-一个用于创建精美、交互式 HTML 演示文稿（PPT）的 AI Coding-Agent Skill（编程助手技能），支持从零开始生成或转换现有的 PowerPoint (`.pptx`) 文件。本技能专为本地编程助手（如 Claude Code, Antigravity, Gemini CLI 等）打包设计，具备固定 16:9 舞台布局、三大视觉风格（赛博朋克、瑞士国际主义、Beautiful.ai 商业风格）、原生多主题切换、内置导航控制、代码高亮、Markdown 渲染、Mermaid/ECharts 图表支持、以及独立的双窗口演讲者视图（Speaker View）。
-
----
-![image](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/beautiful-demo.gif)
-
-## 功能特性
-
-**Generate HTML PPT** 能够帮助您在无需编写复杂 CSS 或 JavaScript 的情况下创建精美的网页版演示文稿。它为 AI 助手提供了一套结构化的生成工作流，并为演讲和阅读者在浏览器中提供极具质感、响应式的演示体验。
-
-### 核心亮点
-
-- **三大视觉流派选择** — 支持充满张力的 Cyberpunk（赛博朋克）、高度严谨的 Swiss International Style（瑞士国际主义）以及优雅现代的 Beautiful Style（Beautiful.ai 商业风格）三大系统，覆盖极客技术到高端商业路演的全场景。
-- **零依赖 (Zero Dependencies)** — 输出单个、完全自包含的 HTML 文件（包含内联 CSS/JS 以及 CDN 备用链接）。无需安装 npm、构建系统或搭建框架，支持离线即开即用。
-- **交互式主题切换** — Cyberpunk 风格支持在生成的幻灯片内置主题切换悬浮菜单，读者可在播放时一键实时切换 4 种视觉风格和字体预设。
-- **固定 16:9 舞台缩放** — 基于 `1920x1080` 像素分辨率设计。视口通过 CSS transforms 自动对整个舞台进行等比缩放，完美自适应任何屏幕尺寸，绝不发生布局折行（“所见即所得”）。
-- **双屏同步演讲者视图** — 按 `S` 键可启动通过 `BroadcastChannel` 实时同步的独立演讲者控制台，包含演讲计时器、下一页幻灯片预览以及可滚动的演讲备注（备注支持 Markdown）。
-- **PowerPoint 转换** — 内置 Python 解析脚本，可提取 PPTX 文件中的文本、演讲备注以及图片资产，将传统 PPT 轻松升级为网页版演示文稿。
-- **AI 视觉与配图生成** — 内置截图美化预设和 AI 配图提示词系统，支持生成适配各大社媒平台（如小红书、微信公众号）的封面图。
-- **丰富的 UI 组件库** — 包含响应式网格、高质感卡片、代码高亮、ECharts 数据可视化以及 Mermaid.js 渲染的矢量流向图。
+一个专为 AI 编程助手（如 Claude Code, Antigravity, Gemini CLI, Codex 等）打造的高质感 HTML 演示文稿（PPT）生成技能。基于 **Design System Specification (`design.md`) 规范架构**，内置 **35+ 套独立视觉设计 Preset（Bold Template Pack）**，结合固定 16:9 舞台与视口无缝融合规范，支持从零生成（Mode A）、PowerPoint (`.pptx`) 文件转换（Mode B）以及自媒体封面设计（Mode C）。
 
 ---
 
-## 项目结构
+![Generate HTML PPT Demo](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/beautiful-demo.gif)
 
-项目结构更加完善，包含完整的 AI 工作流指南和静态资源：
+---
+
+## 🌟 核心亮点
+
+**Generate HTML PPT** 让 AI 助手摆脱传统“AI 瓶颈”与简陋模板，无需手动编写复杂的 CSS/JS 代码，即可在浏览器中输出具备顶级设计质感、支持响应式缩放与富交互的网页版演示文稿。
+
+### 1. 🎨 35+ 套视觉设计系统 (Design Recipe Pack)
+* **丰富的风格库**：拥有包含 Beautiful Modern, Swiss International, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, Retro Zine, Neo Grid Bold, Monochrome, Pastel Geometry, Vintage Editorial 等 35+ 种精心打造的视觉设计规范 (`design.md`)。
+* **拒绝无脑 AI 风格**：每套 Presets 均包含独立且严谨的字体栈（Google Fonts / Fontshare）、颜色 Token、阴影阶梯、排版 Scale 与微动效规范，拒绝泛滥的浅蓝/紫渐变与通用系统字体。
+
+### 2. 📺 固定 16:9 舞台与视口无缝融合 (Fixed Stage & Seamless Viewport)
+* **16:9 绝对防错位舞台**：以 `1920×1080` 像素为标准分辨率设计，采用动态 JavaScript（`updateScale()`）与 CSS `transform` 进行全视口等比缩放。在手机、平板、4K 投影仪上均能保持完美的排版比例，杜绝响应式折行导致的“排版坍塌”。
+* **视口无缝融合 (Seamless Viewport)**：通过 CSS 变量（`--viewport-bg`）与动态脚本（`updateViewportBg()`），自动将浏览器舞台外围背景色与当前幻灯片的切面背景色实时无缝同步，告别尴尬的硬切黑边。
+
+### 3. 🎯 渐进式上下文加载 (Progressive Disclosure)
+* **极高的 Token 效率**：大模型无需一次性读取数百 K 的模板代码。AI 助手首先读取 `designs/bold-template-pack/selection-index.json` 轻量元数据匹配风格，待用户选定后再**单点精准读取**对应模板的 `design.md` 进行构建，显著提升响应速度并降低消耗。
+
+### 4. 🔀 灵活的三大工作模式 (Operational Modes)
+* **Mode A: 从零创作演示文稿** — 包含需求对齐、品牌嗅探（Brand Asset Sniffing）、叙事弧线大纲（Narrative Arc）、灰度骨架确认（Wireframing）与分批填充内容。
+* **Mode B: PPTX 文件一键转换** — 内置 Python 解析脚本（`extract-pptx.py`），自动提取 PowerPoint 中的文本、图片、矢量形状与演讲者备注（Speaker Notes），轻松将传统 PPT 升级为网页版。
+* **Mode C: 多平台自媒体封面设计** — 自动提炼 PPT/文章核心要点，根据内置排版规范生成微信公众号 (21:9)、小红书 (3:4)、X/Twitter 等社交平台的封面 Prompt 及视觉产出。
+
+### 5. 🎙️ 双屏同步演讲者视图 (Synced Speaker View)
+* 播放时按 **`S`** 键可一键唤起独立控制台。基于 `BroadcastChannel` 毫秒级无缝同步，提供总计时器、下一页 Slide 实时预览以及支持 Markdown 渲染的可滚动演讲提词器。
+
+### 6. 🚀 零依赖与单文件交付 (Zero Dependencies)
+* 输出单个自包含 HTML 文件，内联全量 CSS 与 JS 逻辑（包含 CDN 备用链接）。无需 Node.js 运行时、npm 依赖或复杂的打包构建流程，支持离线即开即用，长久保存不出错。
+
+### 7. 📊 富交互组件与数据可视化 (Rich UI Component Kit)
+* 原生内置 **ECharts 交互图表**、**Mermaid.js 矢量流程图**、**代码高亮**、**数字递增动画 (`.count-up`)** 以及 **弹簧物理入场动画 (`.anim`)**。
+
+---
+
+## 📂 项目结构
+
+项目针对 AI Agent 工作流进行了高度模块化设计：
 
 ```text
 generate-html-ppt/
 ├── SKILL.md                  # AI 编程助手的工作流地图与生成规则
-├── README.md                 # 中英文文档
-├── README_en.md
-├── references/               # AI 助手的详细工作手册 (排版, 组件, 配图提示词等)
-├── resources/
-│   ├── template.html         # 赛博朋克风格 (Cyberpunk) 的主模版
-│   ├── template-swiss.html   # 瑞士国际主义风格 (Swiss) 的主模版
-│   ├── template-beautiful.html # Beautiful.ai 商业风格的主模版
-│   └── screenshot-backgrounds/ # 用于自动包裹、美化软件截图的高清底图
-└── scripts/
-    ├── extract-pptx.py       # 用于从 PPTX 中提取文字、图片和讲稿的 Python 脚本
-    └── validate-swiss-deck.mjs # 严格校验瑞士风格排版合规性的 Node.js 脚本
+├── README.md                 # 中文说明文档
+├── README_en.md              # 英文说明文档
+├── designs/                  # 设计系统规范库
+│   ├── bold-template-pack/   # 35+ 种设计 Preset 集合
+│   │   ├── selection-index.json # 风格选择轻量索引
+│   │   ├── deck-stage.js     # 舞台缩放与视口同步核心脚本
+│   │   └── templates/        # 包含 8-bit-orbit, beautiful-modern, swiss 等 35+ 套 design.md
+│   ├── viewport-base.css     # 16:9 舞台与视口基线 CSS
+│   ├── STYLE_PRESETS.md      # 核心视觉主题参考
+│   └── animation-patterns.md # 动画与微交互指南
+├── references/               # AI 助手的排版、组件与配图指导手册
+│   ├── checklist.md          # 幻灯片质量校验清单
+│   ├── screenshot-framing.md # 截图带壳美化与排版规范
+│   ├── image-prompts.md      # AI 文生图 Prompt 生成指南
+│   └── covers.md             # 自媒体封面排版规范
+├── resources/                # 基础模版与高清截图底图
+│   ├── template.html         # Cyberpunk 主模版
+│   ├── template-swiss.html   # Swiss International 主模版
+│   ├── template-beautiful.html # Beautiful.ai 主模版
+│   └── screenshot-backgrounds/
+└── scripts/                  # 辅助工具脚本
+    ├── extract-pptx.py       # Python 脚本：提取 PPTX 文本、图片与讲稿
+    ├── validate-swiss-deck.mjs # Swiss 风格合规性 Node.js 校验脚本
+    └── validate-beautiful-deck.mjs # Beautiful 风格合规性校验脚本
 ```
 
 ---
 
-## 安装说明
+## 🛠️ 安装说明
 
-### 使用 AI 助手一键安装（推荐）
-您可以直接要求您的 AI 编程助手（如 Claude Code, Codex 等）为您安装此技能，只需向 AI 发送以下指令：
+### 1. 使用 AI 助手一键安装（推荐）
+向您的 AI 编程助手（如 Claude Code, Antigravity, Gemini CLI, Codex 等）发送以下指令：
 
 ```text
 请帮我将 https://github.com/helloyxs/generate-html-ppt.git 克隆并安装为你的本地技能，同时安装所需的 python-pptx 依赖。
 ```
 
-### 在 Claude Code 中手动安装
-建议将本 Skill 复制到本地智能助手的技能目录（或项目目录）下作为扩展使用：
+### 2. 在 Claude Code 中手动安装
 
 ```bash
-# 1. 克隆本仓库到本地技能目录
+# 1. 克隆仓库到本地技能目录
 git clone https://github.com/helloyxs/generate-html-ppt.git ~/.claude/skills/generate-html-ppt
 
-# 2. 安装 Python 依赖（用于解析 .pptx，仅在使用该功能时需要）
+# 2. 安装 Python 依赖（用于解析 .pptx，仅在使用 Mode B 时需要）
 pip install python-pptx
-
-# 3. 安装 Node.js 依赖（可选，如果使用瑞士风格模板，系统会自带执行环境校验脚本）
 ```
 
-### 在 Codex 中手动安装
-将本 Skill 复制到 Codex 的技能目录下：
+### 3. 在 Codex / Antigravity 中手动安装
 
 ```bash
-# 1. 克隆本仓库到 Codex 技能目录
+# 1. 克隆仓库到对应的技能目录
 git clone https://github.com/helloyxs/generate-html-ppt.git ~/.codex/skills/generate-html-ppt
 
-# 2. 安装 Python 依赖（用于解析 .pptx，仅在使用该功能时需要）
+# 2. 安装 Python 依赖
 pip install python-pptx
 ```
 
-在交互中，只需给 AI 传入 `SKILL.md`，或者告诉 AI 助手“加载并遵循 `~/.claude/skills/generate-html-ppt/SKILL.md`”（Codex 用户请替换为对应的技能路径）。
+在对话中，只需给 AI 传入 `SKILL.md`，或者告诉 AI 助手：“加载并遵循 `~/.claude/skills/generate-html-ppt/SKILL.md`”。
 
 ---
 
-## 使用指南
+## 💡 使用指南
 
 ### 1. 从零开始生成演示文稿 (Mode A)
-运行命令或给 AI 发送需求：
+通过斜杠命令或直接描述您的需求：
 ```text
-/generate-html-ppt "我想为一个新的开源数据库项目制作一份路演 PPT"
+/generate-html-ppt "我想为一个开源云原生数据库项目制作一份商业路演 PPT"
 ```
-AI 助手将遵循结构化工作流：
-1. **风格选择与大纲对齐**：通过 7 个检查问题，与您确认观众、时长，并在 **Cyberpunk (赛博朋克)**、**Swiss (瑞士国际)** 和 **Beautiful (商业风格)** 三套模板中选择其一。
-2. **准备视觉资产**：自动使用 `screenshot-framing` 规范美化您的截图，或根据 `image-prompts` 生成 AI 插画。
-3. **分批生成幻灯片**：每 3~5 页为一批分段生成，确保代码稳定。
-4. **验证与交付**：若选择瑞士风格，AI 会自动运行 `validate-swiss-deck.mjs` 脚本校验排版，修复完成后自动在浏览器中打开 PPT。
+
+AI 助手将严格遵循 **四阶段工作流**：
+1. **需求对齐与风格推荐**：通过 7 个检查问题确认受众与时长，基于 `selection-index.json` 从 35+ 种 Preset 中推荐 2-3 个符合调性的设计方向（如 *Beautiful Modern*, *Swiss Style*, *8-Bit Orbit* 等），并自动触发**品牌嗅探（Brand Asset Sniffing）**提取品牌主色与字体。
+2. **视觉资产准备**：针对项目截图应用带壳美化（`screenshot-framing`），或根据 `image-prompts` 生成配套 AI 插画。
+3. **设计系统灰度骨架确认 (Wireframing)**：根据选定的 `design.md` 单点规范，构建 `1920×1080` 舞台骨架，应用布局密度策略（防止中间尴尬中空，使用 `center-group` 垂直集中分组与 Hero 中间连通桥），生成 HTML 骨架文件并**暂停等待用户确认**。
+4. **分批内容填充与交付**：骨架确认后分批填入精细文案与可视化图表，自动校验后在浏览器中打开 PPT。
 
 ### 2. 转换现有的 PPTX 文件 (Mode B)
-向 AI 助手提供本地 PowerPoint 文件路径：
+提供本地 PowerPoint 文件路径：
 ```text
-/generate-html-ppt "把我的 Q3_Product_Roadmap.pptx 文件转换为网页演示文稿"
+/generate-html-ppt "帮我把路径为 ./docs/Q3_Roadmap.pptx 的文件转换为 HTML 演示文稿"
 ```
-AI 将自动执行 `python scripts/extract-pptx.py`，提取其中的文本与图片，将其内容映射到网页版模板中，同时保留所有的演讲备注（Speaker Notes）。
+AI 将自动运行 `python scripts/extract-pptx.py` 提取文字、矢量元素、高分辨率图片与演讲者备注，并将其精准映射到 HTML PPT 模板中。
 
-### 3. 生成自媒体封面 (Mode C)
-如果需要将 PPT 内容分发到不同社交平台，可指令：
+### 3. 生成多平台社交封面 (Mode C)
+生成 PPT 后可直接要求：
 ```text
-"根据刚刚生成的幻灯片，帮我设计一张微信公众号(21:9)和小红书(3:4)的封面图"
+"根据这份 PPT 的核心内容，帮我设计一张微信公众号 (21:9) 和一张小红书 (3:4) 的封面图"
 ```
-AI 将提取核心信息并使用内置的设计参数调用文生图模型输出封面。
+AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视觉封面。
 
 ---
 
-## 设计系统与 UI 组件
+## 🎨 视觉风格与 Presets 一览
 
-根据所选模板，HTML PPT 采用截然不同的排版逻辑。
+系统内置了 35+ 种独立设计规范，覆盖各种演讲与演示场景：
 
-### A. 赛博朋克风格 (Cyberpunk - `template.html`)
-灵活度极高的网格系统，组件丰富：
-* **网格布局 (Grids)**：`.grid-2`（双栏）、`.grid-3`、`.grid-4`，用于自由排布内容。
-* **卡片组件 (Cards)**：带有 `.b-blue`, `.fill-teal`, `.feat-red` 等多种色彩边框和水洗背景的卡片，实现赛博霓虹发光效果。
-* **微动效支持**：给元素添加 `.a` 以及 `.a1` 至 `.a6` 等级，即可实现瀑布式延迟渐显入场动画。
-
-### B. 瑞士国际主义风格 (Swiss Style - `template-swiss.html`)
-高度锁定的严谨设计系统：
-* **22 种专属排版版式 (`S01-S22`)**：遵循包豪斯和瑞士国际主义网格，不允许随意嵌套 class，每一页的 `<section data-layout="Sxx">` 的子元素都有严格的标签层级（如 `.main-content`, `.visual-area` 等）。
-* **极简与大留白**：强调信息的纯粹与清晰，依赖大字号和负空间，不需要卡片容器。
-
-### C. Beautiful.ai 商业风格 (Beautiful Style - `template-beautiful.html`)
-优雅现代的高端路演设计系统：
-* **12 种精品排版 (`L01-L12`)**：提供从开场封面、数据大字报到图片网格等 12 种高质感版式。
-* **光晕主题交替**：支持 `light`、`dark` 以及带有渐变光晕的 `hero` 主题交错使用，打造富有节奏感的演示体验。
-* **丰富的智能动画与图表**：支持弹簧物理引擎的入场动画（`.anim` 等）、数字滚动增加效果（`.count-up`）以及基于 data 属性一键配置的智能图表（`.smart-chart`）。
-
-### 共通组件
-* **矢量图表 (Mermaid.js)**：直接在 `<pre class="mermaid">` 中编写文本语法渲染关系图、架构图或甘特图。
-* **数据可视化 (ECharts)**：直接在 `<div class="echarts" data-option='...'>` 中声明 JSON 配置，即可渲染可交互的统计分析图表。
-
----
-
-## 主题与排版预设
-
-AI 助手将根据您的 PPT 调性匹配主题（仅限赛博朋克模板生效，瑞士风格主题固定）：
-
-### 颜色主题
-| 主题 CSS | 氛围基调 | 正式度 | 推荐应用场景 |
+| 风格 Preset | 视觉基调 (Vibe) | 适合场景 | 核心设计元素 |
 | :--- | :--- | :--- | :--- |
-| **Cyberpunk** (默认) | 高对比度、赛博霓虹卡片发光 | 中 - 低 | 技术分享、创意项目路演、极客演讲 |
-| `theme-blue.css` | 专业、严谨、沉稳蓝色调 | 中 | 企业 IT 介绍、新产品发布、SaaS 路演 |
-| `theme-light.css` | 极简、客观、干净灰白色调 | 高 | 财务季度汇报、法律提案、董事会报告 |
-| `theme-emerald.css` | 有机、新鲜、环保绿色调 | 中 - 低 | 可持续发展倡议、创意品牌宣讲、设计展 |
+| **Beautiful Modern** | 优雅、现代、高端 | 商业路演、产品发布会 | 渐变光晕 Orb、大字报数字、`light`/`dark`/`hero` 主题交替 |
+| **Swiss International** | 严谨、极简、包豪斯 | 架构设计、学术汇报 | 22 种严格锁定的网格版式 (`S01-S22`)、大负空间、极简文字排版 |
+| **Cyberpunk Dark** | 霓虹发光、极客感 | 技术分享、开源项目 | 卡片发光边框 (`.b-blue`, `.fill-teal`)、渐显入场动画 (`.a1`-`.a6`) |
+| **8-Bit Orbit** | 像素怀旧、复古游戏 | 游戏开发、创意 Web3 | 像素边框、点阵字体、复古色彩对比 |
+| **Emerald Editorial** | 深邃绿调、杂志质感 | 环保可持续、设计展 | 衬线标题、典雅网格、深绿色调与金色微发光 |
+| **Neo Grid Bold** | 粗矿新丑风 (Neubrutalism) | 潮流品牌、青年沙龙 | 粗黑边框、硬投影、高饱和度对比块 |
+| **Monochrome** | 黑白极简、黑客风格 | 代码演练、黑客松 | 纯黑纯白高对比、monospace 等宽字体 |
 
-### 字体预设
-- `font-modern.css` — 现代无衬线中英文字体栈，适合标准商业场景。
-- `font-serif.css` — 经典衬线标题搭配无衬线正文，适合高正式度的人文报告。
-- `font-tech.css` — 等宽字体预设，为工程或开发者主题带来极客感。
-- `font-rounded.css` — 亲和温暖的圆体字预设，适合大众消费或轻松沙龙场景。
-
----
-
-## 幻灯片快捷键与播放控制
-* **下一页**：`右方向键`、`下方向键`、`空格键`、`PageDown`，或在移动端向左轻扫。
-* **上一页**：`左方向键`、`上方向键`、`PageUp`，或在移动端向右轻扫。
-* **跳转首页/末页**：`Home` / `End` 键。
-* **全屏切换**：按 `F` 键。
-* **演讲者视图**：按 `S` 键，自动弹出双屏同步的提词器与控制窗口。
-* **页面锚点定位**：幻灯片状态与 URL hash 实时同步（如 `#s3`）。
+*(更多风格请在 `designs/bold-template-pack/` 中探索)*
 
 ---
 
-## 项目哲学
+## ⌨️ 快捷键与播放控制
 
-1. **零依赖生命周期 (Zero-Dependency)**：单个 HTML 文件不仅能离线使用，在任何设备随时运行，且在 20 年后依然能够被完美打开。
-2. **等比缩放的排版稳定性 (Layout Consistency)**：固定 16:9 舞台确保幻灯片绝对不会因为屏幕比例不同而发生“错位”或“坍塌”。
-3. **AI Native 原生工作流**：将琐碎的代码调试变为对 AI 的逻辑指导。借助校验脚本与锁定的布局系统，大幅降低大模型的幻觉概率。
+在浏览器中打开生成的 HTML 幻灯片时，可使用以下快捷键：
+
+* **下一页**：`右方向键 (→)`、`下方向键 (↓)`、`空格键 (Space)`、`PageDown`，或移动端向左轻扫。
+* **上一页**：`左方向键 (←)`、`上方向键 (↑)`、`PageUp`，或移动端向右轻扫。
+* **跳转首页 / 末页**：`Home` / `End` 键。
+* **全屏模式**：`F` 键。
+* **演讲者视图 (Speaker Mode)**：`S` 键（唤起双屏同步提词控制台）。
+* **页面锚点定位**：支持 URL Hash 实时同步（如直接访问 `#s3` 跳转第 3 页）。
 
 ---
 
-## 开源协议
+## 🧠 项目哲学
 
-MIT — 欢迎自由地使用、定制、修改并分享！
+1. **零依赖长寿生命周期 (Zero-Dependency Lifespan)**：生成的 HTML 文件不依赖任何外部后端或构建系统，在任何设备随时运行，且在 20 年后依然能够被浏览器完美打开。
+2. **排版稳定性 (Layout Stability)**：固定 16:9 舞台结合 CSS transform 等比缩放，彻底解决屏幕比例变动导致“格式错乱”的行业难题。
+3. **AI 原生工作流 (AI-Native Workflow)**：将复杂的代码调试转化为给 AI 的逻辑指令。借助 `design.md` 规则约束与校验脚本，大幅降低大模型的幻觉概率。
 
-## 致谢
+---
 
-本项目灵感源于 [@zarazhangrui](https://github.com/zarazhangrui) 的 [frontend-slides](https://github.com/zarazhangrui/frontend-slides) 以及 [@op7418](https://github.com/op7418) 的 [guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) 开源项目。
+## 📄 开源协议
+
+[MIT License](LICENSE) — 欢迎自由地使用、定制、修改并分享！
+
+## 👏 致谢
+
+感谢 [@zarazhangrui](https://github.com/zarazhangrui) 的 [frontend-slides](https://github.com/zarazhangrui/frontend-slides) 以及 [@op7418](https://github.com/op7418) 的 [guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) 开源项目。

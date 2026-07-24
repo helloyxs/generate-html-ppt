@@ -10,6 +10,9 @@
  4. **动画编排**：所有需要入场动画的元素加 `.anim` 和 `.d1`~`.d8`；方向动画加 `.anim-left` / `.anim-right` / `.anim-scale`。
  5. **智能图表**：用 `.smart-chart` + `data-chart` 自动渲染，支持 bar / line / donut / pie / radar。
  6. **数字动画**：大数字加 `.count-up` + `data-value`，进入页面时自动 count-up。
+ 7. **纵向布局自适应策略（杜绝巨幅中空）**：
+    - **无中间扩展内容（如仅有标题+2列卡片）**：使用 **方案一** `.frame.vstack`，设置 `justify-content: flex-start; gap: 40px;`（或 `justify-content: center;`），使内容紧凑靠拢，留白集中在底部。
+    - **含流程图/数据指标（3段式结构）**：使用 **方案二** `.frame.between`，配合 `justify-content: space-between`，并在中间插入 `.pipeline`（步骤流程）或 `.stat-card`（指标行）填补空白。
 
  ## 基础结构
 

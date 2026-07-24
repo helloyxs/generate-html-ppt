@@ -2,7 +2,7 @@
   "schema_version": 1,
   "pack_name": "Beautiful HTML Templates - Bold Design Pack",
   "source_repo": "zarazhangrui/beautiful-html-templates",
-  "template_count": 34,
+  "template_count": 35,
   "usage": {
     "selection": "Read this compact index first to shortlist bold templates from metadata.",
     "previews": "For title-slide previews, read only the preview_md files for the shortlisted bold candidates.",
@@ -17,6 +17,31 @@
     "mobile_behavior": "preserve 16:9 stage; letterbox or pillarbox instead of reflowing slide content"
   },
   "templates": [
+    {
+      "slug": "beautiful-modern",
+      "name": "Beautiful Modern",
+      "tagline": "State-of-the-art presentation system with glassmorphism, spring physics animations, and fluid layout density control.",
+      "mood": [
+        "modern",
+        "glassmorphism",
+        "premium",
+        "clean",
+        "tech"
+      ],
+      "tone": [
+        "elegant",
+        "sleek",
+        "professional",
+        "fluid"
+      ],
+      "formality": "medium-high",
+      "density": "flexible",
+      "scheme": "adaptive",
+      "best_for": "Default premiere choice for modern tech presentations, product pitch decks, conference talks, feature showcases, and AI product intros.",
+      "avoid_for": "Contexts requiring raw retro pixel art or paper zine textures.",
+      "preview_md": "bold-template-pack/templates/beautiful-modern/preview.md",
+      "design_md": "bold-template-pack/templates/beautiful-modern/design.md"
+    },
     {
       "slug": "8-bit-orbit",
       "name": "8-Bit Orbit",

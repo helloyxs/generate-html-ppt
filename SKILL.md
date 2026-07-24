@@ -86,6 +86,12 @@ Prepare visual assets before building wireframes:
    - Set up the 1920×1080 `.deck-stage` canvas and scaling script (`updateScale()`, `updateViewportBg()`).
    - Create slide containers (`<div class="slide" id="s{N}">...</div>`).
    - Include slide titles, structural grid/card layout classes, and placeholder text/images.
+   - **Apply Layout Density Strategy (防止中间尴尬中空与过度拉伸)**:
+     - *space-between 滥用规避*: 严禁对内容高度较矮（<200px）的中间组件无脑使用 `.between` (`space-between`)，否则会导致元素被甩到最顶和最底，中间形成 200~400px 巨大尴尬空白。
+     - *垂直集中分组 (Scheme 1 / center-group)*: 优先使用 `.slide-content.center-group` (`justify-content: center; gap: 40px;`) 或 `.slide-content` (`justify-content: flex-start; gap: 40px;`)，紧密分组标题、中间连通桥与卡片，四周留出自然呼吸 Margins。
+     - *中间连通桥 (Middle Bridge Block)*: 
+       - 封面/Hero Slide：在标题与底部 Stats 之间加入 `.hero-middle-bridge` 芯片标签行（如 `✦ Viewport 视口无缝同步` 等），消除中空断层。
+       - 步骤/流程 Slide：三段式 Pipeline 卡片内务必填充充实的内容要点列表 (Bullet points)，充实卡片纵向高度。
    - **DO NOT fill detailed paragraphs yet.**
 
 3. **Stop & Present Wireframe for Approval (骨架确认)**
