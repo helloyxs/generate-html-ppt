@@ -24,7 +24,7 @@ An AI Coding-Agent Skill for creating stunning, interactive HTML presentations �
 * **Token-Efficient Agent Workflow**: The AI agent avoids loading hundreds of KB of template files at once. It first reads `designs/bold-template-pack/selection-index.json` (lightweight metadata) to select a style, and only reads the specific template's single `design.md` file once confirmed by the user.
 
 ### 4. 🔀 Three Operating Modes
-* **Mode A: Create Deck from Scratch** — Complete 4-phase workflow covering requirements alignment, brand asset sniffing, narrative arc outline, wireframe confirmation, and content batch filling.
+* **Mode A: Create Deck from Scratch** — Complete workflow covering requirements alignment, visual style previewing, brand asset sniffing, narrative arc outline, wireframe confirmation, and content batch filling.
 * **Mode B: PowerPoint Conversion** — Includes a Python parser (`extract-pptx.py`) that extracts slide text, shapes, high-resolution images, and speaker notes from `.pptx` files, converting legacy decks to the web effortlessly.
 * **Mode C: Multi-Platform Cover Generation** — Extracts core slide takeaways and generates social media cover prompts/visuals for WeChat (21:9), Xiaohongshu (3:4), X/Twitter, or newsletters.
 
@@ -116,7 +116,7 @@ Run the slash command or describe your topic:
 ```
 
 The AI agent executes a **4-Phase Workflow**:
-1. **Requirements Alignment & Style Recommendation**: Clarifies audience and length via 7 checklist questions, recommends 2–3 suitable design recipes from 35+ presets based on `selection-index.json` (*Beautiful Modern*, *Swiss Style*, *8-Bit Orbit*, etc.), and triggers **Brand Asset Sniffing** to extract brand colors and fonts.
+1. **Requirements Alignment & Style Recommendation (with Visual Preview)**: Clarifies audience and length via 7 checklist questions, recommends 2–3 suitable design recipes from 35+ presets based on `selection-index.json` (*Beautiful Modern*, *Swiss Style*, *8-Bit Orbit*, etc.), offers lightweight 1-slide HTML comparison cards (`style-preview.html`) or preview images to preview aesthetics before building full slides, and triggers **Brand Asset Sniffing** to extract brand colors and fonts.
 2. **Visual Assets Preparation**: Wraps software screenshots into device mockups (`screenshot-framing`) or generates AI illustrations (`image-prompts`).
 3. **Design-System Wireframing**: Reads the single `design.md` recipe, constructs the `1920×1080` stage wireframe, applies layout density strategy (preventing empty center space using `center-group` vertical grouping and hero middle bridge blocks), and **pauses to request user approval**.
 4. **Content Batch Filling & Verification**: Fills detailed paragraphs and interactive charts in batches after wireframe approval, verifies layout integrity, and opens the deck in your browser.

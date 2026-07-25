@@ -24,7 +24,7 @@
 * **极高的 Token 效率**：大模型无需一次性读取数百 K 的模板代码。AI 助手首先读取 `designs/bold-template-pack/selection-index.json` 轻量元数据匹配风格，待用户选定后再**单点精准读取**对应模板的 `design.md` 进行构建，显著提升响应速度并降低消耗。
 
 ### 4. 🔀 灵活的三大工作模式 (Operational Modes)
-* **Mode A: 从零创作演示文稿** — 包含需求对齐、品牌嗅探（Brand Asset Sniffing）、叙事弧线大纲（Narrative Arc）、灰度骨架确认（Wireframing）与分批填充内容。
+* **Mode A: 从零创作演示文稿** — 包含需求对齐、风格视觉预览前置（Visual Style Preview）、品牌嗅探（Brand Asset Sniffing）、叙事弧线大纲（Narrative Arc）、灰度骨架确认（Wireframing）与分批填充内容。
 * **Mode B: PPTX 文件一键转换** — 内置 Python 解析脚本（`extract-pptx.py`），自动提取 PowerPoint 中的文本、图片、矢量形状与演讲者备注（Speaker Notes），轻松将传统 PPT 升级为网页版。
 * **Mode C: 多平台自媒体封面设计** — 自动提炼 PPT/文章核心要点，根据内置排版规范生成微信公众号 (21:9)、小红书 (3:4)、X/Twitter 等社交平台的封面 Prompt 及视觉产出。
 
@@ -116,7 +116,7 @@ pip install python-pptx
 ```
 
 AI 助手将严格遵循 **四阶段工作流**：
-1. **需求对齐与风格推荐**：通过 7 个检查问题确认受众与时长，基于 `selection-index.json` 从 35+ 种 Preset 中推荐 2-3 个符合调性的设计方向（如 *Beautiful Modern*, *Swiss Style*, *8-Bit Orbit* 等），并自动触发**品牌嗅探（Brand Asset Sniffing）**提取品牌主色与字体。
+1. **需求对齐与风格推荐（含视觉预览）**：通过 7 个检查问题确认受众与时长，基于 `selection-index.json` 从 35+ 种 Preset 中推荐 2-3 个符合调性的设计方向（如 *Beautiful Modern*, *Swiss Style*, *8-Bit Orbit* 等），并支持生成轻量 1 Slide 风格对比卡（`style-preview.html`）或示例图供用户提前确认，消除试错不确定性；同时自动触发**品牌嗅探（Brand Asset Sniffing）**提取品牌主色与字体。
 2. **视觉资产准备**：针对项目截图应用带壳美化（`screenshot-framing`），或根据 `image-prompts` 生成配套 AI 插画。
 3. **设计系统灰度骨架确认 (Wireframing)**：根据选定的 `design.md` 单点规范，构建 `1920×1080` 舞台骨架，应用布局密度策略（防止中间尴尬中空，使用 `center-group` 垂直集中分组与 Hero 中间连通桥），生成 HTML 骨架文件并**暂停等待用户确认**。
 4. **分批内容填充与交付**：骨架确认后分批填入精细文案与可视化图表，自动校验后在浏览器中打开 PPT。

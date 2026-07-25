@@ -31,11 +31,12 @@ Do not generate all slides in a single pass, and do not start building content b
 
 ---
 
-## Phase 1: Outline & Style Alignment (Text-Based)
+## Phase 1: Outline & Style Alignment (Text & Visual Preview Protocol)
 
 1. **Requirements Alignment (7-Question Checklist)**
    Clarify requirements via text conversation:
-   1. **Style Preference** — Match against available design recipes (Default: Beautiful Modern. Alternatives: Swiss Minimalist, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, etc.).
+   1. **Style Preference & First-Time Guidance (风格偏好与初用指南)** — Match against available design recipes (Default: Beautiful Modern. Alternatives: Swiss Minimalist, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, etc.).
+      *For first-time or undecided users*: Proactively offer to generate a quick **Visual Style Preview (风格视觉预览)** before building the full presentation to avoid wasting tokens if the aesthetic isn't right.
    2. **Audience & Scenario** — Pitch deck / Conference talk / Internal report / Teaching-Tutorial.
    3. **Presentation Length** — Short (5-10) / Medium (10-20) / Long (20+).
    4. **Raw Materials** — Documents, notes, topic outline.
@@ -48,8 +49,16 @@ Do not generate all slides in a single pass, and do not start building content b
 2. **Brand Asset Protocol (品牌嗅探)**
    **CRITICAL RULE**: If the user provides a specific company or brand, extract core brand colors (HEX/RGB) and typography via search or local files, injecting them into the selected `design.md` CSS variables (e.g. `--brand-accent`).
 
-3. **Text-Based Style Matching**
-   Read `designs/bold-template-pack/selection-index.json`. Recommend 2-3 style options in text with short descriptions matching the user's mood and scenario. Confirm the selected style name with the user.
+3. **Style Matching & Visual Preview Protocol (风格匹配与视觉预览协议)**
+   Read `designs/bold-template-pack/selection-index.json`. Recommend 2-3 candidate style options tailored to the topic mood and presentation scenario.
+   **CRITICAL REQUIREMENT (主动提示视觉预览与低成本确认)**:
+   - **Proactive Prompting (主动提示)**: The AI MUST explicitly ask the user whether they want to view a visual style preview first or proceed directly. Present two clear paths:
+     - **Option A (Direct Proceed / 直接生成)**: Directly proceed with the top recommended style (e.g., Beautiful Modern or Cyberpunk Dark).
+     - **Option B (Visual Preview / 视觉预览对比 - Recommended for first-time users)**: Rapidly generate a 1 to 3 slide visual style comparison card (`style-preview.html` or mockup images) rendered with actual topic content for visual confirmation before constructing the full presentation.
+   - **How to execute Option B (1-3 Slide Visual Style Comparison)**:
+     - *Method 1 (Multi-Slide / Candidate Card HTML Preview - Recommended)*: Generate a lightweight `style-preview.html` containing 1 to 3 candidate slide preview cards (e.g., Slide 1 Cover, Slide 2 Key Concepts/Timeline, Slide 3 Architecture/Data) rendered with their exact CSS variables, Google Fonts, color tokens, and layout cards. Allow the user to specify how many slide preview cards (1-3) they wish to view.
+     - *Method 2 (Style Preview Images)*: Use `generate_image` tool to render 16:9 visual mockup images for candidate styles.
+   - Confirm the user's selected style choice after previewing before proceeding to Phase 2.
 
 4. **Draft Narrative Arc Outline**
    Draft a slide-by-slide outline using a classic Narrative Arc:
