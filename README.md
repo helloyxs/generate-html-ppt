@@ -6,6 +6,10 @@
 
 ![Generate HTML PPT Demo](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/beautiful-demo.gif)
 
+在创建新PPT时支持直观的风格选择，避免Token浪费
+
+![Generate HTML PPT Demo](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/风格选择.gif)
+
 ---
 
 ## 🌟 核心亮点

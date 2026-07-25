@@ -6,6 +6,8 @@ An AI Coding-Agent Skill for creating stunning, interactive HTML presentations �
 
 ![Generate HTML PPT Demo](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/beautiful-demo.gif)
 
+![Generate HTML PPT Demo](https://github.com/helloyxs/generate-html-ppt/blob/main/demo/风格选择.gif)
+
 ---
 
 ## 🌟 Key Features
