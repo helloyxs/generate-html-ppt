@@ -145,15 +145,15 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 
 系统内置了 35+ 种独立设计规范，覆盖各种演讲与演示场景：
 
-| 风格 Preset | 视觉基调 (Vibe) | 适合场景 | 核心设计元素 |
-| :--- | :--- | :--- | :--- |
-| **Beautiful Modern** | 优雅、现代、高端 | 商业路演、产品发布会 | 渐变光晕 Orb、大字报数字、`light`/`dark`/`hero` 主题交替 |
-| **Swiss International** | 严谨、极简、包豪斯 | 架构设计、学术汇报 | 22 种严格锁定的网格版式 (`S01-S22`)、大负空间、极简文字排版 |
-| **Cyberpunk Dark** | 霓虹发光、极客感 | 技术分享、开源项目 | 卡片发光边框 (`.b-blue`, `.fill-teal`)、渐显入场动画 (`.a1`-`.a6`) |
-| **8-Bit Orbit** | 像素怀旧、复古游戏 | 游戏开发、创意 Web3 | 像素边框、点阵字体、复古色彩对比 |
-| **Emerald Editorial** | 深邃绿调、杂志质感 | 环保可持续、设计展 | 衬线标题、典雅网格、深绿色调与金色微发光 |
-| **Neo Grid Bold** | 粗矿新丑风 (Neubrutalism) | 潮流品牌、青年沙龙 | 粗黑边框、硬投影、高饱和度对比块 |
-| **Monochrome** | 黑白极简、黑客风格 | 代码演练、黑客松 | 纯黑纯白高对比、monospace 等宽字体 |
+| 风格 Preset | 视觉效果 (Preview) | 视觉基调 (Vibe) | 适合场景 | 核心设计元素 |
+| :--- | :--- | :--- | :--- | :--- |
+| **Beautiful Modern** | <img src="demo/previews/beautiful-modern.png" width="200" alt="Beautiful Modern"> | 优雅、现代、高端 | 商业路演、产品发布会 | 渐变光晕 Orb、大字报数字、`light`/`dark`/`hero` 主题交替 |
+| **Swiss International** | <img src="demo/previews/swiss-international.png" width="200" alt="Swiss International"> | 严谨、极简、包豪斯 | 架构设计、学术汇报 | 22 种严格锁定的网格版式 (`S01-S22`)、大负空间、极简文字排版 |
+| **Cyberpunk Dark** | <img src="demo/previews/cyberpunk-dark.png" width="200" alt="Cyberpunk Dark"> | 霓虹发光、极客感 | 技术分享、开源项目 | 卡片发光边框 (`.b-blue`, `.fill-teal`)、渐显入场动画 (`.a1`-`.a6`) |
+| **8-Bit Orbit** | <img src="demo/previews/8-bit-orbit.png" width="200" alt="8-Bit Orbit"> | 像素怀旧、复古游戏 | 游戏开发、创意 Web3 | 像素边框、点阵字体、复古色彩对比 |
+| **Emerald Editorial** | <img src="demo/previews/emerald-editorial.png" width="200" alt="Emerald Editorial"> | 深邃绿调、杂志质感 | 环保可持续、设计展 | 衬线标题、典雅网格、深绿色调与金色微发光 |
+| **Neo Grid Bold** | <img src="demo/previews/neo-grid-bold.png" width="200" alt="Neo Grid Bold"> | 粗矿新丑风 (Neubrutalism) | 潮流品牌、青年沙龙 | 粗黑边框、硬投影、高饱和度对比块 |
+| **Monochrome** | <img src="demo/previews/monochrome.png" width="200" alt="Monochrome"> | 黑白极简、黑客风格 | 代码演练、黑客松 | 纯黑纯白高对比、monospace 等宽字体 |
 
 *(更多风格请在 `designs/bold-template-pack/` 中探索)*
 

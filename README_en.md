@@ -143,15 +143,15 @@ The agent extracts key takeaways and generates tailored cover designs per `refer
 
 The skill includes 35+ visual recipes covering various presentation scenarios:
 
-| Style Preset | Vibe / Mood | Best For | Signature Elements |
-| :--- | :--- | :--- | :--- |
-| **Beautiful Modern** | Elegant, Modern, Premium | Pitch decks, product launches | Gradient orbs, hero numbers, `light`/`dark`/`hero` theme rhythm |
-| **Swiss International** | Rigorous, Minimalist, Bauhaus | System architecture, academic | 22 locked layouts (`S01-S22`), negative space, pure typography |
-| **Cyberpunk Dark** | High-impact Neon, Geeky | Tech talks, developer decks | Glow cards (`.b-blue`, `.fill-teal`), staggered entry animations (`.a1`-`.a6`) |
-| **8-Bit Orbit** | Retro Pixel, Nostalgic Game | Game dev, Web3 projects | Pixel borders, dot-matrix fonts, retro color contrast |
-| **Emerald Editorial** | Deep Green, Magazine Quality | Sustainability, design exhibitions | Serif display headers, classic grids, deep emerald & gold accents |
-| **Neo Grid Bold** | Neubrutalism, Energetic | Youth culture, creative meetups | Thick black borders, hard offset shadows, high saturation blocks |
-| **Monochrome** | High Contrast, Hacker Aesthetic | Code walkthroughs, hackathons | Pure black & white contrast, monospace typography |
+| Style Preset | Visual Preview | Vibe / Mood | Best For | Signature Elements |
+| :--- | :--- | :--- | :--- | :--- |
+| **Beautiful Modern** | <img src="demo/previews/beautiful-modern.png" width="200" alt="Beautiful Modern"> | Elegant, Modern, Premium | Pitch decks, product launches | Gradient orbs, hero numbers, `light`/`dark`/`hero` theme rhythm |
+| **Swiss International** | <img src="demo/previews/swiss-international.png" width="200" alt="Swiss International"> | Rigorous, Minimalist, Bauhaus | System architecture, academic | 22 locked layouts (`S01-S22`), negative space, pure typography |
+| **Cyberpunk Dark** | <img src="demo/previews/cyberpunk-dark.png" width="200" alt="Cyberpunk Dark"> | High-impact Neon, Geeky | Tech talks, developer decks | Glow cards (`.b-blue`, `.fill-teal`), staggered entry animations (`.a1`-`.a6`) |
+| **8-Bit Orbit** | <img src="demo/previews/8-bit-orbit.png" width="200" alt="8-Bit Orbit"> | Retro Pixel, Nostalgic Game | Game dev, Web3 projects | Pixel borders, dot-matrix fonts, retro color contrast |
+| **Emerald Editorial** | <img src="demo/previews/emerald-editorial.png" width="200" alt="Emerald Editorial"> | Deep Green, Magazine Quality | Sustainability, design exhibitions | Serif display headers, classic grids, deep emerald & gold accents |
+| **Neo Grid Bold** | <img src="demo/previews/neo-grid-bold.png" width="200" alt="Neo Grid Bold"> | Neubrutalism, Energetic | Youth culture, creative meetups | Thick black borders, hard offset shadows, high saturation blocks |
+| **Monochrome** | <img src="demo/previews/monochrome.png" width="200" alt="Monochrome"> | High Contrast, Hacker Aesthetic | Code walkthroughs, hackathons | Pure black & white contrast, monospace typography |
 
 *(Explore all 35+ recipes in `designs/bold-template-pack/`)*
 
