@@ -129,10 +129,59 @@
    .quote-text { font-family: var(--font-display); font-size: 32px; font-weight: 600; line-height: 1.5; color: var(--b-text); position: relative; z-index: 1; }
    .quote-src { font-size: 16px; color: var(--b-text-muted); margin-top: 16px; font-weight: 600; }
 
-   .frame-img { display: block; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-lg); border: 1px solid var(--b-border); background: var(--b-bg-elevated); }
-   .frame-img img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-   .frame-img.r-16x10 { aspect-ratio: 16 / 10; }
-   .img-cap { padding: 16px 20px; font-size: 14px; color: var(--b-text-muted); font-weight: 500; background: var(--b-bg-elevated); }
+  /* IMAGE TREATMENTS T1-T8 — 默认无圆角无阴影;真要卡片化用 .t-edge-card (T8) */
+   .frame-img,
+   figure[class^="t-"],
+   .t-bleed, .t-float, .t-inset, .t-browser, .t-quiet, .t-backdrop, .t-edge-card,
+   .t-device-mac, .t-device-iphone { display: block; position: relative; border-radius: 0; box-shadow: none; border: 0; background: transparent; overflow: visible; }
+   .frame-img img, figure[class^="t-"] img,
+   .t-bleed img, .t-float img, .t-inset img, .t-browser > img, .t-quiet img, .t-edge-card img,
+   .t-device-mac .t-device-screen img, .t-device-iphone .t-device-screen img {
+     width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;
+   }
+  .frame-img.r-16x10 { aspect-ratio: 16 / 10; }
+
+   /* 全局比例类 */
+   .r-21x9  { aspect-ratio: 21 / 9; } .r-16x9  { aspect-ratio: 16 / 9; } .r-16x10 { aspect-ratio: 16 / 10; }
+   .r-4x3   { aspect-ratio: 4 / 3; }  .r-3x2   { aspect-ratio: 3 / 2; }  .r-1x1   { aspect-ratio: 1 / 1; } .r-3x4 { aspect-ratio: 3 / 4; }
+   .h-16 { height: 16vh; } .h-18 { height: 18vh; } .h-22 { height: 22vh; } .h-26 { height: 26vh; }
+
+   /* T2 Float —— 默认 */
+   .t-float { margin: 0; padding: 0; }
+   .t-cap { display: block; margin-top: 10px; font-size: 12px; line-height: 1.5; font-style: italic; color: var(--b-text-muted); }
+
+   /* T3 Inset —— 浅色基底 */
+   .t-inset { padding: 24px; background: rgba(15, 23, 42, 0.04); border-radius: 0; }
+   .t-inset img { object-fit: contain; }
+
+   /* T4 Browser Chrome */
+   .t-browser { display: flex; flex-direction: column; background: #1f2024; border-radius: 8px; overflow: hidden; box-shadow: 0 8px 24px -8px rgba(0,0,0,0.15); }
+   .t-browser-bar { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; background: #2a2c31; }
+   .t-browser-bar .t-dot { width: 10px; height: 10px; border-radius: 50%; background: #4a4d54; }
+   .t-browser-bar .t-dot:nth-child(1) { background: #ff5f57; }
+   .t-browser-bar .t-dot:nth-child(2) { background: #febc2e; }
+   .t-browser-bar .t-dot:nth-child(3) { background: #28c840; }
+   .t-browser-bar .t-url { margin-left: 12px; flex: 1; height: 20px; border-radius: 4px; background: rgba(255,255,255,0.06); display: flex; align-items: center; padding: 0 10px; font-size: 11px; color: rgba(255,255,255,0.55); }
+   .t-browser > img { flex: 1; object-fit: cover; object-position: top center; }
+
+   /* T5 Device Frame */
+   .t-device-mac { background: #1a1a1c; border-radius: 10px 10px 14px 14px; padding: 14px 14px 24px; box-shadow: 0 12px 32px -10px rgba(0,0,0,0.25); }
+   .t-device-mac .t-device-screen { border-radius: 4px; overflow: hidden; aspect-ratio: 16 / 10; background: #000; }
+   .t-device-iphone { width: 240px; margin: 0 auto; background: #1a1a1c; border-radius: 32px; padding: 8px; box-shadow: 0 12px 32px -10px rgba(0,0,0,0.25); }
+   .t-device-iphone .t-device-screen { border-radius: 26px; overflow: hidden; aspect-ratio: 9 / 19.5; background: #000; }
+
+   /* T6 Quiet Frame */
+   .t-quiet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+   .t-quiet { margin: 0; border: 0.5px solid var(--b-border); background: transparent; overflow: hidden; }
+   .t-quiet img { object-fit: cover; object-position: top center; }
+
+   /* T7 Backdrop */
+   .t-backdrop { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+   .t-backdrop img { width: 100%; height: 100%; object-fit: cover; filter: blur(14px) brightness(0.45); opacity: 0.55; transform: scale(1.08); }
+   .slide > .frame { position: relative; z-index: 1; }
+
+   /* T8 Edge Card —— 唯一允许圆角阴影 */
+   .t-edge-card { border-radius: 6px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px -10px rgba(0,0,0,0.12); background: #fff; }
 
    .pipeline { display: flex; gap: 24px; width: 100%; }
    .pipeline-step { flex: 1; background: var(--b-bg-elevated); border: 1px solid var(--b-border); border-radius: var(--radius-md); padding: 24px; position: relative; box-shadow: var(--shadow-sm); transition: transform 0.35s var(--ease-spring), box-shadow 0.35s var(--ease-out); }
@@ -273,9 +322,8 @@
          <div class="quote-src">— 演示设计原则</div>
        </div>
      </div>
-     <figure class="frame-img r-16x10 anim-right d3">
+     <figure class="t-float r-16x10 anim-right d3" data-treatment="t-float">
        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&auto=format&fit=crop" alt="Workspace">
-       <figcaption class="img-cap">Unsplash · Workspace</figcaption>
      </figure>
    </div>
    <div class="foot"><div>图文混排</div><div>05 / 12</div></div>
@@ -289,14 +337,14 @@
        <div class="kicker anim d1">Proof Points</div>
        <div class="h-xl anim d2">图片网格，统一比例</div>
      </div>
-     <div class="grid-3-3 anim d3">
-       <figure class="frame-img" style="height:22vh"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop" alt="Analytics"><figcaption class="img-cap">数据分析</figcaption></figure>
-       <figure class="frame-img" style="height:22vh"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop" alt="Dashboard"><figcaption class="img-cap">仪表盘</figcaption></figure>
-       <figure class="frame-img" style="height:22vh"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format&fit=crop" alt="Team"><figcaption class="img-cap">团队协作</figcaption></figure>
-       <figure class="frame-img" style="height:22vh"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop" alt="Meeting"><figcaption class="img-cap">会议沟通</figcaption></figure>
-       <figure class="frame-img" style="height:22vh"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&auto=format&fit=crop" alt="Strategy"><figcaption class="img-cap">战略规划</figcaption></figure>
-       <figure class="frame-img" style="height:22vh"><img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&auto=format&fit=crop" alt="Prototype"><figcaption class="img-cap">产品原型</figcaption></figure>
-     </div>
+    <div class="t-quiet-grid anim d3">
+      <figure class="t-quiet h-22" data-treatment="t-quiet"><img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&auto=format&fit=crop" alt="Analytics"></figure>
+      <figure class="t-quiet h-22" data-treatment="t-quiet"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop" alt="Dashboard"></figure>
+      <figure class="t-quiet h-22" data-treatment="t-quiet"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=600&auto=format&fit=crop" alt="Team"></figure>
+      <figure class="t-quiet h-22" data-treatment="t-quiet"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop" alt="Meeting"></figure>
+      <figure class="t-quiet h-22" data-treatment="t-quiet"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=600&auto=format&fit=crop" alt="Strategy"></figure>
+      <figure class="t-quiet h-22" data-treatment="t-quiet"><img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=600&auto=format&fit=crop" alt="Prototype"></figure>
+    </div>
    </div>
    <div class="foot"><div>图片网格</div><div>06 / 12</div></div>
  </div>
@@ -388,21 +436,111 @@
    <div class="foot"><div>特性页</div><div>11 / 12</div></div>
  </div>
 
- <!-- L12 Closing -->
- <div class="slide hero dark" id="s12">
-   <div class="cover-frame">
-     <div class="h-hero anim d1">Thank You</div>
-     <div class="lead anim d2" style="max-width:800px">开始用 Beautiful Deck 讲述你的下一个故事。</div>
-     <div class="cover-divider anim d3"></div>
-     <div class="hstack anim d4" style="gap:32px">
-       <div class="tag accent">#BeautifulDeck</div>
-       <div class="tag accent">#HTMLPPT</div>
-     </div>
-   </div>
- </div>
+<!-- L12 Closing -->
+<div class="slide hero dark" id="s12">
+  <div class="cover-frame">
+    <div class="h-hero anim d1">Thank You</div>
+    <div class="lead anim d2" style="max-width:800px">开始用 Beautiful Deck 讲述你的下一个故事。</div>
+    <div class="cover-divider anim d3"></div>
+    <div class="hstack anim d4" style="gap:32px">
+      <div class="tag accent">#BeautifulDeck</div>
+      <div class="tag accent">#HTMLPPT</div>
+    </div>
+  </div>
+</div>
 
- </div>
- </div>
+<!-- SLIDE 13: 8 PARADIGMS SHOWCASE (T1-T8) -->
+<div class="slide light" id="s13">
+  <div class="frame vstack" style="justify-content:flex-start; padding: 48px 64px; gap: 24px;">
+    <div>
+      <div class="kicker anim d1">Design System</div>
+      <div class="h-xl anim d2" style="font-size: 38px;">8 套图片处理范式 <span class="em">(T1 – T8)</span></div>
+      <div class="lead anim d3" style="font-size: 16px; max-width: 1100px;">默认走 T2 Float；UI 截图走 T3 Inset；多图分组走 T6 Quiet；营销首图才允许 T8 Edge Card。无意义的"原始截图"图注被禁止，包裹圆角阴影被禁止。</div>
+    </div>
+
+    <div class="anim d4" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; width: 100%;">
+      <!-- T1 Bleed -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #1e293b;">
+          <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&auto=format&fit=crop" alt="T1 Bleed" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T1 · BLEED</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">全屏出血 / 封面主图</div>
+      </div>
+      <!-- T2 Float -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="t-float" data-treatment="t-float" style="aspect-ratio: 4 / 3;">
+          <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&auto=format&fit=crop" alt="T2 Float" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T2 · FLOAT</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">纯留白 / 默认范式</div>
+      </div>
+      <!-- T3 Inset -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="t-inset" data-treatment="t-inset" style="aspect-ratio: 4 / 3;">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&auto=format&fit=crop" alt="T3 Inset" style="width: 100%; height: 100%; object-fit: contain; display: block;">
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T3 · INSET</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">浅色基底 / UI 截图</div>
+      </div>
+      <!-- T4 Browser -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="t-browser" data-treatment="t-browser" style="aspect-ratio: 4 / 3;">
+          <div class="t-browser-bar">
+            <span class="t-dot"></span><span class="t-dot"></span><span class="t-dot"></span>
+            <span class="t-url">app.example.com</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&auto=format&fit=crop" alt="T4 Browser">
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T4 · BROWSER</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">简化浏览器框 / Web</div>
+      </div>
+      <!-- T5 Device -->
+      <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+        <div class="t-device-iphone" data-treatment="t-device" style="width: 130px;">
+          <div class="t-device-screen"><img src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=400&auto=format&fit=crop" alt="T5 Device"></div>
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T5 · DEVICE</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">极简设备外框 / App</div>
+      </div>
+      <!-- T6 Quiet -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+          <div class="t-quiet" data-treatment="t-quiet" style="aspect-ratio: 1 / 1;"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=300&auto=format&fit=crop" alt="" style="width: 100%; height: 100%; object-fit: cover;"></div>
+          <div class="t-quiet" data-treatment="t-quiet" style="aspect-ratio: 1 / 1;"><img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=300&auto=format&fit=crop" alt="" style="width: 100%; height: 100%; object-fit: cover;"></div>
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T6 · QUIET</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">0.5px 发丝线 / 多图分组</div>
+      </div>
+      <!-- T7 Backdrop -->
+      <div style="display: flex; flex-direction: column; gap: 8px; position: relative;">
+        <div style="position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #0f172a;">
+          <div style="position: absolute; inset: 0; filter: blur(8px) brightness(0.4); opacity: 0.7; transform: scale(1.05);">
+            <img src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400&auto=format&fit=crop" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+          </div>
+          <div style="position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff;">
+            <div style="font-family: var(--font-display); font-size: 38px; font-weight: 800; line-height: 1;">+42%</div>
+            <div style="font-size: 11px; opacity: 0.7; margin-top: 4px; letter-spacing: 0.05em;">EFFICIENCY</div>
+          </div>
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T7 · BACKDROP</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">背景虚化 / 大字报</div>
+      </div>
+      <!-- T8 Edge Card -->
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="t-edge-card" data-treatment="t-edge-card" style="aspect-ratio: 4 / 3;">
+          <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&auto=format&fit=crop" alt="T8 Edge Card" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+        </div>
+        <div style="font-family: var(--font-display); font-size: 13px; font-weight: 800; color: var(--b-text); letter-spacing: 0.05em;">T8 · EDGE CARD</div>
+        <div style="font-size: 12px; color: var(--b-text-muted); line-height: 1.5;">6px 圆角卡 / 仅限营销首图</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><div>图片范式</div><div>13 / 13</div></div>
+</div>
+
+</div>
+</div>
 
  <button class="fs-btn" onclick="toggleFs()" aria-label="Toggle fullscreen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
  <div class="nav-arrows"><button onclick="go(-1)" aria-label="Previous slide"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><button onclick="go(1)" aria-label="Next slide"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div>

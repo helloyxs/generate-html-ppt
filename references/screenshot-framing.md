@@ -1,12 +1,14 @@
 # 截图美化语义规则
 
-用于把用户提供的产品截图、网页截图、代码截图、设计稿截图处理成符合模板比例的图片资产。目标是类似 CleanShot X 的“截图居中 + 背景填充 + 统一比例”,而不是默认让 GPT-M 2.0 重画截图。
+用于把用户提供的产品截图、网页截图、代码截图、设计稿截图处理成符合 [`image-treatments.md`](image-treatments.md) 范式规范的图片资产。本文件是 8 套范式(T1-T8)中**截图类**的子集说明:T3 Inset(默认截图处理)、T4 Browser Chrome(网页截图)、T5 Device Frame(移动/桌面 App 截图)。其它范式见主文档。
+
+> **重大变更**: 旧文档里"CleanShot X 式截图居中 + 背景填充"现在统一收敛到 **T3 Inset** 这一档。**不再**用"圆角+阴影+1px 边框"作为所有截图的默认外观,那是被 [`image-treatments.md`](image-treatments.md) 显式禁止的卡片化旧行为。
 
 ## 优先级
 
-1. **程序化适配优先**:截图内容、文字、UI 细节需要保真时,不要重画;创建目标比例画布,把原截图等比缩放后放入画布。
-2. **GPT-M 2.0 只做重构**:只有原图过长、过窄、信息太乱、需要 UI 情景化或概念化表达时,才使用“截图再设计 / UI 情景图”。
-3. **模板槽位先行**:先确定 slide 版式和图片槽位比例,再决定截图适配参数。
+1. **程序化适配优先**: 截图内容、文字、UI 细节需要保真时,不要重画;创建目标比例画布,把原截图等比缩放后放入画布(T3 Inset)。
+2. **GPT-M 2.0 只做重构**: 只有原图过长、过窄、信息太乱、需要 UI 情景化或概念化表达时,才使用"截图再设计 / UI 情景图"。
+3. **范式先行**: 先在 T3 / T4 / T5 里选一档,再决定截图适配参数。不要回退到"圆角+阴影+figcap 原始截图"的旧范式。
 
 ## 开始前询问
 
@@ -38,26 +40,36 @@
 
 | 参数 | 可选值 | 判断方式 |
 |---|---|---|
-| `ratio` | `21:9` / `16:10` / `16:9` / `4:3` / `1:1` | 跟随模板图片槽位,不要跟随原截图比例 |
-| `background` | `plain` / `gradient` / `wallpaper` / `blurred` / `grid` / `paper` | 跟随当前 PPT 风格和主题 |
+| `ratio` | `21:9` / `16:10` / `16:9` / `4:3` / `1:1` | 跟随模板图片槽位(`.r-16x10` 等),不要跟随原截图比例 |
+| `background` | `plain` / `gradient` / `wallpaper` / `blurred` / `grid` / `paper` | T3 默认 `plain`(浅色基底);Style A 可 `paper`;Style B 用 `grid` |
 | `padding` | `compact` / `standard` / `spacious` | 普通截图 standard;文字密集或高截图 spacious;小图组 compact |
-| `inset` | `none` / `subtle` / `balanced` | 截图需要从背景中浮出来时用 balanced;瑞士风多用 none/subtle |
-| `shadow` | `none` / `soft` / `editorial` | Style A 可 soft/editorial;Style B 默认 none |
-| `corners` | `square` / `small` / `medium` | Style B square;Style A small/medium |
+| `inset` | `none` / `subtle` / `balanced` | **T3 默认 `subtle`**(仅靠浅色基底色阶分层);不靠阴影/边框 |
+| `shadow` | `none` / `soft` / `editorial` | **T3 / T4 / T5 / T6 默认 `none`**;只有 T8 (Edge Card) 才允许 `soft` |
+| `corners` | `square` / `small` / `medium` | **T3 / T4 / T5 / T6 默认 `square`**(无圆角);T8 可 `small`(6px) |
 | `alignment` | `center` / `top-left` / `top-right` / `bottom-left` / `bottom-right` | 跟随页面构图,不是永远居中 |
 
+> **重要**: 上表中只有 T3 / T4 / T5 / T6 适用本文件的截图处理。T1 / T2 / T7 / T8 的范式不依赖这 7 个参数(分别是全屏出血、纯留白、背景虚化、营销卡片)。完整规范见 [`image-treatments.md`](image-treatments.md)。
 ## 风格映射
+
+### 截图处理默认走 T3 (Inset)
+
+**无论 Style A 还是 Style B,所有原始截图默认走 T3 Inset**,只在 `background` / `padding` 两个参数上有差异:
+
+```text
+# T3 Inset 通用默认
+ratio:跟随槽位, background:plain, padding:standard, inset:subtle, shadow:none, corners:square, alignment:center
+```
 
 ### Style A · 电子杂志风
 
 - 背景: `paper` / `blurred` / 低饱和 `gradient`
 - 质感:纸张、墨水、胶片颗粒、暖白、低对比
-- 截图:可用小圆角和轻微阴影,但不要像 SaaS 营销卡片
+- 截图:**无圆角无阴影**,完全靠浅色色阶分层;不要像 SaaS 营销卡片
 - 背景资产:优先使用 `resources/screenshot-backgrounds/style-a/` 下对应主题的 16:9 crop-safe WebP,截图合成时按槽位裁切
 - 推荐语义:
 
 ```text
-ratio:16:10, background:paper, padding:standard, inset:balanced, shadow:editorial, corners:small, alignment:center
+ratio:16:10, background:paper, padding:standard, inset:subtle, shadow:none, corners:square, alignment:center
 ```
 
 ### Style B · 瑞士国际主义
@@ -111,14 +123,21 @@ ratio:21:9, background:grid, padding:standard, inset:subtle, shadow:none, corner
 
 ## 截图类型决策
 
-| 原始素材 | 推荐处理 |
-|---|---|
-| 普通网页 / App / 桌面截图 | 程序化适配到目标比例 |
-| 产品 UI 细节很重要 | 程序化适配,使用 `fit-contain`,不重画 |
-| 长网页截图 | 截关键区域或拆成 2-3 张同尺寸面板 |
-| 极窄 / 极高截图 | 先尝试 `spacious + side alignment`;仍太小时再重构 |
-| 代码截图 | Style A 用纸感背景;Style B 用浅网格背景;文字必须可读 |
-| 概念解释用的 UI 情景图 | 可以 GPT-M 2.0 重新设计 |
+| 原始素材 | 推荐处理(范式 + 做法) |
+|---|---|---|
+| 普通网页 / App / 桌面截图 | T3 Inset,程序化适配到目标比例 |
+| 网页应用 / dashboard 截图 | **T4 Browser Chrome** 增强"在浏览器里"语境 |
+| 移动端 App 截图 | **T5 Device Frame** (iPhone) |
+| 桌面端原生 App 截图 | **T5 Device Frame** (Mac) 或 T3 Inset |
+| 产品 UI 细节很重要 | T3 Inset + `fit-contain`,不重画 |
+| 多张同气质证据截图 | **T6 Quiet Frame**,单图不加 figcaption |
+| 改版前后对比 | T6 Quiet Frame 双图,只靠位置/标题区分 |
+| 长网页截图 | T3 Inset;过长则拆成 2-3 张同尺寸面板 |
+| 极窄 / 极高截图 | T3 Inset + `spacious` padding;仍太小再走 GPT-M 2.0 重构 |
+| 代码截图 | T3 Inset + 暗底主题;Style A 用纸感背景;Style B 用浅网格背景 |
+| 概念解释用的 UI 情景图 | GPT-M 2.0 重新设计,生成后用 T3 Inset 嵌入 |
+| 营销首图 / 产品摄影 | T8 Edge Card(仅限 Beautiful Modern 风格) |
+| 封面 / 章节主视觉 | T1 Bleed 或 T7 Backdrop(由 [`image-treatments.md`](image-treatments.md) 决定) |
 
 ## 生成背景图提示词
 

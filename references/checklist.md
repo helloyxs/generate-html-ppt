@@ -194,11 +194,13 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 
 **自检命令**:`grep -E "font-size:min\([0-9.]+vw,\s*[0-9.]+vh\)" index.html`,把所有命中的 X/Y 看一眼,任何 Y/X < 1.6 都改大。
 
-### 0-D. 瑞士风图片混排:直角、同高、只做证据
+### 0-D. 图片处理范式:8 套范式 + 1 个 T8 例外(所有主题通用)
 
-**现象**:图片像普通 PPT 插图,圆角、阴影、比例混乱;多张截图高度不一,或 GPT-M 2.0 生成图自带标题/页脚,和页面 chrome 重复。
+**现象**:图片像普通 PPT 插图,圆角+阴影+1px 边框当默认;多张截图高度不一;figcap 写"原始截图/产品截图/Screenshot"等空标签;LLM 把旧 `.frame-img` 卡片范式带回到新 deck。
 
-**根因**:瑞士风的图片不是装饰,而是 grid 里的证据块。没有先选原始版式和图片槽位,就会把任意图片硬塞进页面。
+**根因**:没有用 8 套图片处理范式(T1-T8),回退到"圆角+阴影+figcap"那套旧范式。完整规范见 [`image-treatments.md`](image-treatments.md)。
+
+**适用范围**: 本节适用于**所有主题**(Beautiful Modern、Swiss、Cyberpunk 等),不限于瑞士风。瑞士风是"最严格"的子集(全部 8 套范式都禁止圆角和阴影);Beautiful Modern 允许 T8 Edge Card 是唯一例外。
 
 **先判断图像角色**:
 - 证据截图、UI、代码、dashboard:保真优先,关键文字和数据不能裁;需要统一比例时先做截图背景画布和 `.fit-contain`。
@@ -211,8 +213,11 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 - 先选版式:单张大图 + KPI 用 `S22`;多图用 `S15/S16` 的原始网格骨架改造
 - S22 生成图比例固定 `21:9`,并在 `<img>` 上写 `data-image-slot="s22-hero-21x9"`
 - 照片默认 `object-position:center 35%` 或 `center center`,不要用 `top center` 截人脸
-- 图片容器只用 `.frame-img`;**不要** `border-radius` / `box-shadow`
-- UI / 信息图 / 流程图若是用户原始截图或文字密集图,使用 `.fit-contain`;若已按槽位重生成,必须用对应比例类铺满容器,例如 `.frame-img.r-21x9`,不能再用固定短高度把图片缩小
+- 图片容器按场景选范式: 截图用 `.t-inset` (T3),网页用 `.t-browser` (T4),多图用 `.t-quiet` + `.t-quiet-grid` (T6),单图用 `.t-float` (T2)
+- **唯一允许圆角+阴影的范式**: T8 Edge Card,仅限 Beautiful Modern 风格的营销首图,且**必须显式标** `class="t-edge-card"`
+- Swiss 主题: 即使 T8 也不允许(Swiss 全局规则禁止圆角和阴影,优先级最高)
+- 老 `.frame-img` 仍可作 fallback,但**不要再**给它加 `border-radius` / `box-shadow`(默认已是 `0 / none`)
+- UI / 信息图 / 流程图若是用户原始截图或文字密集图,使用 `.t-inset` + `.fit-contain`(T3 Inset);若已按槽位重生成,必须用对应比例类铺满容器,例如 `.t-inset.r-21x9` 或 `.t-float.r-16x10`,不能再用固定短高度把图片缩小
 - 多图同组必须统一槽位、比例、高度,不要混用
 - 用户原始截图要先读 `references/screenshot-framing.md`:优先用 `assets/screenshot-backgrounds/` 内置主题背景 + 程序化缩放/留边/对齐,不要为了比例统一就重画截图内容
 - 截图背景必须跟随当前主题色,且可裁成 `21:9` / `16:10` / `4:3` / `1:1`;背景里不能有标题、页脚、边框、logo、人物或明显主体
@@ -221,10 +226,14 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 - 文字压图 / 全屏主视觉必须先做 quiet-zone 判断:至少约 30% 低细节区域可承载标题;不通过就换图、换裁切或改成图文分栏,不要整页套黑色/白色遮罩
 
 **自检命令**:
-- `grep -E "frame-img.*border-radius|box-shadow" index.html`——命中就删
-- `grep -n "data-image-slot" index.html`——每张本地图片都应有槽位声明
+- `grep -nE "<img[^>]*>" index.html | grep -v "data-treatment"` ——每张 `<img>` 必须有 `data-treatment` 属性,0 命中才合规
+- `grep -nE "frame-img.*border-radius|box-shadow" index.html` ——命中就删(老 frame-img 不应再带圆角阴影,默认已重置为 0)
+- `grep -nE "figcap|img-cap" index.html` ——检查 figcap 内容,凡命中"原始截图/产品截图/Screenshot/Untitled/Sample"必须删
+- `grep -nE "data-image-slot" index.html` ——Swiss 主题下每张本地图片都应有槽位声明
+- `grep -nE "原始截图|产品截图|Untitled screenshot" index.html references/ designs/ resources/ demo/` ——必须 0 命中
 - 目视:图片内部如果自带大标题、页码、页脚、角标,优先重生成,不要在页面里再裁切硬救
 - 目视:截图外侧背景应该是安静托底,不能比截图本身更抢眼;Swiss 风截图不得出现圆角和投影
+- 目视:每张图都有"图片会说话"的感觉,**不要**默认带 `.img-cap` 写"产品截图"这类占位符
 
 ### 0-D-2. 瑞士风底部分页安全区:最低处不要碰 nav
 

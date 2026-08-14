@@ -11,7 +11,19 @@ Use the CSS classes provided in the template to create a visually appealing pres
   - `.badge` (inside `.card`): automatically inherits the color of the parent card if the card uses a `.b-*` or `.fill-*` modifier. **TIP:** Place the `<span class="badge">` directly inside the `<h3>` (e.g., `<h3><span class="badge">1</span> Title</h3>`) to align the badge and the text perfectly on the same line.
   - `.tag` (standalone label) + `.tag-blue` / `.tag-teal` / `.tag-red` / `.tag-amber`.
   - `.stack-row` + `.stack-blue` / `.stack-teal` / `.stack-red` / `.stack-amber` / `.stack-navy` (for layered architecture diagrams).
-- **Images**: `.slide-img` for a single image (contain-fit, max 562px tall); wrap multiple `<img>` in `.img-grid` for an auto-fitting image grid. Always include descriptive `alt` text.
+- **Images (必读 [`image-treatments.md`](image-treatments.md))**: 所有图片必须按场景选 8 套范式(T1-T8)之一,不再用旧的 `.slide-img` + `.img-grid` + `.img-cap` 组合:
+  - **T2 Float 自由留白** (默认): 单图,纯留白无框无阴影,用于照片、纪实、人物、辅助图
+  - **T1 Bleed 全屏出血**: 主视觉,图延伸到 slide 边缘
+  - **T3 Inset 浅色基底** (截图默认): UI 截图、dashboard、代码截图,无圆角无阴影,靠浅色色阶分层
+  - **T4 Browser Chrome**: 网页应用、dashboard 截图,加简化浏览器顶栏
+  - **T5 Device Frame**: 移动/桌面 App 截图,极简设备外框
+  - **T6 Quiet Frame** (多图默认): 多张图分组,0.5px 极轻发丝线,单图**不加** figcaption
+  - **T7 Backdrop 背景虚化**: 章节幕封、大字报配图,图降透明度+模糊作为背景
+  - **T8 Edge Card** (唯一允许圆角+阴影): Beautiful Modern 营销首图,6px 圆角 + 极轻阴影
+  - 每张 `<img>` 必须写 `data-treatment="t-XXX"` 自检属性(评审 grep 锚点)
+  - 比例类(`.r-16x10` / `.r-4x3` / `.h-22` 等)全局通用,叠加在 T1-T8 任一范式上
+  - **永远写** `alt="..."` 描述图内容;**禁止**给 figcaption 写"原始截图 / 产品截图 / Screenshot / Untitled / Sample"这类空标签
+  - 旧 `.img-grid` 仍可作 fallback 容器,但**首选** `.t-quiet-grid`(T6 自带 0.5px 发丝线 + gap 14px)
 - **Code & Tables**: `.code-block` on a `<pre><code>` for automatic syntax highlighting (via Highlight.js); `.data-table` on a `<table>` (with `<th>` header cells) for data tables; inline `<code>` inside cards, lists, and paragraphs is styled automatically.
 - **Diagrams, Charts & Markdown**:
   - **Mermaid.js** (Logical Diagrams): Wrap text diagrams in `<pre class="mermaid">` (e.g. `graph TD`, sequence diagrams, mindmaps). **WARNING**: If you place a Mermaid diagram inside an HTML comment `<!-- ... -->` for any reason, you MUST use thick arrows `==>` or dotted arrows `-.->` instead of thin arrows `-->`. The thin arrow `-->` will prematurely close the HTML comment and break the page layout!

@@ -16,17 +16,19 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 
 **永远用标准比例**，不要用原图 `aspect-ratio: 2592/1798` 这种奇葩比例：
 
-| 场景 | 推荐比例 | 写法 |
+| 场景 | 推荐比例 | 写法(范式 + 比例) |
 |------|---------|------|
-| 左文右图 主图 | 16:10 或 4:3 | `.frame-img.r-16x10` 或 `.frame-img.r-4x3` |
-| 图片网格（多图对比） | 统一 | `.frame-img.h-22` / `.frame-img.h-26`，不用 aspect-ratio |
-| 小型面板组 | 统一 | `.frame-img.h-16` / `.frame-img.h-18`，同组必须同高 |
-| 左小图 + 右文字 | 1:1 或 3:2 | `.frame-img.r-1x1` 或 `.frame-img.r-3x2` |
-| 全屏主视觉 | 16:9 | `.frame-img.r-16x9` |
-| 信息图 / 截图再设计 | 16:9 或 16:10 | `.frame-img.r-16x9.fit-contain` 或 `.frame-img.r-16x10.fit-contain` |
-| 图文混排小插图 | 3:2 或 3:4 | `.frame-img.r-3x2` 或 `.frame-img.r-3x4` |
+| 左文右图 主图 | 16:10 或 4:3 | `.t-float.r-16x10` 或 `.t-float.r-4x3`(T2 Float 默认) |
+| 图片网格（多图对比） | 统一 | `.t-quiet` + `style="height:22vh\|26vh"`,同组必须同高(T6) |
+| 小型面板组 | 统一 | `.t-quiet` + `style="height:16vh\|18vh"`,同组必须同高(T6) |
+| 左小图 + 右文字 | 1:1 或 3:2 | `.t-float.r-1x1` 或 `.t-float.r-3x2`(T2) |
+| 全屏主视觉 | 16:9 | `.t-bleed`(T1) 或 `.t-float.r-16x9`(T2) |
+| 信息图 / 截图再设计 | 16:9 或 16:10 | `.t-inset.r-16x9` 或 `.t-inset.r-16x10`(T3,默认截图处理) |
+| 图文混排小插图 | 3:2 或 3:4 | `.t-float.r-3x2` 或 `.t-float.r-3x4`(T2) |
 
-图片必须包在 `<figure class="frame-img">` 里。默认照片会 `object-fit:cover + object-position:top center`,只裁底部,不裁顶/左/右。信息图和截图再设计必须加 `.fit-contain`,避免文字或标注被裁切。
+图片必须包在 `<figure class="t-XXX">` 里(按 [`image-treatments.md`](image-treatments.md) 选范式),并写 `data-treatment="t-XXX"` 自检。比例类(`.r-*` / `.h-*`)全局通用,不再限定在 `.frame-img` 上。默认照片会 `object-fit:cover + object-position:top center`,只裁底部,不裁顶/左/右。信息图和截图再设计必须加 `.fit-contain`,避免文字或标注被裁切。
+
+**禁用**: 旧版 `figure.frame-img` + `figcaption.img-cap` 写"产品截图/原始截图" 的组合已废止,本文件下面的所有 layout 示例都已改用 T2 / T6 范式。如果生成时仍写出这种组合,说明 LLM 回退到旧范式,需要手动改写。
 
 ### B2. 图片与内容的垂直对齐
 
@@ -309,10 +311,9 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
         <div class="callout-src">— 一个观察者的判断</div>
       </div>
     </div>
-    <!-- 右列：图片用标准 16/10 比例 + max-height，不要 align-self:end -->
-    <figure class="frame-img r-16x10" data-anim>
-      <img src="images/codepilot.png" alt="CodePilot 产品截图">
-      <figcaption class="img-cap">CodePilot · 产品截图</figcaption>
+    <!-- 右列：T2 Float 自由留白（默认范式,无圆角无阴影,无产品截图图注） -->
+    <figure class="t-float r-16x10" data-treatment="t-float" data-anim>
+      <img src="images/codepilot.png" alt="CodePilot 主界面">
     </figure>
   </div>
   <div class="foot">
@@ -342,31 +343,14 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
     <div class="kicker" data-anim>Proof · 粉丝实证</div>
     <h2 class="h-xl" data-anim>10 个平台 · 6 张截图</h2>
 
-    <div class="grid-3-3" style="margin-top:3vh">
-      <figure class="frame-img" style="height:26vh" data-anim>
-        <img src="images/weibo.png" alt="微博 289K">
-        <figcaption class="img-cap">微博 · 289K</figcaption>
-      </figure>
-      <figure class="frame-img" style="height:26vh" data-anim>
-        <img src="images/twitter.png" alt="推特 137K">
-        <figcaption class="img-cap">推特 · 137K</figcaption>
-      </figure>
-      <figure class="frame-img" style="height:26vh" data-anim>
-        <img src="images/wechat.png" alt="公众号 96K">
-        <figcaption class="img-cap">公众号 · 96K</figcaption>
-      </figure>
-      <figure class="frame-img" style="height:26vh" data-anim>
-        <img src="images/jike.png" alt="即刻 26K">
-        <figcaption class="img-cap">即刻 · 26K</figcaption>
-      </figure>
-      <figure class="frame-img" style="height:26vh" data-anim>
-        <img src="images/xhs.png" alt="小红书 19K">
-        <figcaption class="img-cap">小红书 · 19K</figcaption>
-      </figure>
-      <figure class="frame-img" style="height:26vh" data-anim>
-        <img src="images/douyin.png" alt="抖音 10K">
-        <figcaption class="img-cap">抖音 · 10K</figcaption>
-      </figure>
+    <!-- T6 Quiet Frame 多图分组,单图无 figcaption,组标题在顶部 .h-xl -->
+    <div class="t-quiet-grid" data-treatment="t-quiet" style="margin-top:3vh">
+      <figure class="t-quiet" style="height:26vh" data-anim><img src="images/weibo.png" alt="微博"></figure>
+      <figure class="t-quiet" style="height:26vh" data-anim><img src="images/twitter.png" alt="推特"></figure>
+      <figure class="t-quiet" style="height:26vh" data-anim><img src="images/wechat.png" alt="公众号"></figure>
+      <figure class="t-quiet" style="height:26vh" data-anim><img src="images/jike.png" alt="即刻"></figure>
+      <figure class="t-quiet" style="height:26vh" data-anim><img src="images/xhs.png" alt="小红书"></figure>
+      <figure class="t-quiet" style="height:26vh" data-anim><img src="images/douyin.png" alt="抖音"></figure>
     </div>
   </div>
   <div class="foot">
@@ -377,11 +361,13 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 ```
 
 **要点**：
-- 关键：每个 `frame-img` 必须写死 `height:NNvh`（不要用 `aspect-ratio`），否则网格会撑破
+- **范式：T6 Quiet Frame**（多图分组,单图无 figcaption,组标题在顶部 `.h-xl`）
+- 关键：每个 `.t-quiet` 必须写死 `height:NNvh`（不要用 `aspect-ratio`），否则网格会撑破
 - 图片会自动 `object-fit:cover + object-position:top`，只裁底部
-- **图注在框内**:`figcaption.img-cap` 会显示在固定高度框的内部底边(模板已处理弹性收缩),不额外占外部高度;有图注时图片实际展示高度 ≈ NNvh − 4vh
-- 用 `.grid-3-3`（3×2）或 `.grid-3`（3×1）承载
-- 3×2 双行 + 图注时,`height:26vh` 是不压 foot 的上限;标题更长或加说明行时降到 `22vh`
+- 容器用 `.t-quiet-grid`（auto-fit minmax 220px 1fr, gap 14px），不要用 `.grid-3-3`（旧 grid 不带 T6 的极轻发丝线）
+- 3×2 双行时,`height:26vh` 是不压 foot 的上限;标题更长或加说明行时降到 `22vh`
+- **不要**给单图加 `figcap` 写"微博 · 289K" —— 这种标签属于旧 `frame-img` + `.img-cap` 范式,新规则是组标题在 slide 顶部,单图本身保持干净
+- 完整规范见 [`image-treatments.md`](image-treatments.md) T6 段
 
 ---
 
@@ -617,10 +603,9 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
         <div class="callout-src">— Luke Wroblewski</div>
       </div>
     </div>
-    <!-- 右列:辅助图 · 竖版或方形 -->
-    <figure class="frame-img r-3x4" data-anim>
+    <!-- 右列:T2 Float 自由留白 · 竖版或方形 · 不加"产品截图"类图注 -->
+    <figure class="t-float r-3x4" data-treatment="t-float" data-anim>
       <img src="images/figma.png" alt="Figma design system">
-      <figcaption class="img-cap">Figma · Design System</figcaption>
     </figure>
   </div>
   <div class="foot">

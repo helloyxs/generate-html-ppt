@@ -69,8 +69,17 @@ Do not generate all slides in a single pass, and do not start building content b
 ## Phase 1.5: Image Generation & Screenshot Beautification
 
 Prepare visual assets before building wireframes:
-- If screenshots are provided, consult `references/screenshot-framing.md`.
-- If AI images or diagrams are needed, consult `references/image-prompts.md`.
+- **图片处理范式(必读)**: 选图片处理方式前先读 [`references/image-treatments.md`](references/image-treatments.md)。所有图片必须选 T1-T8 中的一档,并在 `<img>` 上写 `data-treatment="t-XXX"` 自检属性。**默认走 T2 (Float / 自由留白)**,不要默认套 `frame-img` 卡片 + `figcaption` "原始截图"那套旧范式。
+- 用户原始截图/UI 截图: 走 T3 (Inset) 或 T4 (Browser),参考 `references/screenshot-framing.md` 适配比例/背景/留边。
+- AI 生成图 / 信息图 / 流程图: 走 T1 (Bleed) / T2 (Float) / T7 (Backdrop),参考 `references/image-prompts.md` 写 prompt。
+- 设备截图(手机/桌面): 用 T5 (Device) 而不是 T4 (Browser)。
+- 多图分组: 用 T6 (Quiet Frame),单图不加 figcaption。
+
+**图片处理硬规则(全范式通用)**:
+- 禁止 `<figcaption>` 写"原始截图 / 产品截图 / Screenshot / Untitled / Sample" 这类空标签。
+- 禁止默认 `.frame-img` 带 `border-radius ≥ 12px` + 中-重 `box-shadow`;默认应为无圆角无阴影(已在 `template-beautiful.html` 重置)。
+- 禁止 hover 时 `transform: scale(1.02)` (旧 Beautiful 模板行为)。
+- 禁止 `object-fit: cover` 裁 UI 截图的左/右两侧(关键按钮和文字通常在两侧)。
 
 ---
 
@@ -138,4 +147,5 @@ All relative paths from skill root:
  - `references/requirements-checklist.md` — Canonical 7-question style alignment checklist used by Phase 1.
 - `references/screenshot-framing.md` — Screenshot framing and mockup guide.
 - `references/image-prompts.md` — Prompt generation guide for presentation visuals.
+- `references/image-treatments.md` — **必读**: 8 套图片处理范式(T1-T8)与 CSS 基座,所有图必须选一档并标 `data-treatment`。
 - `scripts/extract-pptx.py` — PowerPoint content extraction script.

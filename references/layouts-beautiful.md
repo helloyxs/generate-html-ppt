@@ -2,6 +2,25 @@
 
  本文档配合 `resources/template-beautiful.html` 使用，提供 12 套可直接复制的版式骨架。
 
+> **图片处理范式升级**：12 套版式里所有图片区都已切换到 [`image-treatments.md`](image-treatments.md) 的 8 套范式（T1-T8）。**默认走 T2 Float / T6 Quiet Frame**；其它范式（截图用 T3、设备用 T5、营销首图用 T8、章节背景用 T7）按场景选。所有图必须写 `data-treatment="t-XXX"` 自检属性，**禁止**给 figcaption 写"原始截图/产品截图/Screenshot"。
+
+| Layout | 图片范式 | 适用 |
+|---|---|---|
+| L01 开场封面 | T7 Backdrop 或 T1 Bleed | 满屏背景 + 标题 |
+| L02 章节幕封 | T7 Backdrop | 模糊背景大字标题 |
+| L03 三列卡片 | (无图)或 T8 Edge Card | 卡片自带卡片感,营销可用 T8 |
+| L04 数据大字报 | (无图)或 T7 Backdrop | 纯数据时可走 T7 烘托 |
+| L05 左文右图 | T2 Float | 单图,纯留白;不加图注 |
+| L06 图片网格 | T6 Quiet Frame | 多图分组,单图无 figcap |
+| L07 流水线 | (无图) | 流程图为主 |
+| L08 智能图表 | (无图) | 图表为主 |
+| L09 对比页 | T6 Quiet Frame(双图) | 视觉等价,只靠位置/标题区分 |
+| L10 大引用 | (无图) | 文字为主 |
+| L11 四列小卡 | (无图) | 卡片为主 |
+| L12 收尾页 | T7 Backdrop | 收尾背景图 |
+
+
+
  ## 设计原则
 
  1. **12 列网格**：所有内容在 1920×1080 的 12 列网格上排布。
@@ -120,9 +139,9 @@
          <div class="quote-src">— 来源</div>
        </div>
      </div>
-     <figure class="frame-img r-16x10 anim-right d3">
+     <!-- T2 Float 自由留白（默认范式,无圆角无阴影,无"产品截图"图注） -->
+     <figure class="t-float r-16x10 anim-right d3" data-treatment="t-float">
        <img src="images/xxx.png" alt="描述">
-       <figcaption class="img-cap">图注</figcaption>
      </figure>
    </div>
  </div>
@@ -138,13 +157,14 @@
        <div class="kicker anim d1">Proof</div>
        <div class="h-xl anim d2">图片网格标题</div>
      </div>
-     <div class="grid-3-3 anim d3">
-       <figure class="frame-img" style="height:24vh"><img src="images/1.png" alt=""><figcaption class="img-cap">图1</figcaption></figure>
-       <figure class="frame-img" style="height:24vh"><img src="images/2.png" alt=""><figcaption class="img-cap">图2</figcaption></figure>
-       <figure class="frame-img" style="height:24vh"><img src="images/3.png" alt=""><figcaption class="img-cap">图3</figcaption></figure>
-       <figure class="frame-img" style="height:24vh"><img src="images/4.png" alt=""><figcaption class="img-cap">图4</figcaption></figure>
-       <figure class="frame-img" style="height:24vh"><img src="images/5.png" alt=""><figcaption class="img-cap">图5</figcaption></figure>
-       <figure class="frame-img" style="height:24vh"><img src="images/6.png" alt=""><figcaption class="img-cap">图6</figcaption></figure>
+     <div class="t-quiet-grid anim d3" data-treatment="t-quiet">
+       <!-- T6 Quiet Frame 多图分组,单图无 figcaption -->
+       <figure class="t-quiet" style="height:24vh"><img src="images/1.png" alt="图1"></figure>
+       <figure class="t-quiet" style="height:24vh"><img src="images/2.png" alt="图2"></figure>
+       <figure class="t-quiet" style="height:24vh"><img src="images/3.png" alt="图3"></figure>
+       <figure class="t-quiet" style="height:24vh"><img src="images/4.png" alt="图4"></figure>
+       <figure class="t-quiet" style="height:24vh"><img src="images/5.png" alt="图5"></figure>
+       <figure class="t-quiet" style="height:24vh"><img src="images/6.png" alt="图6"></figure>
      </div>
    </div>
  </div>
