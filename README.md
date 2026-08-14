@@ -73,7 +73,7 @@ generate-html-ppt/
 └── scripts/                  # 辅助工具脚本
     ├── extract-pptx.py       # Python 脚本：提取 PPTX 文本、图片与讲稿
     ├── validate-swiss-deck.mjs # Swiss 风格合规性 Node.js 校验脚本
-    └── validate-beautiful-deck.mjs # Beautiful 风格合规性校验脚本
+    └── validate-fluid-deck.mjs # Fluid 主题 (Beautiful Modern / Cyberpunk Dark) 合规性校验脚本
 ```
 
 ---

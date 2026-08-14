@@ -2,6 +2,11 @@
 
 Use this reference when generating presentations. Match animations to the intended feeling.
 
+> **Canonical source.** The classes and timing tokens in this file are the same ones used by
+> `templates/beautiful-modern/design.md` and the same ones `scripts/validate-fluid-deck.mjs`
+> expects. If a future template introduces a new animation vocabulary, add it there first and
+> cross-link from here — do not invent a parallel system.
+
 ## Effect-to-Feeling Guide
 
 | Feeling | Animations | Visual Cues |
@@ -13,42 +18,55 @@ Use this reference when generating presentations. Match animations to the intend
 | **Calm / Minimal** | Very slow subtle motion, gentle fades | High whitespace, muted palette, serif typography, generous padding |
 | **Editorial / Magazine** | Staggered text reveals, image-text interplay | Strong type hierarchy, pull quotes, grid-breaking layouts, serif headlines + sans body |
 
-## Entrance Animations
+## Entrance Animations (`.anim*` + `.d1`–`.d8`)
+
+The entrance vocabulary is a single base class plus four directional variants, paired with
+delay classes for staggered reveals. All variants are spring-physics: opacity fades in while
+transform overshoots its resting position, then settles.
 
 ```css
-/* Fade + Slide Up (most versatile) */
-.reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s var(--ease-out-expo),
-                transform 0.6s var(--ease-out-expo);
-}
-.visible .reveal {
-    opacity: 1;
-    transform: translateY(0);
+:root {
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Scale In */
-.reveal-scale {
-    opacity: 0;
-    transform: scale(0.9);
-    transition: opacity 0.6s, transform 0.6s var(--ease-out-expo);
-}
+@keyframes springUp    { 0% { opacity: 0; transform: translateY(45px) scale(0.94); } 60% { opacity: 1; transform: translateY(-6px) scale(1.015); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes springLeft  { 0% { opacity: 0; transform: translateX(-60px); } 60% { opacity: 1; transform: translateX(8px); } 100% { opacity: 1; transform: translateX(0); } }
+@keyframes springRight { 0% { opacity: 0; transform: translateX(60px); } 60% { opacity: 1; transform: translateX(-8px); } 100% { opacity: 1; transform: translateX(0); } }
+@keyframes springScale { 0% { opacity: 0; transform: scale(0.85); } 60% { opacity: 1; transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes float       { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
 
-/* Slide from Left */
-.reveal-left {
-    opacity: 0;
-    transform: translateX(-50px);
-    transition: opacity 0.6s, transform 0.6s var(--ease-out-expo);
-}
+.anim              { opacity: 0; }
+.slide.active .anim        { animation: springUp 0.85s var(--ease-spring) forwards; }
+.slide.active .anim-left   { animation-name: springLeft; }
+.slide.active .anim-right  { animation-name: springRight; }
+.slide.active .anim-scale  { animation-name: springScale; }
+.slide.active .anim-float  { animation: float 4s ease-in-out infinite; opacity: 1; }
 
-/* Blur In */
-.reveal-blur {
-    opacity: 0;
-    filter: blur(10px);
-    transition: opacity 0.8s, filter 0.8s var(--ease-out-expo);
-}
+/* Staggered delays — apply to children in DOM order */
+.slide.active .d1 { animation-delay: 0.08s; }
+.slide.active .d2 { animation-delay: 0.18s; }
+.slide.active .d3 { animation-delay: 0.30s; }
+.slide.active .d4 { animation-delay: 0.42s; }
+.slide.active .d5 { animation-delay: 0.54s; }
+.slide.active .d6 { animation-delay: 0.66s; }
+.slide.active .d7 { animation-delay: 0.78s; }
+.slide.active .d8 { animation-delay: 0.90s; }
 ```
+
+**Usage pattern** — every animated element on a slide gets `.anim` (or one of the directional
+variants) plus a delay class for staggering:
+
+```html
+<h2 class="anim d1">Spring entrance</h2>
+<p  class="anim d2">The second element lands 100ms after the first.</p>
+<div class="card anim d3">Cards stagger into the layout.</div>
+<div class="cover-orb anim-float">Background orbs loop forever.</div>
+```
+
+**Rule of thumb.** `validate-fluid-deck.mjs` warns if a non-hero slide has fewer than 3
+`.anim*` elements. Aim for `.anim d1` on the kicker, `.anim d2` on the title, `.anim d3` on
+the lead paragraph, and `.anim d4`–`.d6` on cards. Hero slides may use only `.anim-float` for
+orbs because the static layout speaks for itself.
 
 ## Background Effects
 
@@ -104,7 +122,17 @@ class TiltEffect {
 | Problem | Fix |
 |---------|-----|
 | Fonts not loading | Check Fontshare/Google Fonts URL; ensure font names match in CSS |
-| Animations not triggering | Verify Intersection Observer is running; check `.visible` class is being added |
+| Animations not triggering | Confirm the slide has `.active` (Beautiful) or `[data-deck-active]` (deck-stage web component). The `.anim` rule is a no-op until the parent slide is active. |
+| Animations fire on first paint instead of on slide change | `.anim` only animates when its parent gains `.active` / `[data-deck-active]`. Do **not** set `.anim` on elements that should be visible on slide 1 before activation — gate with `opacity: 0` only inside `.slide.active` rules. |
 | Scroll snap not working | Ensure `scroll-snap-type: y mandatory` on html; each slide needs `scroll-snap-align: start` |
 | Mobile issues | Disable heavy effects at 768px breakpoint; test touch events; reduce particle count |
 | Performance issues | Use `will-change` sparingly; prefer `transform`/`opacity` animations; throttle scroll handlers |
+
+## Migration Note (legacy `.reveal*` classes)
+
+The old `.reveal` / `.reveal-scale` / `.reveal-left` / `.reveal-blur` vocabulary that this file
+used to document is no longer used by any template in `bold-template-pack/`. It was an
+Intersection-Observer-driven system, not a parent-class-driven one, and it conflicted with the
+spring-physics vocabulary that the Beautiful / Cyberpunk templates ship. Do not generate new
+slides with `.reveal*` classes — `validate-fluid-deck.mjs` will count them as 0 animated
+elements and the deck will fail the "≥3 anims per slide" quality bar.

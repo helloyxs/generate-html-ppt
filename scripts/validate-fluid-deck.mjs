@@ -1,9 +1,20 @@
 #!/usr/bin/env node
+//
+// Validates decks built from fluid-layout templates that use the
+// `<div class="slide …">` + light/dark theme convention. Today this covers
+// Beautiful Modern and Cyberpunk Dark, and any future template that adopts
+// the same vocabulary. Swiss / 8-Bit / Emerald / Neo-Grid etc. have their
+// own layout grammars and should use `validate-swiss-deck.mjs` or a
+// style-specific validator instead.
+//
+// If you only have a `validate-beautiful-deck.mjs` path in your workflow
+// (older docs, cached shells), it is an old alias for this file.
+//
 import { readFileSync } from 'node:fs';
 
 const file = process.argv[2];
 if (!file) {
-  console.error('Usage: node scripts/validate-beautiful-deck.mjs <index.html>');
+  console.error('Usage: node scripts/validate-fluid-deck.mjs <index.html>');
   process.exit(2);
 }
 
@@ -12,6 +23,8 @@ const errors = [];
 const warnings = [];
 
 // Extract slide divs with depth-aware parsing (Beautiful/Cyberpunk use <div class="slide">)
+// Fluid-layout templates (Beautiful Modern, Cyberpunk Dark, and any future
+// template that adopts the same vocabulary) all use `<div class="slide …">`.
 function extractSlides() {
   const slides = [];
   const openRe = /<div\b[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>/gi;
@@ -47,7 +60,7 @@ function extractSlides() {
 const slides = extractSlides();
 
 if (!slides.length) {
-  errors.push('No <div class="slide"> pages found. Are you validating the correct Beautiful/Cyberpunk template?');
+  errors.push('No <div class="slide"> pages found. This validator targets fluid-layout templates (Beautiful Modern, Cyberpunk Dark). If your deck uses a Swiss / 8-Bit / Emerald / Neo-Grid layout, run its style-specific validator instead.');
 }
 
 const ids = [];
@@ -168,7 +181,7 @@ if (warnings.length) {
   warnings.forEach((w) => console.warn('  • ' + w));
 }
 if (!errors.length && !warnings.length) {
-  console.log(`\n✅ Beautiful/Cyberpunk deck validation passed for ${file}.`);
+  console.log(`\n✅ Fluid-layout deck validation passed for ${file}.`);
   process.exit(0);
 }
 process.exit(errors.length ? 1 : 0);

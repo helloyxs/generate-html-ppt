@@ -11,11 +11,20 @@
  *      scaled with `transform: scale()` to fit the viewport, letterboxed.
  *      Set the `noscale` attribute to render at authored size (1:1) — the
  *      PPTX exporter sets this so its DOM capture sees unscaled geometry.
- *  (f) print — `@media print` lays every slide out as its own page at the
- *      design size, so the browser's Print → Save as PDF produces a clean
- *      one-page-per-slide PDF with no extra setup.
- *
- * Slides are HIDDEN, not unmounted. Non-active slides stay in the DOM with
+*  (f) print — `@media print` lays every slide out as its own page at the
+*      design size, so the browser's Print → Save as PDF produces a clean
+*      one-page-per-slide PDF with no extra setup.
+ *  (g) speaker view — opens a separate window with a `speaker.html` companion
+ *      file and keeps it in sync via a `BroadcastChannel('deck-speaker-sync')`.
+ *      Press `S` to open the console; arrow keys inside the console navigate
+ *      the main deck in real time. The console shows elapsed time, current
+ *      slide title, next slide title, speaker notes, and a live next-slide
+ *      preview iframe. Notes are read from the same `<script
+ *      type="application/json" id="speaker-notes">` array (1 entry per slide,
+ *      empty string when none), with a fallback to `<aside class="notes">`
+ *      inside each slide for hosts that prefer inline HTML notes.
+*
+* Slides are HIDDEN, not unmounted. Non-active slides stay in the DOM with
  * `visibility: hidden` + `opacity: 0`, so their state (videos, iframes,
  * form inputs, React trees) is preserved across navigation.
  *
@@ -56,6 +65,8 @@
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 
   const pad2 = (n) => String(n).padStart(2, '0');
+
+  const SPEAKER_CHANNEL_NAME = 'deck-speaker-sync';
 
   const stylesheet = `
     :host {

@@ -12,7 +12,7 @@ When the user requests an HTML presentation or PPT, follow these instructions to
 Presentations are generated using a **Design System Specification (`design.md`)** architecture combined with **Progressive Disclosure**. Rather than relying on rigid, hardcoded HTML templates, visual styles are authored as comprehensive design recipes specifying fonts, color palettes, elevation shadows, typography scales, layout rules, and animation patterns.
 
 ### Core Principles
-1. **Design System Specification (`design.md`) Architecture**: Access over 34+ distinct aesthetic design recipes (e.g., Beautiful Modern, Swiss International, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, Neo Grid, Monochrome, Retro Zine) defined in `designs/bold-template-pack/` and `designs/STYLE_PRESETS.md`.
+1. **Design System Specification (`design.md`) Architecture**: Access over 35+ distinct aesthetic design recipes (e.g., Beautiful Modern, Swiss International, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, Neo Grid, Monochrome, Retro Zine) defined in `designs/bold-template-pack/` and `designs/STYLE_PRESETS.md`.
 2. **Progressive Disclosure**: High token efficiency. First read `designs/bold-template-pack/selection-index.json` to match styles based on text metadata. Only after the style is chosen, read that specific template's single `design.md` file to construct the presentation.
 3. **Fixed 16:9 Stage (NON-NEGOTIABLE)**: Every slide canvas is authored inside a 1920×1080 stage scaled uniformly to the viewport using JavaScript (`updateScale()`). Content never reflows per device.
 4. **Seamless Viewport Rule (视口无缝融合规范)**: All presentations must use CSS variables (`--viewport-bg`) on `body` / `.deck-viewport` and dynamic JavaScript (`updateViewportBg()`) to synchronize the outer screen background with the active slide's background.
@@ -35,22 +35,18 @@ Do not generate all slides in a single pass, and do not start building content b
 
 1. **Requirements Alignment (7-Question Checklist)**
    Clarify requirements via text conversation:
-   1. **Style Preference & First-Time Guidance (风格偏好与初用指南)** — Match against available design recipes (Default: Beautiful Modern. Alternatives: Swiss Minimalist, Cyberpunk Dark, 8-Bit Orbit, Emerald Editorial, etc.).
-      *For first-time or undecided users*: Proactively offer to generate a quick **Visual Style Preview (风格视觉预览)** before building the full presentation to avoid wasting tokens if the aesthetic isn't right.
-   2. **Audience & Scenario** — Pitch deck / Conference talk / Internal report / Teaching-Tutorial.
-   3. **Presentation Length** — Short (5-10) / Medium (10-20) / Long (20+).
-   4. **Raw Materials** — Documents, notes, topic outline.
-   5. **Visual Assets** — Logos, screenshots, diagrams.
-   6. **Theme & Density Mode**:
-      - *Low density / Speaker-led*: Large headings, minimal text, generous negative space, 1-3 bullets max.
-      - *High density / Reading-first*: Detailed grids, comparisons, tables, 4-8 bullets per slide.
-   7. **Hard Constraints** — Specific brand colors, typography requirements, or deadline constraints.
+    The full 7-question checklist is the canonical input for style matching. Read it from the standalone file `references/requirements-checklist.md` instead of inlining it here, so any agent can link to a stable anchor and re-read it without parsing this SKILL.md again. Quick recall: style preference, audience & scenario, presentation length, raw materials, visual assets, theme/density mode, hard constraints.
+    *For first-time or undecided users*: Proactively offer to generate a quick **Visual Style Preview (风格视觉预览)** before building the full presentation to avoid wasting tokens if the aesthetic isn't right.
 
 2. **Brand Asset Protocol (品牌嗅探)**
    **CRITICAL RULE**: If the user provides a specific company or brand, extract core brand colors (HEX/RGB) and typography via search or local files, injecting them into the selected `design.md` CSS variables (e.g. `--brand-accent`).
 
 3. **Style Matching & Visual Preview Protocol (风格匹配与视觉预览协议)**
    Read `designs/bold-template-pack/selection-index.json`. Recommend 2-3 candidate style options tailored to the topic mood and presentation scenario.
+   **Preview Coverage Check (视觉预览覆盖检查)**: Each template entry carries a `preview_png` field — either a path like `demo/previews/<slug>.png` or `null`. The agent MUST inspect this field for every shortlisted candidate and:
+   - If `preview_png` is set: reference it as the canonical visual preview for that style.
+   - If `preview_png` is `null`: the template has no static preview yet. Surface this to the user in plain language ("this style does not have a static preview yet") and bump the recommendation toward **Option B (Visual Preview / Method 1 — `style-preview.html` comparison card)** so the user gets a real rendered preview before committing to the full deck. Never silently fall through to a `null` preview and pretend it exists.
+   - If a preview PNG is mentioned in `selection-index.json`'s `orphan_previews` block, treat it as informational only (likely a legacy asset for a template slug that was renamed/removed) and do NOT bind it to a current template.
    **CRITICAL REQUIREMENT (主动提示视觉预览与低成本确认)**:
    - **Proactive Prompting (主动提示)**: The AI MUST explicitly ask the user whether they want to view a visual style preview first or proceed directly. Present two clear paths:
      - **Option A (Direct Proceed / 直接生成)**: Directly proceed with the top recommended style (e.g., Beautiful Modern or Cyberpunk Dark).
@@ -133,12 +129,13 @@ Once the wireframe is approved:
 
 All relative paths from skill root:
 
-- `designs/bold-template-pack/selection-index.json` — Compact metadata index of 34 bold design templates.
+ - `designs/bold-template-pack/selection-index.json` — Compact metadata index of 35 bold design templates. Each entry carries `preview_png` (path or `null`) and the index also lists `orphan_previews` for legacy PNGs that do not map to a current slug.
 - `designs/bold-template-pack/templates/*/design.md` — Detailed Design System recipes (read only the selected one).
 - `designs/viewport-base.css` — Mandatory 16:9 stage scaling and seamless viewport CSS base.
 - `designs/STYLE_PRESETS.md` — Core safe preset recipes (Beautiful Modern, Swiss Style, Cyberpunk Dark).
 - `designs/animation-patterns.md` — Animation and micro-interaction guide.
 - `references/checklist.md` — Presentation quality checklist.
+ - `references/requirements-checklist.md` — Canonical 7-question style alignment checklist used by Phase 1.
 - `references/screenshot-framing.md` — Screenshot framing and mockup guide.
 - `references/image-prompts.md` — Prompt generation guide for presentation visuals.
 - `scripts/extract-pptx.py` — PowerPoint content extraction script.

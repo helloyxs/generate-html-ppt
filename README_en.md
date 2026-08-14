@@ -71,7 +71,7 @@ generate-html-ppt/
 └── scripts/                  # Helper scripts
     ├── extract-pptx.py       # Python script to extract slides, images, and notes from PPTX
     ├── validate-swiss-deck.mjs # Strict Node.js validation script for Swiss layout
-    └── validate-beautiful-deck.mjs # Validation script for Beautiful layout
+    └── validate-fluid-deck.mjs # Validation script for fluid layouts (Beautiful Modern / Cyberpunk Dark)
 ```
 
 ---
