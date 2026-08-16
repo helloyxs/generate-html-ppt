@@ -172,66 +172,72 @@
    /* ==========================================================
       TYPOGRAPHY
       ========================================================== */
-   .kicker {
-     font-family: var(--font-display);
-     font-size: 18px;
-     font-weight: 700;
-     letter-spacing: 3px;
-     text-transform: uppercase;
-     color: var(--b-accent);
-     margin-bottom: var(--space-5);
-   }
+    .slide-header, .header-compact { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; width: 100%; }
+    .header-split { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: 24px; width: 100%; }
+    .kicker, .eyebrow-pill {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--b-accent);
+      margin-bottom: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .h-hero {
+      font-family: var(--font-display);
+      font-size: 78px;
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 8px;
+    }
+    .h-xl {
+      font-family: var(--font-display);
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .h-lg {
+      font-family: var(--font-display);
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .h-md {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .lead {
+      font-size: 24px;
+      line-height: 1.5;
+      color: var(--b-text-secondary);
+      font-weight: 600;
+      max-width: 1200px;
+      margin-bottom: 16px;
+    }
+    .body-text {
+      font-size: 21px;
+      line-height: 1.65;
+      color: var(--b-text-secondary);
+    }
+    .caption {
+      font-size: 16px;
+      color: var(--b-text-muted);
+      font-weight: 500;
+    }
+
    .slide.dark .kicker { color: #818cf8; }
-
-   .h-hero {
-     font-family: var(--font-display);
-     font-size: clamp(72px, 7vw, 120px);
-     font-weight: 800;
-     line-height: 1.05;
-     letter-spacing: -2px;
-     margin-bottom: var(--space-5);
-   }
-   .h-xl {
-     font-family: var(--font-display);
-     font-size: 56px;
-     font-weight: 800;
-     line-height: 1.15;
-     letter-spacing: -1px;
-     margin-bottom: var(--space-4);
-   }
-   .h-lg {
-     font-family: var(--font-display);
-     font-size: 44px;
-     font-weight: 700;
-     line-height: 1.2;
-     letter-spacing: -0.5px;
-     margin-bottom: var(--space-4);
-   }
-   .h-md {
-     font-family: var(--font-display);
-     font-size: 32px;
-     font-weight: 700;
-     line-height: 1.25;
-     margin-bottom: var(--space-3);
-   }
-
-   .lead {
-     font-size: 26px;
-     line-height: 1.6;
-     color: var(--b-text-secondary);
-     font-weight: 400;
-     max-width: 1100px;
-   }
-   .body-text {
-     font-size: 20px;
-     line-height: 1.75;
-     color: var(--b-text-secondary);
-   }
-   .caption {
-     font-size: 15px;
-     color: var(--b-text-muted);
-     font-weight: 500;
-   }
 
    .em { color: var(--b-accent); font-weight: 700; }
    .em-teal { color: var(--b-teal); font-weight: 700; }
@@ -283,7 +289,7 @@
       border: 1px solid var(--b-border-strong);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 600;
       color: var(--b-text-secondary);
       display: flex;
@@ -297,7 +303,7 @@
       color: var(--b-text);
       transform: translateY(-2px);
     }
-    .chip-dot { color: var(--b-accent); font-size: 16px; }
+    .chip-dot { color: var(--b-accent); font-size: 18px; }
    .grid-12 {
      display: grid;
      grid-template-columns: repeat(12, 1fr);
@@ -359,6 +365,7 @@
      z-index: 100;
      flex-wrap: wrap;
      justify-content: center;
+     display: none;
    }
    .nav .dot {
      width: calc(10px * var(--chrome-scale, 1));
@@ -383,6 +390,7 @@
      font-weight: 600;
      color: var(--b-text-muted);
      z-index: 100;
+     display: none;
    }
    .nav-arrows {
      position: fixed;
@@ -391,6 +399,7 @@
      display: flex;
      gap: calc(10px * var(--chrome-scale, 1));
      z-index: 100;
+     display: none;
    }
    .nav-arrows button, .fs-btn, .speaker-btn {
      width: calc(38px * var(--chrome-scale, 1));
@@ -418,8 +427,187 @@
      width: calc(16px * var(--chrome-scale, 1));
      height: calc(16px * var(--chrome-scale, 1));
    }
-   .fs-btn { position: fixed; top: calc(28px * var(--chrome-scale, 1)); left: calc(40px * var(--chrome-scale, 1)); z-index: 100; }
-   .speaker-btn { position: fixed; top: calc(28px * var(--chrome-scale, 1)); left: calc(84px * var(--chrome-scale, 1)); z-index: 100; }
+   .fs-btn { position: fixed; top: calc(28px * var(--chrome-scale, 1)); left: calc(40px * var(--chrome-scale, 1)); z-index: 100; display: none; }
+   .speaker-btn { position: fixed; top: calc(28px * var(--chrome-scale, 1)); left: calc(84px * var(--chrome-scale, 1)); z-index: 100; display: none; }
+   
+    /* Controls Bar & Overview Modal */
+    .controls-bar {
+      position: fixed;
+      bottom: calc(24px * var(--chrome-scale, 1));
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      padding: 8px 20px;
+      border-radius: 999px;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: 1000;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      user-select: none;
+    }
+    .ctrl-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #cbd5e1;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      font-family: inherit;
+    }
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .ctrl-btn svg { width: 16px; height: 16px; display: block; flex-shrink: 0; }
+    .slide-counter {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono, monospace);
+      font-size: 16px;
+      font-weight: 800;
+      color: #f1f5f9;
+      padding: 0 12px;
+      border-left: 1px solid rgba(255, 255, 255, 0.15);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .slide-progress-track {
+      width: 80px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .slide-progress-fill {
+      height: 100%;
+      background: var(--b-accent-cyan, #06b6d4);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    
+    .deck-overview {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 15, 29, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      padding: 40px 60px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .deck-overview.active { display: flex; opacity: 1; }
+    .overview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      padding-bottom: 16px;
+    }
+    .overview-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .overview-hint {
+      font-size: 15px;
+      color: #94a3b8;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 5px 12px;
+      border-radius: 8px;
+    }
+    .overview-close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .overview-close-btn:hover { background: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      width: 100%;
+    }
+    .overview-card {
+      background: rgba(30, 41, 59, 0.75);
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+    .overview-card:hover {
+      border-color: var(--b-accent-cyan, #06b6d4);
+      transform: translateY(-4px);
+      background: rgba(30, 41, 59, 0.95);
+    }
+    .overview-card.current {
+      border-color: var(--b-accent-cyan, #06b6d4);
+      box-shadow: 0 0 24px rgba(6, 182, 212, 0.35);
+      background: rgba(14, 116, 144, 0.3);
+    }
+    .overview-card-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      font-family: var(--font-mono, monospace);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #e2e8f0;
+    }
+    .overview-card-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.35;
+      margin-right: 52px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .overview-card-desc {
+      font-size: 15px;
+      color: #94a3b8;
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
    .watermark {
      position: fixed;
      top: calc(28px * var(--chrome-scale, 1));
@@ -492,7 +680,7 @@
      display: flex;
      align-items: center;
      justify-content: center;
-     font-size: 24px;
+     font-size: 28px;
      margin-bottom: var(--space-2);
    }
    .icon-box.round { border-radius: 50%; }
@@ -503,14 +691,15 @@
 
    .b-card h3 {
      font-family: var(--font-display);
-     font-size: 26px;
-     font-weight: 700;
+     font-size: 28px;
+     font-weight: 800;
      color: var(--b-text);
      line-height: 1.25;
+     margin-bottom: 8px;
    }
    .b-card p {
-     font-size: 18px;
-     line-height: 1.65;
+     font-size: 20px;
+     line-height: 1.62;
      color: var(--b-text-secondary);
    }
    .b-card ul {
@@ -518,11 +707,11 @@
      margin-top: var(--space-2);
    }
    .b-card li {
-     font-size: 17px;
+     font-size: 19px;
      color: var(--b-text-secondary);
      padding: 6px 0 6px 26px;
      position: relative;
-     line-height: 1.55;
+     line-height: 1.6;
    }
    .b-card li::before {
      content: '';
@@ -569,8 +758,8 @@
 
    .cover-logo {
      font-family: var(--font-display);
-     font-size: 22px;
-     font-weight: 700;
+     font-size: 24px;
+     font-weight: 800;
      letter-spacing: 2px;
      text-transform: uppercase;
      color: var(--b-text-muted);
@@ -579,17 +768,18 @@
    .cover-logo span { color: var(--b-accent); }
    .cover-title {
      font-family: var(--font-display);
-     font-size: clamp(64px, 6.5vw, 110px);
+     font-size: clamp(68px, 7vw, 115px);
      font-weight: 800;
      line-height: 1.08;
      letter-spacing: -2px;
      margin-bottom: var(--space-5);
    }
    .cover-sub {
-     font-size: 28px;
-     line-height: 1.6;
+     font-size: 30px;
+     line-height: 1.55;
+     font-weight: 600;
      color: var(--b-text-secondary);
-     max-width: 1000px;
+     max-width: 1100px;
      margin-bottom: var(--space-8);
    }
    .cover-divider {
@@ -614,7 +804,7 @@
    .cover-stat:last-child { border-right: none; }
    .cover-stat .n {
      font-family: var(--font-display);
-     font-size: 40px;
+     font-size: 48px;
      font-weight: 800;
      background: var(--b-grad-accent);
      -webkit-background-clip: text;
@@ -622,9 +812,9 @@
      background-clip: text;
    }
    .cover-stat .l {
-     font-size: 14px;
+     font-size: 16px;
      color: var(--b-text-muted);
-     font-weight: 600;
+     font-weight: 700;
      letter-spacing: 1px;
      text-transform: uppercase;
      margin-top: var(--space-1);
@@ -645,7 +835,7 @@
    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
    .slide.dark .stat-card { background: var(--b-surface); backdrop-filter: blur(12px); }
    .stat-label {
-     font-size: 13px;
+     font-size: 16px;
      font-weight: 700;
      letter-spacing: 1px;
      text-transform: uppercase;
@@ -654,20 +844,20 @@
    }
    .stat-nb {
      font-family: var(--font-display);
-     font-size: 46px;
+     font-size: 56px;
      font-weight: 800;
      color: var(--b-text);
      line-height: 1.1;
      letter-spacing: -1px;
    }
    .stat-nb .stat-unit {
-     font-size: 24px;
-     font-weight: 600;
+     font-size: 26px;
+     font-weight: 700;
      color: var(--b-text-secondary);
      margin-left: 4px;
    }
    .stat-note {
-     font-size: 15px;
+     font-size: 17px;
      color: var(--b-text-muted);
      margin-top: var(--space-2);
      font-weight: 500;
@@ -698,7 +888,7 @@
    }
    .quote-text {
      font-family: var(--font-display);
-     font-size: 32px;
+     font-size: 34px;
      font-weight: 600;
      line-height: 1.5;
      color: var(--b-text);
@@ -706,7 +896,7 @@
      z-index: 1;
    }
    .quote-src {
-     font-size: 16px;
+     font-size: 19px;
      color: var(--b-text-muted);
      margin-top: var(--space-4);
      font-weight: 600;
@@ -716,7 +906,7 @@
      background: var(--b-accent-soft);
      border-radius: var(--radius-md);
      padding: var(--space-5) var(--space-6);
-     font-size: 20px;
+     font-size: 23px;
      line-height: 1.6;
      color: var(--b-accent-600);
      font-weight: 600;
@@ -949,9 +1139,11 @@
     .t-edge-card img { object-fit: cover; }
 
     /* ==========================================================
-       CLICK-TO-ZOOM LIGHTBOX (opt-in via data-zoomable)
+       CLICK / DOUBLE-CLICK IMAGE ZOOM LIGHTBOX (默认双击放大)
        放在 body 视口层之外,不受 .deck-stage transform 影响
        ========================================================== */
+    .slide img,
+    figure img,
     [data-zoomable] { cursor: zoom-in; }
     [data-zoomable] img,
     [data-zoomable] > img { display: block; }
@@ -1079,8 +1271,8 @@
    }
    .pipeline-step:last-child::after { display: none; }
    .pipeline-step .step-nb {
-     width: 36px;
-     height: 36px;
+     width: 42px;
+     height: 42px;
      border-radius: 50%;
      background: var(--b-accent-soft);
      color: var(--b-accent);
@@ -1088,18 +1280,18 @@
      align-items: center;
      justify-content: center;
      font-family: var(--font-display);
-     font-size: 16px;
+     font-size: 19px;
      font-weight: 800;
      margin-bottom: var(--space-3);
    }
    .pipeline-step h3 {
      font-family: var(--font-display);
-     font-size: 22px;
-     font-weight: 700;
+     font-size: 24px;
+     font-weight: 800;
      margin-bottom: var(--space-2);
    }
    .pipeline-step p {
-     font-size: 16px;
+     font-size: 19px;
      line-height: 1.6;
      color: var(--b-text-secondary);
    }
@@ -1128,8 +1320,8 @@
      border-radius: var(--radius-md);
      padding: var(--space-6);
      font-family: var(--font-mono);
-     font-size: 17px;
-     line-height: 1.7;
+     font-size: 19px;
+     line-height: 1.65;
      text-align: left;
      max-width: 100%;
      overflow-x: auto;
@@ -1149,7 +1341,7 @@
    .data-table {
      border-collapse: collapse;
      width: 100%;
-     font-size: 17px;
+     font-size: 20px;
      text-align: left;
      border-radius: var(--radius-md);
      overflow: hidden;
@@ -1158,13 +1350,15 @@
    .data-table th {
      background: var(--b-text);
      color: #fff;
-     padding: 14px 20px;
-     font-weight: 700;
+     padding: 16px 22px;
+     font-weight: 800;
+     font-size: 21px;
    }
    .data-table td {
-     padding: 12px 20px;
+     padding: 14px 22px;
      border-bottom: 1px solid var(--b-border);
      color: var(--b-text-secondary);
+     line-height: 1.5;
    }
    .data-table tr:nth-child(even) td { background: rgba(15, 23, 42, 0.02); }
 
@@ -1174,9 +1368,9 @@
    .badge {
      display: inline-flex;
      align-items: center;
-     padding: 5px 12px;
+     padding: 5px 14px;
      border-radius: 20px;
-     font-size: 12px;
+     font-size: 14px;
      font-weight: 800;
      letter-spacing: 0.5px;
      text-transform: uppercase;
@@ -1187,10 +1381,10 @@
    .tag {
      display: inline-flex;
      align-items: center;
-     padding: 6px 14px;
+     padding: 6px 16px;
      border-radius: 20px;
-     font-size: 14px;
-     font-weight: 600;
+     font-size: 16px;
+     font-weight: 700;
      background: var(--b-bg-elevated);
      border: 1px solid var(--b-border);
      color: var(--b-text-secondary);
@@ -1223,7 +1417,7 @@
    }
    .compare-card { text-align: center; }
    .compare-card .label {
-     font-size: 14px;
+     font-size: 16px;
      font-weight: 700;
      letter-spacing: 1px;
      text-transform: uppercase;
@@ -1232,7 +1426,7 @@
    }
    .compare-card .value {
      font-family: var(--font-display);
-     font-size: 52px;
+     font-size: 56px;
      font-weight: 800;
      color: var(--b-text);
      line-height: 1;
@@ -1337,7 +1531,7 @@
      .deck { position: static; width: auto; height: auto; overflow: visible; transform: none !important; }
      .slide { position: relative; inset: auto; visibility: visible; opacity: 1; pointer-events: auto; page-break-after: always; break-after: page; }
      .slide:last-of-type { page-break-after: auto; break-after: auto; }
-     .nav, .nav-arrows, .page-num, .watermark, .fs-btn, .speaker-btn { display: none !important; }
+     .nav, .nav-arrows, .page-num, .watermark, .fs-btn, .speaker-btn, .controls-bar { display: none !important; }
    }
  </style>
  </head>
@@ -1415,13 +1609,27 @@
 
  <div class="watermark">{{WATERMARK}}</div>
 
- <button class="fs-btn" onclick="toggleFs()" aria-label="Toggle fullscreen" title="Fullscreen (F)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
- <button class="speaker-btn" onclick="openSpeakerView()" aria-label="Speaker View" title="Speaker View (S)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
- <div class="nav-arrows"><button onclick="go(-1)" aria-label="Previous slide"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><button onclick="go(1)" aria-label="Next slide"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div>
- <div class="nav" id="nav"></div>
- <div class="page-num" id="pageNum"></div>
+  <div class="controls-bar" id="controlsBar">
+    <button class="ctrl-btn" onclick="go(-1)" title="上一页 (← / PageUp)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> 上一页</button>
+    <div class="slide-counter">
+      <span id="pageNum">01 / 01</span>
+      <div class="slide-progress-track"><div class="slide-progress-fill" id="progressFill" style="width: 100%;"></div></div>
+    </div>
+    <button class="ctrl-btn" onclick="go(1)" title="下一页 (→ / Space / PageDown)">下一页 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
+    <button class="ctrl-btn" onclick="toggleOverview()" title="全览缩略图 (O / Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 全览</button>
+    <button class="ctrl-btn" onclick="toggleFs()" title="全屏演示 (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> 全屏</button>
+    <button class="ctrl-btn" onclick="openSpeakerView()" title="演讲者视图 (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
+  </div>
 
- 
+  <!-- Overview Modal -->
+  <div class="deck-overview" id="overviewModal">
+    <div class="overview-header">
+      <div class="overview-title"><span>🗂 幻灯片全览导航</span><span class="overview-hint">按 ESC 或 O 键快速退出</span></div>
+      <button class="overview-close-btn" onclick="toggleOverview()">✕ 关闭全览</button>
+    </div>
+    <div class="overview-grid" id="overviewGrid"></div>
+  </div>
+
 <!-- Click-to-zoom lightbox (out-of-stage, fixed to viewport) -->
 <div class="img-lightbox" id="imgLightbox" role="dialog" aria-hidden="true" aria-label="图片放大预览">
   <button class="img-lightbox-close" type="button" aria-label="关闭">×</button>
@@ -1432,7 +1640,7 @@
     <img class="img-lightbox-img" id="imgLightboxImg" alt="放大预览" />
   </div>
   <div class="img-lightbox-cap" id="imgLightboxCap" hidden></div>
-  <div class="img-lightbox-hint">ESC · 任意位置 · 关闭</div>
+  <div class="img-lightbox-hint">双击图片 · ESC · 任意位置关闭</div>
 </div>
 
 <script>   /* ==========================================================
@@ -1603,11 +1811,14 @@
 
    function doSlideUpdate(next) {
      slides[cur].classList.remove('active');
-     nav.children[cur].classList.remove('on');
+     if (nav && nav.children[cur]) nav.children[cur].classList.remove('on');
      cur = next;
      slides[cur].classList.add('active');
-     nav.children[cur].classList.add('on');
-     document.getElementById('pageNum').textContent = (cur + 1) + ' / ' + N;
+     if (nav && nav.children[cur]) nav.children[cur].classList.add('on');
+     const pageNum = document.getElementById('pageNum');
+     if (pageNum) pageNum.textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
+     const progressFill = document.getElementById('progressFill');
+     if (progressFill) progressFill.style.width = ((cur + 1) / N * 100) + '%';
      history.replaceState(null, '', '#' + slides[cur].id);
      updateViewportBg();
      broadcastSpeakerState();
@@ -1622,13 +1833,51 @@
      else document.documentElement.requestFullscreen();
    }
 
+   function buildOverview() {
+     const grid = document.getElementById('overviewGrid');
+     if (!grid) return;
+     grid.innerHTML = '';
+     slides.forEach((s, idx) => {
+       const card = document.createElement('div');
+       card.className = `overview-card ${idx === cur ? 'current' : ''}`;
+       const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero, .cover-title')?.innerText || `Slide ${idx + 1}`;
+       const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+       card.innerHTML = `
+         <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
+         <div class="overview-card-title">${title}</div>
+         <div class="overview-card-desc">${desc}</div>
+       `;
+       card.onclick = () => { jump(idx); toggleOverview(); };
+       grid.appendChild(card);
+     });
+   }
+
+   function toggleOverview() {
+     const modal = document.getElementById('overviewModal');
+     if (!modal) return;
+     const isOpening = !modal.classList.contains('active');
+     if (isOpening) {
+       buildOverview();
+       modal.classList.add('active');
+     } else {
+       modal.classList.remove('active');
+     }
+   }
+
    document.addEventListener('keydown', e => {
+     const modal = document.getElementById('overviewModal');
+     const isOverviewActive = modal && modal.classList.contains('active');
+     if (e.key === 'Escape') {
+       if (isOverviewActive) { toggleOverview(); return; }
+     }
+     if (e.key === 'o' || e.key === 'O') { toggleOverview(); return; }
+     if (e.key === 'f' || e.key === 'F') { if (!e.metaKey && !e.ctrlKey) toggleFs(); return; }
+     if (e.key === 's' || e.key === 'S') { openSpeakerView(); return; }
+     if (isOverviewActive) return;
      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); }
      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
      if (e.key === 'Home') { e.preventDefault(); jump(0); }
      if (e.key === 'End') { e.preventDefault(); jump(N - 1); }
-     if (e.key === 'f' || e.key === 'F') toggleFs();
-     if (e.key === 's' || e.key === 'S') openSpeakerView();
    });
 
    let tx = 0;
@@ -1804,9 +2053,10 @@
    if (wmEl && !wmEl.textContent.trim().replace('{{WATERMARK}}', '')) wmEl.remove();
 
    /* ==========================================================
-      CLICK-TO-ZOOM LIGHTBOX
-      opt-in: <img data-zoomable> 或 <figure data-zoomable><img></figure>
-      同 slide 内的多张可点击图自动归组,支持左右键翻页
+      DEFAULT DOUBLE-CLICK IMAGE ZOOM & LIGHTBOX
+      - 默认支持鼠标双击任意图片(img)全屏放大
+      - 同时支持点击带有 [data-zoomable] 的图片/卡片
+      - 再次双击/单击背景/按ESC关闭，同页多图支持左右箭头切换
       ========================================================== */
    (function() {
      const lb = document.getElementById('imgLightbox');
@@ -1817,41 +2067,50 @@
      const lbClose = lb.querySelector('.img-lightbox-close');
      const lbPrev = lb.querySelector('.img-lightbox-prev');
      const lbNext = lb.querySelector('.img-lightbox-next');
-     let currentGroup = [];
+     let currentGroup = { items: [] };
      let currentIndex = -1;
 
      function collectGroups() {
        const groups = new Map();
-       document.querySelectorAll('[data-zoomable]').forEach(el => {
-         const img = el.tagName === 'IMG' ? el : el.querySelector('img');
-         if (!img) return;
-         const slide = el.closest('.slide') || document.body;
+       const allImgs = document.querySelectorAll('.slide img, figure img, [data-zoomable] img, img[data-zoomable]');
+       allImgs.forEach(img => {
+         if (img.classList.contains('img-lightbox-img') || img.closest('.deck-overview') || img.closest('.img-lightbox')) return;
+         const slide = img.closest('.slide') || document.body;
          const key = slide.id || ('__group__' + groups.size);
          if (!groups.has(key)) groups.set(key, { slide, items: [] });
-         const fig = el.tagName === 'FIGURE' ? el.querySelector('figcaption') : null;
+         const figure = img.closest('figure');
+         const figCap = figure ? figure.querySelector('figcaption') : null;
+         const capText = figCap ? (figCap.textContent || '').trim() : (img.getAttribute('alt') || img.getAttribute('title') || '');
          groups.get(key).items.push({
-           el, img,
-           src: img.getAttribute('src'),
+           img,
+           src: img.getAttribute('src') || img.currentSrc,
            alt: img.getAttribute('alt') || '',
-           cap: fig ? (fig.textContent || '').trim() : ''
+           cap: capText
          });
        });
-       return Array.from(groups.values());
+       return groups;
      }
 
      function applyItem(group, index) {
        const item = group.items[index];
+       if (!item) return;
        if (lbImg.src !== item.src) lbImg.src = item.src;
        lbImg.alt = item.alt;
-       if (item.cap) { lbCap.textContent = item.cap; lbCap.hidden = false; }
-       else { lbCap.hidden = true; }
+       if (item.cap && item.cap !== '放大预览') {
+         lbCap.textContent = item.cap;
+         lbCap.hidden = false;
+       } else {
+         lbCap.hidden = true;
+       }
        if (group.items.length > 1) {
          lbCounter.textContent = (index + 1) + ' / ' + group.items.length;
          lbCounter.hidden = false;
-         lbPrev.hidden = false; lbNext.hidden = false;
+         lbPrev.hidden = false;
+         lbNext.hidden = false;
        } else {
          lbCounter.hidden = true;
-         lbPrev.hidden = true; lbNext.hidden = true;
+         lbPrev.hidden = true;
+         lbNext.hidden = true;
        }
      }
 
@@ -1871,7 +2130,7 @@
      }
 
      function nav(delta) {
-       if (!currentGroup.length) return;
+       if (!currentGroup.items || !currentGroup.items.length) return;
        const n = currentGroup.items.length;
        if (n < 2) return;
        currentIndex = (currentIndex + delta + n) % n;
@@ -1881,19 +2140,33 @@
      lb.addEventListener('click', function(e) {
        if (e.target === lb || e.target.classList.contains('img-lightbox-frame')) close();
      });
-     lbClose.addEventListener('click', function(e) { e.stopPropagation(); close(); });
-     lbPrev.addEventListener('click', function(e) { e.stopPropagation(); nav(-1); });
-     lbNext.addEventListener('click', function(e) { e.stopPropagation(); nav(1); });
+     lb.addEventListener('dblclick', function(e) {
+       e.stopPropagation();
+       close();
+     });
+     if (lbClose) lbClose.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+     if (lbPrev) lbPrev.addEventListener('click', function(e) { e.stopPropagation(); nav(-1); });
+     if (lbNext) lbNext.addEventListener('click', function(e) { e.stopPropagation(); nav(1); });
 
      function bind() {
        const groups = collectGroups();
        groups.forEach(function(g) {
          g.items.forEach(function(item, i) {
-           item.el.addEventListener('click', function(e) {
+           // 1. 默认：双击任意图片放大
+           item.img.addEventListener('dblclick', function(e) {
              e.preventDefault();
              e.stopPropagation();
              openAt(g, i);
            });
+           // 2. 显式 data-zoomable 支持单击放大
+           const zoomableParent = item.img.closest('[data-zoomable]');
+           if (zoomableParent) {
+             zoomableParent.addEventListener('click', function(e) {
+               e.preventDefault();
+               e.stopPropagation();
+               openAt(g, i);
+             });
+           }
          });
        });
      }

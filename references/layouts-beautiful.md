@@ -32,6 +32,12 @@
  7. **纵向布局自适应策略（杜绝巨幅中空）**：
     - **无中间扩展内容（如仅有标题+2列卡片）**：使用 **方案一** `.frame.vstack`，设置 `justify-content: flex-start; gap: 40px;`（或 `justify-content: center;`），使内容紧凑靠拢，留白集中在底部。
     - **含流程图/数据指标（3段式结构）**：使用 **方案二** `.frame.between`，配合 `justify-content: space-between`，并在中间插入 `.pipeline`（步骤流程）或 `.stat-card`（指标行）填补空白。
+ 8. **页眉三要素紧凑压缩与空间让渡原则 (Header Compression)**：
+    - Badge/Eyebrow (`.eyebrow-pill` / `.kicker`)、主标题 (`.h-xl` / `.slide-title`)、副标题 (`.lead` / `.slide-subtitle`) 必须紧凑编排，严格控制页眉总高度 <= 200px (18%~22% 画布高)。
+    - Badge-to-Title 6~8px，Title-to-Subtitle 8~12px，Subtitle-to-Content 16~24px。
+    - 严禁层层堆叠 20~30px 外边距，将 78%+ 纵向空间让渡给卡片、图表与正文。可采用 `.header-compact` 容器或 `.header-split` 左右分栏容器。
+ 9. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**：
+    - 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演示与各种缩放比例下的极佳易读性。
 
  ## 基础结构
 
@@ -74,9 +80,11 @@
  ```html
  <div class="slide hero dark" id="sN">
    <div class="cover-frame">
-     <div class="kicker anim d1">Act I</div>
-     <div class="h-hero anim d2">章节标题</div>
-     <div class="lead anim d3" style="max-width:800px">章节引言</div>
+     <div class="header-compact">
+       <div class="kicker anim d1">Act I</div>
+       <div class="h-hero anim d2">章节标题</div>
+       <div class="lead anim d3" style="max-width:800px">章节引言</div>
+     </div>
    </div>
  </div>
  ```
@@ -87,7 +95,7 @@
  <div class="slide light" id="sN">
    <div class="chrome"><div>章节</div><div>页码</div></div>
    <div class="frame vstack" style="justify-content:center">
-     <div>
+     <div class="header-compact">
        <div class="kicker anim d1">小标题</div>
        <div class="h-xl anim d2">大标题带 <span class="em">强调</span></div>
        <div class="lead anim d3" style="max-width:900px">说明文字</div>

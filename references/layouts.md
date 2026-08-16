@@ -39,11 +39,33 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 - 如果一张截图/UI 情景图在横向页面里变成很长的条,不要硬拉满宽;改成极宽横图素材,或拆成 2-3 个局部面板拼排
 - 多图面板必须使用同一个高度类,不要混用 `h-16` / `h-22` 或手写不同 `height`
 
-### B3. 标题与正文的间距
+### B3. 页眉三要素（Badge + 主标题 + 副标题）紧凑压缩与空间让渡
 
-- 两段式页面(顶部标题 + 下方长正文/引用/图表)必须在标题和内容之间留出明显间距,推荐 `margin-top:6vh` 到 `8vh`
+- **页眉三要素组合**（分类 Badge、主标题 h1/h2、副标题/说明 lead/tagline）必须保持紧凑扁平，**总高度严格控制在 <= 200px（约占 1080p 画布的 18%~22%）**，杜绝层层堆叠 20~30px 大外边距，为下方主内容（卡片、图表、流程等）留出 78%+ 黄金纵向空间。
+- **具体间距标准**：
+  - Badge 与主标题间距：`6px ~ 8px`
+  - 主标题与副标题间距：`8px ~ 12px`
+  - 副标题与下方主内容区间距：`16px ~ 24px`
+- **推荐排版方案**：
+  - 使用 `.header-compact` 垂直紧凑编排
+  - 使用 `.header-split` 左右水平分栏（左标题 + 右副标题，将 3 行压缩为 1 行）
+  - 使用行内徽标前缀（如 `<h2><span class="eyebrow-pill">TAG</span> 主标题</h2>`）
 - 居中大标题页必须让主标题在页面水平居中,使用 `.center` 或 `text-align:center; margin-inline:auto`
-- 复杂内容页(大标题 + 小标题 + 详细内容)要让大标题和下方内容分层,下方内容使用左右两端对齐的 grid 或 rowline,不要全部堆在一条中轴线上
+
+### B4. 主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)
+
+- **字号阶梯规范**：在 1920×1080 舞台下，所有文字必须遵循大字号标准，杜绝 12px~14px 密密麻麻的文档感：
+  - **分类徽章/Pill** (`.eyebrow-pill` / `.kicker`): `16px ~ 18px` (`font-weight: 800`)
+  - **主标题** (`.slide-title` / `.h-xl`): `48px ~ 54px` (`font-weight: 800/900`)
+  - **副标题/金句引导语** (`.slide-subtitle` / `.lead`): `22px ~ 26px` (`font-weight: 600`)
+  - **卡片/分栏标题** (`.b-card h3` / `.card-title`): `26px ~ 28px` (`font-weight: 800`)
+  - **卡片正文/主要段落** (`.b-card p` / `.card-text` / `p`): `20px ~ 22px` (`line-height: 1.62`)
+  - **列表项/Bullet Items** (`.b-card li` / `.feature-desc`): `19px ~ 21px` (`line-height: 1.6`)
+  - **数据大数字** (`.stat-nb`): `56px ~ 72px`，**数据标签** (`.stat-label`): `16px ~ 18px` (`font-weight: 700`)
+  - **流水线/Pipeline** (`.step-nb: 19px~20px`, `h3: 24px`, `p: 19px`)
+  - **表格** (`.data-table`): `th: 21px (w:800)` / `td: 20px (line-height: 1.5)`
+  - **代码块** (`.code-block`): `19px ~ 21px` (`line-height: 1.65`)
+  - **底栏控制按钮** (`.ctrl-btn` / `.slide-counter`): `16px` (`font-weight: 700/800`)
 
 ### C. 图片定位准则（避免图片堆到页面最底部、被浏览器工具栏遮挡）
 

@@ -123,7 +123,7 @@
         .hero-chip {
             padding: 10px 22px; border-radius: 30px;
             background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(12px); font-size: 17px; font-weight: 600; color: #cbd5e1;
+            backdrop-filter: blur(12px); font-size: 19px; font-weight: 600; color: #cbd5e1;
             display: flex; align-items: center; gap: 8px;
             transition: all 0.3s ease;
         }
@@ -131,7 +131,7 @@
             background: rgba(79, 70, 229, 0.15); border-color: rgba(6, 182, 212, 0.4); color: #fff;
             transform: translateY(-2px);
         }
-        .chip-dot { color: var(--b-accent-cyan); font-size: 16px; }
+        .chip-dot { color: var(--b-accent-cyan); font-size: 18px; }
 
         /* Typography */
         .display-hero {
@@ -149,16 +149,16 @@
             display: inline-flex; align-items: center; gap: 8px;
             padding: 8px 22px; border-radius: 30px;
             background: var(--b-accent-soft); border: 1px solid rgba(79, 70, 229, 0.3);
-            font-family: var(--font-display); font-size: 15px; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.15em; color: var(--b-accent-cyan);
+            font-family: var(--font-display); font-size: 16px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 0.12em; color: var(--b-accent-cyan);
             margin-bottom: 14px; width: fit-content;
         }
         .tagline {
-            font-family: var(--font-body); font-size: 24px; font-weight: 600;
+            font-family: var(--font-body); font-size: 26px; font-weight: 600;
             color: #94a3b8; margin-bottom: 20px; letter-spacing: -0.01em;
         }
         .body-desc {
-            font-family: var(--font-body); font-size: 21px; line-height: 1.6;
+            font-family: var(--font-body); font-size: 22px; line-height: 1.62;
             color: var(--text-sub); max-width: 1200px; margin: 0;
         }
 
@@ -189,17 +189,17 @@
         .b-card.violet { --b-accent: var(--b-violet); border-top-color: var(--b-violet); }
 
         .card-num-badge {
-            width: 44px; height: 44px; border-radius: 14px;
+            width: 48px; height: 48px; border-radius: 14px;
             background: var(--b-grad-accent); color: #fff;
             display: flex; align-items: center; justify-content: center;
-            font-family: var(--font-display); font-size: 18px; font-weight: 700;
+            font-family: var(--font-display); font-size: 20px; font-weight: 800;
             margin-bottom: 18px;
         }
         .icon-box {
-            width: 52px; height: 52px; border-radius: 14px;
+            width: 60px; height: 60px; border-radius: 14px;
             background: var(--b-accent-soft); color: var(--b-accent);
             display: flex; align-items: center; justify-content: center;
-            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+            font-size: 28px; font-weight: 700; margin-bottom: 16px;
         }
         .icon-box.teal { background: rgba(13, 148, 136, 0.12); color: var(--b-teal); }
         .icon-box.rose { background: rgba(225, 29, 72, 0.12); color: var(--b-rose); }
@@ -207,11 +207,11 @@
         .icon-box.violet { background: rgba(124, 58, 237, 0.12); color: var(--b-violet); }
 
         .card-title {
-            font-family: var(--font-display); font-size: 24px; font-weight: 700;
+            font-family: var(--font-display); font-size: 28px; font-weight: 800;
             margin: 0 0 10px 0; color: var(--text-color);
         }
         .card-body {
-            font-size: 17px; line-height: 1.65; color: var(--text-sub); margin: 0;
+            font-size: 20px; line-height: 1.62; color: var(--text-sub); margin: 0;
         }
 
         /* Pipeline Steps */
@@ -236,10 +236,10 @@
         }
         .pipeline-step:last-child::after { display: none; }
         .step-nb {
-            width: 38px; height: 38px; border-radius: 50%;
+            width: 42px; height: 42px; border-radius: 50%;
             background: var(--b-grad-accent); color: #fff;
             display: flex; align-items: center; justify-content: center;
-            font-family: var(--font-display); font-size: 17px; font-weight: 800; margin-bottom: 14px;
+            font-family: var(--font-display); font-size: 19px; font-weight: 800; margin-bottom: 14px;
         }
 
         /* Stat Cards */
@@ -253,19 +253,43 @@
             box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.2);
         }
         .stat-label {
-            font-size: 14px; font-weight: 700; letter-spacing: 1px;
+            font-size: 16px; font-weight: 700; letter-spacing: 1px;
             text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px;
         }
         .stat-nb {
-            font-family: var(--font-display); font-size: 48px; font-weight: 800;
+            font-family: var(--font-display); font-size: 56px; font-weight: 800;
             background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             line-height: 1;
         }
         .stat-note {
-            font-size: 15px; color: var(--text-sub); margin-top: 10px; font-weight: 500;
+            font-size: 17px; color: var(--text-sub); margin-top: 10px; font-weight: 500;
         }
 
-       /* Frame Images */
+       /* Frame Images & Default Double-Click Zoom */
+       .slide img, figure img, [data-zoomable] { cursor: zoom-in; }
+
+       .img-lightbox {
+           position: fixed; inset: 0; z-index: 99999;
+           background: rgba(8, 12, 24, 0.90); backdrop-filter: blur(16px);
+           display: flex; flex-direction: column; align-items: center; justify-content: center;
+           opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+           cursor: zoom-out; padding: 50px 70px 60px; box-sizing: border-box; user-select: none;
+       }
+       .img-lightbox.open { opacity: 1; visibility: visible; }
+       .img-lightbox-frame { position: relative; display: flex; align-items: center; justify-content: center; max-width: 100%; max-height: 100%; }
+       .img-lightbox-img { display: block; max-width: 88vw; max-height: 80vh; width: auto; height: auto; border-radius: 8px; box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1); transform: scale(0.94); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: #0f172a; }
+       .img-lightbox.open .img-lightbox-img { transform: scale(1); }
+       .img-lightbox-cap { margin-top: 14px; font-size: 14px; line-height: 1.5; color: rgba(226, 232, 240, 0.85); text-align: center; max-width: 80ch; font-style: italic; }
+       .img-lightbox-close, .img-lightbox-prev, .img-lightbox-next { position: fixed; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(15, 23, 42, 0.65); color: #e2e8f0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; backdrop-filter: blur(10px); font-family: inherit; font-size: 20px; line-height: 1; }
+       .img-lightbox-close:hover, .img-lightbox-prev:hover, .img-lightbox-next:hover { background: var(--b-accent, #4f46e5); border-color: var(--b-accent, #4f46e5); color: #fff; transform: scale(1.08); }
+       .img-lightbox-close { top: 26px; right: 32px; font-size: 24px; }
+       .img-lightbox-close:hover { transform: rotate(90deg) scale(1.08); }
+       .img-lightbox-prev { top: 50%; left: 26px; transform: translateY(-50%); }
+       .img-lightbox-next { top: 50%; right: 26px; transform: translateY(-50%); }
+       .img-lightbox-prev:hover, .img-lightbox-next:hover { transform: translateY(-50%) scale(1.08); }
+       .img-lightbox-counter { position: fixed; top: 30px; left: 32px; font-family: var(--font-mono, monospace); font-size: 13px; font-weight: 700; letter-spacing: 1.5px; color: rgba(226, 232, 240, 0.9); background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 8px 16px; border-radius: 999px; }
+       .img-lightbox-hint { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); font-family: inherit; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: rgba(226, 232, 240, 0.65); background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.12); backdrop-filter: blur(8px); padding: 7px 18px; border-radius: 999px; }
+
        /* IMAGE TREATMENTS T1-T8 — 默认无圆角无阴影,真要卡片化用 .t-edge-card (T8) */
        .frame-img,
         figure[class^="t-"],
@@ -338,11 +362,11 @@
             padding: 32px 40px; backdrop-filter: blur(16px); position: relative;
         }
         .quote-text {
-            font-family: var(--font-display); font-size: 30px; font-weight: 600;
-            line-height: 1.45; color: var(--text-color); margin: 0 0 14px 0;
+            font-family: var(--font-display); font-size: 34px; font-weight: 600;
+            line-height: 1.5; color: var(--text-color); margin: 0 0 14px 0;
         }
         .quote-author {
-            font-size: 17px; font-weight: 600; color: var(--b-accent-cyan);
+            font-size: 19px; font-weight: 600; color: var(--b-accent-cyan);
         }
 
         /* Compare Component */
@@ -364,7 +388,7 @@
         }
         .tag {
             display: inline-flex; align-items: center; padding: 6px 18px; border-radius: 20px;
-            font-size: 15px; font-weight: 600; background: rgba(255,255,255,0.06);
+            font-size: 16px; font-weight: 700; background: rgba(255,255,255,0.06);
             border: 1px solid var(--card-border); color: var(--text-sub);
         }
         .tag.accent { background: var(--b-accent-soft); color: var(--b-accent-cyan); border-color: rgba(6,182,212,0.4); }
@@ -383,10 +407,10 @@
         .traffic-dot.red { background: #ff5f56; }
         .traffic-dot.yellow { background: #ffbd2e; }
         .traffic-dot.green { background: #27c93f; }
-        .code-title { font-family: monospace; font-size: 14px; color: #64748b; margin-left: 10px; }
+        .code-title { font-family: monospace; font-size: 16px; color: #64748b; margin-left: 10px; }
         .code-body {
             padding: 24px; font-family: 'Fira Code', monospace, sans-serif;
-            font-size: 16px; line-height: 1.8; color: #e2e8f0; overflow-x: auto;
+            font-size: 19px; line-height: 1.65; color: #e2e8f0; overflow-x: auto;
         }
         .code-kw { color: #f472b6; }
         .code-prop { color: #38bdf8; }
@@ -462,30 +486,73 @@
         .slide.active .d5 { animation-delay: 0.54s; }
         .slide.active .d6 { animation-delay: 0.66s; }
 
+        /* Compact Header Layout & Space Compression */
+        .slide-header, .header-compact { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; width: 100%; }
+        .header-split { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: 20px; width: 100%; }
+
         /* Navigation Chrome Controls */
         .controls-bar {
-            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-            display: flex; align-items: center; gap: 16px;
-            background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 8px 24px; border-radius: 40px; backdrop-filter: blur(12px);
-            z-index: 100; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 10px;
+            background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 6px 16px; border-radius: 999px; backdrop-filter: blur(16px);
+            z-index: 100; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35); user-select: none;
         }
         .ctrl-btn {
-            background: none; border: none; color: #94a3b8; font-size: 18px; cursor: pointer;
-            width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
+            background: transparent; border: 1px solid transparent; color: #cbd5e1; font-size: 13px; font-weight: 600; cursor: pointer;
+            padding: 6px 12px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); font-family: inherit;
         }
-        .ctrl-btn:hover { background: rgba(255, 255, 255, 0.1); color: #fff; transform: scale(1.1); }
+        .ctrl-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.2); color: #fff; transform: translateY(-1px); }
+        .ctrl-btn svg { width: 14px; height: 14px; display: block; flex-shrink: 0; }
         .slide-counter {
-            font-family: var(--font-display); font-size: 16px; font-weight: 700;
-            color: #f8fafc; letter-spacing: 0.05em; min-width: 70px; text-align: center;
+            display: flex; align-items: center; gap: 8px;
+            font-family: var(--font-mono, monospace); font-size: 13px; font-weight: 700;
+            color: #f1f5f9; letter-spacing: 0.05em; padding: 0 8px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15); border-right: 1px solid rgba(255, 255, 255, 0.15);
         }
-        .dots-container { display: flex; gap: 8px; align-items: center; }
-        .dot {
-            width: 10px; height: 10px; border-radius: 50%; background: rgba(255, 255, 255, 0.25);
-            cursor: pointer; transition: all 0.3s ease;
+        .slide-progress-track {
+            width: 60px; height: 4px; background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px; overflow: hidden;
         }
-        .dot.active { background: var(--b-accent-cyan); transform: scale(1.3); box-shadow: 0 0 10px var(--b-accent-cyan); }
+        .slide-progress-fill {
+            height: 100%; background: var(--b-accent-cyan, #06b6d4);
+            border-radius: 999px; transition: width 0.3s ease;
+        }
+        
+        .deck-overview {
+            position: fixed; inset: 0; background: rgba(10, 15, 29, 0.94);
+            backdrop-filter: blur(20px); z-index: 9999; display: none; flex-direction: column;
+            padding: 40px 60px; box-sizing: border-box; overflow-y: auto; opacity: 0; transition: opacity 0.25s ease;
+        }
+        .deck-overview.active { display: flex; opacity: 1; }
+        .overview-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); padding-bottom: 16px;
+        }
+        .overview-title { font-size: 20px; font-weight: 700; color: #ffffff; display: flex; align-items: center; gap: 10px; }
+        .overview-hint { font-size: 13px; color: #94a3b8; background: rgba(255, 255, 255, 0.08); padding: 4px 10px; border-radius: 6px; }
+        .overview-close-btn {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff; font-size: 14px; font-weight: 600; padding: 6px 16px; border-radius: 999px;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .overview-close-btn:hover { background: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; width: 100%; }
+        .overview-card {
+            background: rgba(30, 41, 59, 0.7); border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s ease;
+            display: flex; flex-direction: column; gap: 10px; position: relative;
+        }
+        .overview-card:hover { border-color: var(--b-accent-cyan); transform: translateY(-4px); background: rgba(30, 41, 59, 0.95); }
+        .overview-card.current { border-color: var(--b-accent-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); background: rgba(14, 116, 144, 0.25); }
+        .overview-card-badge {
+            position: absolute; top: 12px; right: 12px; font-family: var(--font-mono, monospace);
+            font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12); color: #e2e8f0;
+        }
+        .overview-card-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.3; margin-right: 48px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .overview-card-desc { font-size: 13px; color: #94a3b8; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -1014,13 +1081,36 @@
         </div>
     </div>
 
-    <!-- NAVIGATION CHROME CONTROLS -->
-    <div class="controls-bar">
-        <button class="ctrl-btn" onclick="prevSlide()" title="上一页 (Left Arrow)">◄</button>
-        <div class="dots-container" id="dots"></div>
-        <span class="slide-counter" id="counter">01 / 12</span>
-        <button class="ctrl-btn" onclick="nextSlide()" title="下一页 (Right Arrow / Space)">►</button>
-        <button class="ctrl-btn" onclick="toggleFullScreen()" title="全屏演示 (F)">⛶</button>
+    <!-- NAVIGATION CHROME CONTROLS (上一页/下一页/全览/全屏) -->
+    <div class="controls-bar" id="controlsBar">
+        <button class="ctrl-btn" onclick="prevSlide()" title="上一页 (← / PageUp)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> 上一页
+        </button>
+        <div class="slide-counter">
+            <span id="counter">01 / 12</span>
+            <div class="slide-progress-track"><div class="slide-progress-fill" id="progressFill" style="width: 8.3%;"></div></div>
+        </div>
+        <button class="ctrl-btn" onclick="nextSlide()" title="下一页 (→ / Space / PageDown)">
+            下一页 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+        <button class="ctrl-btn" onclick="toggleOverview()" title="全览缩略图 (O / Esc)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 全览
+        </button>
+        <button class="ctrl-btn" onclick="toggleFullScreen()" title="全屏演示 (F)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> 全屏
+        </button>
+    </div>
+
+    <!-- OVERVIEW GALLERY MODAL -->
+    <div class="deck-overview" id="overviewModal">
+        <div class="overview-header">
+            <div class="overview-title">
+                <span>🗂 幻灯片全览导航</span>
+                <span class="overview-hint">按 ESC 或 O 键快速退出</span>
+            </div>
+            <button class="overview-close-btn" onclick="toggleOverview()">✕ 关闭全览</button>
+        </div>
+        <div class="overview-grid" id="overviewGrid"></div>
     </div>
 
     <!-- CORE JAVASCRIPT SCALING & VIEWPORT SYNC & CHART & COUNT-UP ENGINE -->
@@ -1158,7 +1248,8 @@
             currentSlide = index;
             const counter = document.getElementById('counter');
             if (counter) counter.innerText = `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
-            renderDots();
+            const progressFill = document.getElementById('progressFill');
+            if (progressFill) progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
             updateViewportBg(currentSlide);
 
             setTimeout(initSmartCharts, 150);
@@ -1180,10 +1271,50 @@
             }
         }
 
+        function buildOverview() {
+            const grid = document.getElementById('overviewGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            document.querySelectorAll('.slide').forEach((s, idx) => {
+                const card = document.createElement('div');
+                card.className = `overview-card ${idx + 1 === currentSlide ? 'current' : ''}`;
+                const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero, .display-hero')?.innerText || `Slide ${idx + 1}`;
+                const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+                card.innerHTML = `
+                    <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
+                    <div class="overview-card-title">${title}</div>
+                    <div class="overview-card-desc">${desc}</div>
+                `;
+                card.onclick = () => { showSlide(idx + 1); toggleOverview(); };
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleOverview() {
+            const modal = document.getElementById('overviewModal');
+            if (!modal) return;
+            const isOpening = !modal.classList.contains('active');
+            if (isOpening) {
+                buildOverview();
+                modal.classList.add('active');
+            } else {
+                modal.classList.remove('active');
+            }
+        }
+
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-            if (e.key === 'ArrowLeft') prevSlide();
-            if (e.key === 'f' || e.key === 'F') toggleFullScreen();
+            const modal = document.getElementById('overviewModal');
+            const isOverviewActive = modal && modal.classList.contains('active');
+            if (e.key === 'Escape') {
+                if (isOverviewActive) { toggleOverview(); return; }
+            }
+            if (e.key === 'o' || e.key === 'O') { toggleOverview(); return; }
+            if (e.key === 'f' || e.key === 'F') { if (!e.metaKey && !e.ctrlKey) toggleFullScreen(); return; }
+            if (isOverviewActive) return;
+            if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') { e.preventDefault(); nextSlide(); }
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+            if (e.key === 'Home') { e.preventDefault(); showSlide(1); }
+            if (e.key === 'End') { e.preventDefault(); showSlide(totalSlides); }
         });
 
         window.addEventListener('resize', () => {
@@ -1193,6 +1324,154 @@
 
         updateScale();
         showSlide(1);
+
+        /* Default Double-Click Image Zoom & Lightbox */
+        (function initImageLightbox() {
+            function ensureLightboxDOM() {
+                let lb = document.getElementById('imgLightbox');
+                if (!lb) {
+                    lb = document.createElement('div');
+                    lb.id = 'imgLightbox';
+                    lb.className = 'img-lightbox';
+                    lb.setAttribute('role', 'dialog');
+                    lb.setAttribute('aria-hidden', 'true');
+                    lb.setAttribute('aria-label', '图片放大预览');
+                    lb.innerHTML = `
+                        <button class="img-lightbox-close" type="button" aria-label="关闭">×</button>
+                        <button class="img-lightbox-prev" type="button" aria-label="上一张" hidden>‹</button>
+                        <button class="img-lightbox-next" type="button" aria-label="下一张" hidden>›</button>
+                        <div class="img-lightbox-counter" id="imgLightboxCounter" hidden></div>
+                        <div class="img-lightbox-frame">
+                            <img class="img-lightbox-img" id="imgLightboxImg" alt="放大预览" />
+                        </div>
+                        <div class="img-lightbox-cap" id="imgLightboxCap" hidden></div>
+                        <div class="img-lightbox-hint">双击图片 · ESC · 任意位置关闭</div>
+                    `;
+                    document.body.appendChild(lb);
+                }
+                return lb;
+            }
+
+            const lb = ensureLightboxDOM();
+            const lbImg = document.getElementById('imgLightboxImg');
+            const lbCap = document.getElementById('imgLightboxCap');
+            const lbCounter = document.getElementById('imgLightboxCounter');
+            const lbClose = lb.querySelector('.img-lightbox-close');
+            const lbPrev = lb.querySelector('.img-lightbox-prev');
+            const lbNext = lb.querySelector('.img-lightbox-next');
+            let currentGroup = { items: [] };
+            let currentIndex = -1;
+
+            function collectSlideImages() {
+                const groups = new Map();
+                const allImgs = document.querySelectorAll('.slide img, figure img, [data-zoomable] img, img[data-zoomable]');
+                allImgs.forEach(img => {
+                    if (img.classList.contains('img-lightbox-img') || img.closest('.deck-overview') || img.closest('.img-lightbox')) return;
+                    const slide = img.closest('.slide') || document.body;
+                    const key = slide.id || '__global_imgs__';
+                    if (!groups.has(key)) groups.set(key, { slide, items: [] });
+                    const figure = img.closest('figure');
+                    const figCap = figure ? figure.querySelector('figcaption') : null;
+                    const caption = figCap ? (figCap.textContent || '').trim() : (img.getAttribute('alt') || img.getAttribute('title') || '');
+                    groups.get(key).items.push({
+                        img,
+                        src: img.getAttribute('src') || img.currentSrc,
+                        alt: img.getAttribute('alt') || '',
+                        cap: caption
+                    });
+                });
+                return groups;
+            }
+
+            function applyItem(group, index) {
+                const item = group.items[index];
+                if (!item) return;
+                if (lbImg.src !== item.src) lbImg.src = item.src;
+                lbImg.alt = item.alt;
+                if (item.cap && item.cap !== '放大预览') {
+                    lbCap.textContent = item.cap;
+                    lbCap.hidden = false;
+                } else {
+                    lbCap.hidden = true;
+                }
+                if (group.items.length > 1) {
+                    lbCounter.textContent = (index + 1) + ' / ' + group.items.length;
+                    lbCounter.hidden = false;
+                    lbPrev.hidden = false;
+                    lbNext.hidden = false;
+                } else {
+                    lbCounter.hidden = true;
+                    lbPrev.hidden = true;
+                    lbNext.hidden = true;
+                }
+            }
+
+            function openAt(group, index) {
+                currentGroup = group;
+                currentIndex = index;
+                applyItem(group, index);
+                lb.classList.add('open');
+                lb.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function close() {
+                lb.classList.remove('open');
+                lb.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+
+            function nav(delta) {
+                if (!currentGroup.items || !currentGroup.items.length) return;
+                const n = currentGroup.items.length;
+                if (n < 2) return;
+                currentIndex = (currentIndex + delta + n) % n;
+                applyItem(currentGroup, currentIndex);
+            }
+
+            lb.addEventListener('click', function(e) {
+                if (e.target === lb || e.target.classList.contains('img-lightbox-frame') || e.target === lbClose) {
+                    close();
+                }
+            });
+            lb.addEventListener('dblclick', function(e) {
+                e.stopPropagation();
+                close();
+            });
+            if (lbClose) lbClose.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+            if (lbPrev) lbPrev.addEventListener('click', function(e) { e.stopPropagation(); nav(-1); });
+            if (lbNext) lbNext.addEventListener('click', function(e) { e.stopPropagation(); nav(1); });
+
+            function bindEvents() {
+                const groups = collectSlideImages();
+                groups.forEach(g => {
+                    g.items.forEach((item, i) => {
+                        item.img.addEventListener('dblclick', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openAt(g, i);
+                        });
+                        const zoomableParent = item.img.closest('[data-zoomable]');
+                        if (zoomableParent) {
+                            zoomableParent.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                openAt(g, i);
+                            });
+                        }
+                    });
+                });
+            }
+
+            bindEvents();
+
+            document.addEventListener('keydown', function(e) {
+                if (!lb.classList.contains('open')) return;
+                if (e.key === 'Escape') { close(); e.stopPropagation(); e.preventDefault(); }
+                else if (e.key === 'ArrowLeft') { nav(-1); e.stopPropagation(); e.preventDefault(); }
+                else if (e.key === 'ArrowRight') { nav(1); e.stopPropagation(); e.preventDefault(); }
+            }, true);
+        })();
     </script>
 </body>
 </html>

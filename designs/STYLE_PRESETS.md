@@ -4,6 +4,21 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 
 **Viewport CSS:** For mandatory base styles, see [viewport-base.css](viewport-base.css). Include in every presentation.
 
+**Core Presentation Rules**:
+1. **Header Area Compression (页眉三要素紧凑压缩)**: Badge (`.eyebrow-pill` / `.kicker`), Main Title (`.slide-title` / `.h-xl`), and Subtitle (`.slide-subtitle` / `.lead`) must be vertically compact, with total height <= 200px (18%~22% of 1080p canvas), keeping Badge-to-Title 6~8px, Title-to-Subtitle 8~12px, Subtitle-to-Body 16~24px to preserve 78%+ vertical space for content.
+2. **Mandatory 4 Controls Bar & Overview Modal (底栏四件套与全景模式)**: Every presentation must include `.controls-bar` (`◀ 上一页`, `01 / N`, `下一页 ▶`, `🗂 全览`, `⛶ 全屏`) and `#overviewModal` with full keyboard shortcuts (`←`/`→`/`Space` 翻页, `O` 全览, `F` 全屏, `Esc` 退出).
+3. **High-Legibility Large Font Standard (主要内容大字号高可读性规范 · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，所有生成页面必须遵循大字号标准阶梯：
+   - **分类徽章/Pill** (`.eyebrow-pill` / `.kicker`): `16px ~ 18px` (font-weight: 800)
+   - **主标题** (`.slide-title` / `.h-xl`): `48px ~ 54px` (font-weight: 800/900, line-height: 1.15)
+   - **副标题/金句** (`.slide-subtitle` / `.lead`): `22px ~ 26px` (font-weight: 600, line-height: 1.5)
+   - **卡片/分栏标题** (`.b-card h3` / `.card-title`): `26px ~ 28px` (font-weight: 800)
+   - **卡片正文/段落** (`.b-card p` / `.card-text` / `p`): `20px ~ 22px` (line-height: 1.62)
+   - **列表项/Bullet Items** (`.b-card li` / `.feature-desc`): `19px ~ 21px` (line-height: 1.6)
+   - **数据大数字** (`.stat-nb`): `56px ~ 72px`, **数据标签** (`.stat-label`): `16px ~ 18px` (font-weight: 700)
+   - **表格** (`.data-table`): `th: 21px` (font-weight: 800) / `td: 20px` (line-height: 1.5)
+   - **代码块** (`.code-block`): `19px ~ 21px` (line-height: 1.65)
+   - **底栏控制台** (`.ctrl-btn` / `.slide-counter`): `16px` (font-weight: 700/800)
+
 ---
 
 ## Dark Themes

@@ -38,14 +38,14 @@ typography:
     letterSpacing: "-0.02em"
   eyebrow-pill:
     fontFamily: "'Outfit', sans-serif"
-    fontWeight: 600
-    fontSize: "15px"
-    letterSpacing: "0.15em"
+    fontWeight: 800
+    fontSize: "16px"
+    letterSpacing: "0.12em"
     textTransform: "uppercase"
   body:
     fontFamily: "'Plus Jakarta Sans', 'Noto Sans SC', sans-serif"
     fontWeight: 400
-    fontSize: "21px"
+    fontSize: "22px"
     lineHeight: 1.6
 ---
 
@@ -139,9 +139,9 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 
 /* Middle Bridge Feature Chips (Hero Cover Component) */
 .hero-middle-bridge { display: flex; gap: 16px; flex-wrap: wrap; margin-top: -8px; margin-bottom: 4px; }
-.hero-chip { padding: 10px 22px; border-radius: 30px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); font-size: 17px; font-weight: 600; color: #cbd5e1; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
+.hero-chip { padding: 10px 22px; border-radius: 30px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); backdrop-filter: blur(12px); font-size: 19px; font-weight: 600; color: #cbd5e1; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease; }
 .hero-chip:hover { background: rgba(79, 70, 229, 0.15); border-color: rgba(6, 182, 212, 0.4); color: #fff; transform: translateY(-2px); }
-.chip-dot { color: var(--b-accent-cyan); font-size: 16px; }
+.chip-dot { color: var(--b-accent-cyan); font-size: 18px; }
 
 /* Grid Helper Classes */
 .grid-2col, .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
@@ -157,8 +157,8 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 .b-card.violet { --b-accent: var(--b-violet); }
 
 /* Card Components */
-.card-num-badge { width: 44px; height: 44px; border-radius: 14px; background: var(--b-grad-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 18px; font-weight: 700; margin-bottom: 18px; }
-.icon-box { width: 52px; height: 52px; border-radius: 14px; background: var(--b-accent-soft); color: var(--b-accent); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; }
+.card-num-badge { width: 48px; height: 48px; border-radius: 14px; background: var(--b-grad-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 20px; font-weight: 800; margin-bottom: 18px; }
+.icon-box { width: 60px; height: 60px; border-radius: 14px; background: var(--b-accent-soft); color: var(--b-accent); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px; }
 .icon-box.teal { background: rgba(13,148,136,0.12); color: var(--b-teal); }
 .icon-box.rose { background: rgba(225,29,72,0.12); color: var(--b-rose); }
 .icon-box.amber { background: rgba(217,119,6,0.12); color: var(--b-amber); }
@@ -169,12 +169,12 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 .pipeline-step { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 24px; position: relative; backdrop-filter: blur(16px); }
 .pipeline-step::after { content: ''; position: absolute; top: 50%; right: -20px; width: 14px; height: 14px; border-top: 3px solid var(--b-accent-cyan); border-right: 3px solid var(--b-accent-cyan); transform: translateY(-50%) rotate(45deg); opacity: 0.8; }
 .pipeline-step:last-child::after { display: none; }
-.step-nb { width: 36px; height: 36px; border-radius: 50%; background: var(--b-grad-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; margin-bottom: 12px; }
+.step-nb { width: 42px; height: 42px; border-radius: 50%; background: var(--b-grad-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; margin-bottom: 12px; font-size: 19px; }
 
 /* Stat Cards */
 .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 24px; backdrop-filter: blur(16px); }
-.stat-label { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px; }
-.stat-nb { font-family: var(--font-display); font-size: 48px; font-weight: 800; background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
+.stat-label { font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px; }
+.stat-nb { font-family: var(--font-display); font-size: 56px; font-weight: 800; background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
 
 /* Animations */
 @keyframes springUp { 0% { opacity: 0; transform: translateY(45px) scale(0.94); } 60% { opacity: 1; transform: translateY(-6px) scale(1.015); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
@@ -198,17 +198,51 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 
 ---
 
-## 3. Core JavaScript Scaling & Viewport Sync
+## 3. Core JavaScript Scaling, 4-Button Controls & Overview
 
-Include this script at the end of the presentation file:
+Include this HTML & script at the end of the presentation file:
 
 ```html
+<!-- 标准底部悬浮控制台 (Controls Bar) -->
+<div class="controls-bar" id="controlsBar">
+    <button class="ctrl-btn" onclick="prevSlide()" title="上一页 (← / PageUp)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> 上一页
+    </button>
+    <div class="slide-counter">
+        <span id="counter">01 / 12</span>
+        <div class="slide-progress-track"><div class="slide-progress-fill" id="progressFill" style="width: 8.3%;"></div></div>
+    </div>
+    <button class="ctrl-btn" onclick="nextSlide()" title="下一页 (→ / Space / PageDown)">
+        下一页 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <button class="ctrl-btn" onclick="toggleOverview()" title="全览缩略图 (O / Esc)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 全览
+    </button>
+    <button class="ctrl-btn" onclick="toggleFullScreen()" title="全屏演示 (F)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> 全屏
+    </button>
+</div>
+
+<!-- 标准全览缩略图模态框 (Overview Modal) -->
+<div class="deck-overview" id="overviewModal">
+    <div class="overview-header">
+        <div class="overview-title">
+            <span>🗂 幻灯片全览导航</span>
+            <span class="overview-hint">按 ESC 或 O 键快速退出</span>
+        </div>
+        <button class="overview-close-btn" onclick="toggleOverview()">✕ 关闭全览</button>
+    </div>
+    <div class="overview-grid" id="overviewGrid"></div>
+</div>
+
 <script>
     let currentSlide = 1;
-    const totalSlides = document.querySelectorAll('.slide').length;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
 
     function updateScale() {
-        const stage = document.getElementById('stage');
+        const stage = document.getElementById('stage') || document.querySelector('.deck-stage');
+        if (!stage) return;
         const scaleX = window.innerWidth / 1920;
         const scaleY = window.innerHeight / 1080;
         const scale = Math.min(scaleX, scaleY);
@@ -218,7 +252,7 @@ Include this script at the end of the presentation file:
     }
 
     function updateViewportBg(slideIndex) {
-        const slide = document.getElementById(`s${slideIndex}`);
+        const slide = document.getElementById(`s${slideIndex}`) || slides[slideIndex - 1];
         if (slide) {
             const bg = slide.getAttribute('data-bg') || (slide.classList.contains('dark') ? '#0f172a' : '#f8fafc');
             document.documentElement.style.setProperty('--viewport-bg', bg);
@@ -226,21 +260,74 @@ Include this script at the end of the presentation file:
     }
 
     function showSlide(index) {
-        document.querySelectorAll('.slide').forEach((slide, i) => {
-            slide.classList.toggle('active', i + 1 === index);
-        });
+        if (index < 1) index = 1;
+        if (index > totalSlides) index = totalSlides;
         currentSlide = index;
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i + 1 === currentSlide);
+        });
         const counter = document.getElementById('counter');
         if (counter) counter.innerText = `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+        const progressFill = document.getElementById('progressFill');
+        if (progressFill) progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
         updateViewportBg(currentSlide);
     }
 
     function nextSlide() { if (currentSlide < totalSlides) showSlide(currentSlide + 1); }
     function prevSlide() { if (currentSlide > 1) showSlide(currentSlide - 1); }
 
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+        }
+    }
+
+    function buildOverview() {
+        const grid = document.getElementById('overviewGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        slides.forEach((s, idx) => {
+            const card = document.createElement('div');
+            card.className = `overview-card ${idx + 1 === currentSlide ? 'current' : ''}`;
+            const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero')?.innerText || `Slide ${idx + 1}`;
+            const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+            card.innerHTML = `
+                <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
+                <div class="overview-card-title">${title}</div>
+                <div class="overview-card-desc">${desc}</div>
+            `;
+            card.onclick = () => { showSlide(idx + 1); toggleOverview(); };
+            grid.appendChild(card);
+        });
+    }
+
+    function toggleOverview() {
+        const modal = document.getElementById('overviewModal');
+        if (!modal) return;
+        const isOpening = !modal.classList.contains('active');
+        if (isOpening) {
+            buildOverview();
+            modal.classList.add('active');
+        } else {
+            modal.classList.remove('active');
+        }
+    }
+
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
-        if (e.key === 'ArrowLeft') prevSlide();
+        const modal = document.getElementById('overviewModal');
+        const isOverviewActive = modal && modal.classList.contains('active');
+        if (e.key === 'Escape') {
+            if (isOverviewActive) { toggleOverview(); return; }
+        }
+        if (e.key === 'o' || e.key === 'O') { toggleOverview(); return; }
+        if (e.key === 'f' || e.key === 'F') { if (!e.metaKey && !e.ctrlKey) toggleFullScreen(); return; }
+        if (isOverviewActive) return;
+        if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') { e.preventDefault(); nextSlide(); }
+        if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+        if (e.key === 'Home') { e.preventDefault(); showSlide(1); }
+        if (e.key === 'End') { e.preventDefault(); showSlide(totalSlides); }
     });
 
     window.addEventListener('resize', updateScale);

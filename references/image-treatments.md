@@ -472,47 +472,49 @@ grep -rE "frame-img[^>]*box-shadow" resources/ demo/  # 旧 frame-img 不应该�
 
 ---
 
-## Click-to-Zoom Lightbox (data-zoomable)
+## Default Double-Click Image Zoom & Lightbox (默认支持鼠标双击放大图片)
 
-8 套范式都允许给图加 `data-zoomable` 启用点击放大。点击图片 → 全屏深色背板 + 居中放大 → 再点 / Esc / 任意位置复原。同 slide 内的多张 zoomable 图自动归组,左右键翻页。
+全库已**原生默认支持鼠标双击图片放大**。任何幻灯片中的 `<img>` 无需显式配置，**鼠标双击（dblclick）即可触发全屏毛玻璃居中放大（Lightbox）**，再次双击、点击背景、点击关闭按钮或按 `Esc` 键即可瞬间复原。
 
-**用法**:在 `<img>` 或包裹 `<figure>` 上加 `data-zoomable` 即可,不需要再加类名。
+此外，8 套范式均支持在 `<img>` 或包裹容器上额外添加 `data-zoomable` 属性以启用**单击直接放大**。同 slide 内的多张图片自动归组，支持键盘左右键及悬浮箭头快速翻页。
+
+**用法**:
+- **默认双击**: 任何 `<img>` 自动支持双击放大，hover 状态默认呈现 `cursor: zoom-in`。
+- **显式单击**: 在 `<img>` 或包裹 `<figure>` 上加 `data-zoomable` 即可启用单击放大。
 
 ```html
-<!-- 单图放大 -->
+<!-- 默认图片：无需多余属性，直接支持双击放大 -->
+<figure class="t-inset r-16x10" data-treatment="t-inset">
+  <img src="images/dashboard.png" alt="数据面板截图">
+</figure>
+
+<!-- 显式单击放大支持 -->
 <figure class="t-inset r-16x10" data-treatment="t-inset" data-zoomable>
   <img src="images/dashboard.png" alt="数据面板截图">
 </figure>
 
-<!-- 缩略图列表:同 slide 多张,自动归组,左右键翻页 -->
+<!-- 缩略图列表:同 slide 多张,自动归组,双击/点击均可全屏,左右键翻页 -->
 <div class="t-quiet-grid">
-  <figure class="t-quiet" data-treatment="t-quiet" data-zoomable>
+  <figure class="t-quiet" data-treatment="t-quiet">
     <img src="images/screen-1.png" alt="界面 1">
   </figure>
-  <figure class="t-quiet" data-treatment="t-quiet" data-zoomable>
+  <figure class="t-quiet" data-treatment="t-quiet">
     <img src="images/screen-2.png" alt="界面 2">
   </figure>
-  <figure class="t-quiet" data-treatment="t-quiet" data-zoomable>
+  <figure class="t-quiet" data-treatment="t-quiet">
     <img src="images/screen-3.png" alt="界面 3">
   </figure>
 </div>
 ```
 
 **交互细节**:
-- 鼠标移到 `data-zoomable` 图上 → `cursor: zoom-in`,提示可点
-- 打开后:背景模糊 + `cubic-bezier` 弹簧放大(0.94 → 1.0)
-- 关闭方式:点背景 / 点关闭按钮 / 按 Esc / 再点图片
-- 翻页(组内):← / → 键,或点两侧箭头按钮
-- 计数器(组内):左上角 `2 / 5` 标签
-- Caption 自动从 `<figcaption>` 拾取,在图下方以斜体灰字显示
-- 打开时锁住 `body` 滚动,关闭后复原
-
-**禁用场景**(T1 / T7 不应加):
-- `t-bleed` 全屏出血本身已是大图,加 lightbox 是噪音
-- `t-backdrop` 是模糊背景,zoom 没意义
-- T2 / T3 / T4 / T5 / T6 / T8 都适合加
-
-**全 deck 一键开关**:在 `template-beautiful.html` 里直接删 `.img-lightbox` DOM + 对应 `<script>` 块即可关闭。
+- 鼠标移到幻灯片图片上 → `cursor: zoom-in`，提示可缩放
+- **双击图片 / 单击 data-zoomable 图片** → 全屏深色毛玻璃背景 + `cubic-bezier` 弹簧物理放大 (0.94 → 1.0)
+- **复原关闭方式**: 再次双击图片 / 单击任意背景 / 单击右上角 `×` / 按 `Esc`
+- **组内翻页**: ← / → 键，或点两侧箭头按钮
+- **组内计数器**: 左上角 `2 / 5` 徽章指示
+- **Caption 自动拾取**: 自动从 `<figcaption>` 或 `alt` / `title` 拾取并在图下方以优雅斜体灰字展示
+- 打开时自动锁住 body 滚动，关闭后复原
 
 ## 何时读这份文档
 

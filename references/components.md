@@ -1,7 +1,32 @@
-# UI Components
-
-Use the CSS classes provided in the template to create a visually appealing presentation:
-- **Typography**: `.slide-label`, `.slide-title`, `.slide-subtitle`, `.em` (blue), `.em-teal`, `.em-red`, `.em-amber`.
+- **Compact Slide Headers (页眉三要素紧凑布局与空间让渡)**:
+  - `.header-compact` (垂直紧凑页眉容器): Badge + Title + Subtitle 统一以 `gap: 8px` 紧凑编排，总高严格控制在画布的 18%~22% 以内（<= 200px），将 78%+ 黄金纵向空间留给主内容。
+  - `.header-split` (左右水平分栏页眉): `display: flex; justify-content: space-between; align-items: flex-end;`，左侧为 Badge + 主标题，右侧并排为副标题/金句引导语，纵向 3 行压减为 1 行。
+  - `.eyebrow-pill` / `.kicker` / `.slide-label`: 胶囊分类微徽章（`margin-bottom: 4px ~ 6px`）。
+  - **行内徽标前缀**: 直接在 `<h2>` 内前置 `<span class="eyebrow-pill">TAG</span>` 实现单行紧凑。
+- **Bottom Navigation Toolbar & Overview (底栏四件套与全景缩略图)**:
+  - `.controls-bar` / `.deck-controls`: 底部居中毛玻璃悬浮控制栏，包含：
+    - `◀ 上一页` (button with `prevSlide()`)
+    - `01 / 15` 页码指示器 (`.slide-counter`) 与细条动态进度条 (`.slide-progress-track`)
+    - `下一页 ▶` (button with `nextSlide()`)
+    - `🗂 全览` (button with `toggleOverview()`)
+    - `⛶ 全屏` (button with `toggleFullScreen()`)
+  - `.deck-overview` / `#overviewModal`: 全屏毛玻璃缩略图模态框，基于 DOM 动态渲染所有 Slide 的序号徽章、标题与摘要卡片，点击任意卡片瞬间直达跳转。
+  - **快捷键规范**: `←`/`→`/`Space` 翻页，`O` 打开全览，`F` 全屏，`Esc` 退出全览/全屏。
+- **Typography & High-Legibility Large Font Standard (主要内容大字号高可读性规范 · NON-NEGOTIABLE)**:
+  - 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，所有生成页面必须遵循大字号标准阶梯：
+    - **分类徽标/Pill** (`.slide-label` / `.eyebrow-pill` / `.kicker`): `16px ~ 18px` (font-weight: 800, padding: 5px 14px)
+    - **主标题** (`.slide-title` / `.h-xl`): `48px ~ 54px` (font-weight: 800/900, line-height: 1.15)
+    - **副标题/金句** (`.slide-subtitle` / `.lead` / `.tagline`): `22px ~ 26px` (font-weight: 600, line-height: 1.5)
+    - **卡片/分栏标题** (`.card h3` / `.b-card h3` / `.card-title`): `26px ~ 28px` (font-weight: 800)
+    - **卡片正文/主要段落** (`.card p` / `.b-card p` / `.card-text` / `.body-text`): `20px ~ 22px` (line-height: 1.62)
+    - **列表项/Bullet Items** (`.card li` / `.b-card li` / `.feature-desc`): `19px ~ 21px` (line-height: 1.6)
+    - **数据大数字** (`.stat-nb` / `.cover-stat .n`): `56px ~ 72px`, **数据标签** (`.stat-label` / `.cover-stat .l`): `16px ~ 18px` (font-weight: 700)
+    - **流程步骤/Pipeline** (`.step-nb`: `19px ~ 20px`, `h3`: `24px` font-weight: 800, `p`: `19px`)
+    - **数据表格** (`.data-table`): `th: 21px` (font-weight: 800) / `td: 20px` (line-height: 1.5)
+    - **代码块** (`.code-block`): `19px ~ 21px` (line-height: 1.65)
+    - **金句引用与 Callout** (`.quote-text`: `34px`, `.callout`: `23px` font-weight: 600)
+    - **底栏控制台** (`.ctrl-btn` / `.slide-counter`): `16px` (font-weight: 700/800)
+  - 强调色类名: `.em` (blue), `.em-teal`, `.em-red`, `.em-amber`.
 - **Layouts**: `.grid-2`, `.grid-3`, `.grid-4` for multiple columns; `.stack-col` for a vertical stack of `.stack-row` layers.
 - **Cards**: `.card` (general card), `.feat-card` (feature card with full colored border), `.plat-card` (compact platform card).
 - **Color variants**: colored components take a `-blue` / `-teal` / `-red` / `-amber` / `-violet` (or `.b-*` / `.fill-*`) modifier class; always pair them:
@@ -33,3 +58,4 @@ Use the CSS classes provided in the template to create a visually appealing pres
 - **Cover Slide**: Use `.cover-bg`, `.cover-grid`, `.cover-content`, `.cover-logo` (accent word inside `<span>`), `.cover-title` (gradient text via `<span class="h">`), `.cover-divider`, `.cover-sub` (highlight via `<span class="warm">`), and `.cover-stats` with `.cover-stat` items (`.n` = number, `.l` = label) for key metrics.
 - **Footers**: Use `.bottom-strip` for key takeaways at the bottom of a slide; inside it, `.em` renders teal and `.wm` renders amber.
 - **Animations**: Add `.a` and `.a1` through `.a6` to elements for staggered fade-up animations when the slide becomes active. For inline SVG diagrams, `.flow-anim` / `.flow-anim-slow` animate dashed connector lines and `.pulse-dot` makes a dot pulse.
+

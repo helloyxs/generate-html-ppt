@@ -33,6 +33,54 @@
 - 图片路径使用相对路径 `images/xxx.png`。
 - 不使用 emoji 作图标；使用 Lucide 图标。
 - 不给图片加厚重阴影或边框；使用 `.frame-img` 容器。
+
+### B-6. 页眉三要素（Badge+主标题+副标题）紧凑压缩与空间让渡自检 ⭐
+- **现象**：Badge（分类标签）、主标题（h1/h2）、副标题（tagline/lead/金句）层层堆叠 20~30px 大外边距，导致页眉区域占据 35%~45% 画布高度，下方 4 张核心卡片或架构图被严重压缩下挤。
+- **做法**：
+  - 严格压缩页眉总高度至 **<= 200px（约占 1080p 画布的 18%~22%）**。
+  - Badge 与主标题间距：`6px ~ 8px`；
+  - 主标题与副标题间距：`8px ~ 12px`；
+  - 副标题与主内容区间距：`16px ~ 24px`；
+  - 推荐使用 `.header-compact` 容器、`.header-split`（左标题 + 右副标题左右水平分栏）、或主标题前缀行内徽章；
+  - 严禁用带有厚重 padding 的独立 Card 容器包裹副标题从而挤占主内容空间；
+  - 确保主内容区（卡片网格、流水线、数据图表）拥有 **78%~82% 充足纵向展开空间**。
+
+### B-7. 底部导航控制台四件套（上一页、下一页、全览、全屏）与全景缩略自检 ⭐
+- **现象**：生成的 PPT 缺少控制按钮，或者仅有简单的小圆点/箭头，无法直观跳页与全览。
+- **做法**：
+  - 必须包含标准毛玻璃悬浮控制栏 `.controls-bar`，配备完整的四大操作按键：
+    - `◀ 上一页` (`prevSlide()`)
+    - `01 / 15` 页码与动态进度条
+    - `下一页 ▶` (`nextSlide()`)
+    - `🗂 全览` (`toggleOverview()`)
+    - `⛶ 全屏` (`toggleFullScreen()`)
+  - 必须包含 `#overviewModal` 全景缩略图网格容器与 JS 构建逻辑，支持点击任意卡片瞬间跳转并关闭全览。
+  - 必须支持全套快捷键：`←`/`→`/`Space` 翻页，`O` 打开全览，`F` 全屏，`Esc` 退出全览/全屏。
+
+### B-8. 主要内容大字号高可读性自检 (High-Legibility Large Font Standard) ⭐
+- **现象**：生成的 PPT 在 1920×1080 舞台下文字字号过小（如正文 13px~16px、副标题 16px），缩放至笔记本或移动屏幕时字号收缩到 7px~10px，造成文字拥挤、像密密麻麻的 Word 文档，严重损害演说可读性。
+- **做法**：
+  - 严格遵循大字号标准阶梯：
+    - **分类微标签/徽章** (`.eyebrow-pill` / `.kicker` / `.slide-label`): `16px ~ 18px` (`font-weight: 800`)
+    - **主标题** (`.slide-title` / `.h-xl`): `48px ~ 54px` (`font-weight: 800/900`)
+    - **副标题/金句引导语** (`.slide-subtitle` / `.lead` / `.tagline`): `22px ~ 26px` (`font-weight: 600`)
+    - **卡片/分栏标题** (`.b-card h3` / `.card-title`): `26px ~ 28px` (`font-weight: 800`)
+    - **卡片正文/主要段落** (`.b-card p` / `.card-text` / `p`): `20px ~ 22px` (`line-height: 1.62`)
+    - **列表项/Bullet Items** (`.b-card li` / `.feature-desc`): `19px ~ 21px` (`line-height: 1.6`)
+    - **数据大数字** (`.stat-nb`): `56px ~ 72px`，**数据标签** (`.stat-label`): `16px ~ 18px` (`font-weight: 700`)
+    - **流水线/Pipeline** (`.step-nb: 19px~20px`, `h3: 24px`, `p: 19px`)
+    - **表格** (`.data-table`): `th: 21px (w:800)` / `td: 20px (line-height: 1.5)`
+    - **代码块** (`.code-block`): `19px ~ 21px` (`line-height: 1.65`)
+    - **金句/引用与 Callout** (`.quote-text: 34px`, `.callout: 23px`)
+    - **底栏控制按钮** (`.ctrl-btn` / `.slide-counter`): `16px` (`font-weight: 700/800`)
+
+### B-9. 默认支持鼠标双击图片放大自检 (Default Double-Click Image Zoom & Lightbox) ⭐
+- **现象**：幻灯片中的图片展示尺寸有限，演讲者或观众双击图片时无法查看大图细节。
+- **做法**：
+  - 页面原生内置 Lightbox 交互脚本，所有幻灯片中的 `<img>` **默认支持鼠标双击（dblclick）全屏毛玻璃放大**。
+  - 支持再次双击、点击背景、点击右上角关闭按钮或按 `Esc` 键退出大图。
+  - 同页多张图片支持键盘 `←` / `→` 键及悬浮翻页按钮自由切换查看，并展示对应图说。
+
 ## 🔴 P0 · 一定不能犯的错
 
 ### 0-S. Swiss locked mode:正文页必须来自原始 22P

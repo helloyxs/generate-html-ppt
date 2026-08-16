@@ -17,6 +17,9 @@ Presentations are generated using a **Design System Specification (`design.md`)*
 3. **Fixed 16:9 Stage (NON-NEGOTIABLE)**: Every slide canvas is authored inside a 1920×1080 stage scaled uniformly to the viewport using JavaScript (`updateScale()`). Content never reflows per device.
 4. **Seamless Viewport Rule (视口无缝融合规范)**: All presentations must use CSS variables (`--viewport-bg`) on `body` / `.deck-viewport` and dynamic JavaScript (`updateViewportBg()`) to synchronize the outer screen background with the active slide's background.
 5. **Text-First Workflow**: Preserves the signature 3-stage user workflow: **Text-based requirement alignment ➔ Design-guided wireframing (灰度骨架确认) ➔ Guided batch content filling ➔ Verification**.
+6. **页眉三要素紧凑压缩与空间让渡规范 (Header Area Compression Rule · NON-NEGOTIABLE)**: Badge/分类标签、主标题、副标题/金句引导语这三项在纵向空间的占用必须保持扁平紧凑，**页眉总高度严格控制在画布的 18%~22% 以内（<= 200px~220px on 1080p）**，坚决杜绝层层大外边距堆叠，将 78%~82% 以上的黄金垂直空间完整让渡给核心内容区（卡片网格、流程图、对比表、数据图表等）。
+7. **每次生成必配底栏四件套与全景缩略图交互 (Mandatory 4-Button Toolbar & Overview Gallery · NON-NEGOTIABLE)**: 每次生成 HTML PPT 必须在底部居中配备毛玻璃控制栏，包含 **`◀ 上一页`**、**`页码/进度条`**、**`下一页 ▶`**、**`🗂 全览`** 与 **`⛶ 全屏`** 按钮，并内置基于 DOM/JS 的全景缩略图模态框与快捷键引擎（`←`/`→`/`Space` 翻页，`O` 打开全览，`F` 全屏，`Esc` 关闭全览/全屏）。
+8. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演说与移动/笔记本视口缩放下的极佳易读性。
 
 ---
 
@@ -76,6 +79,7 @@ Prepare visual assets before building wireframes:
 - 多图分组: 用 T6 (Quiet Frame),单图不加 figcaption。
 
 **图片处理硬规则(全范式通用)**:
+- **默认支持鼠标双击图片放大 (Default Double-Click Image Zoom & Lightbox · NON-NEGOTIABLE)**: 生成的页面必须默认支持鼠标双击（dblclick）任意幻灯片图片全屏毛玻璃放大预览，再次双击/单击背景/按 Esc 退出；显式添加 `data-zoomable` 可支持单击放大。
 - 禁止 `<figcaption>` 写"原始截图 / 产品截图 / Screenshot / Untitled / Sample" 这类空标签。
 - 禁止默认 `.frame-img` 带 `border-radius ≥ 12px` + 中-重 `box-shadow`;默认应为无圆角无阴影(已在 `template-beautiful.html` 重置)。
 - 禁止 hover 时 `transform: scale(1.02)` (旧 Beautiful 模板行为)。
@@ -100,13 +104,181 @@ Prepare visual assets before building wireframes:
    - Set up the 1920×1080 `.deck-stage` canvas and scaling script (`updateScale()`, `updateViewportBg()`).
    - Create slide containers (`<div class="slide" id="s{N}">...</div>`).
    - Include slide titles, structural grid/card layout classes, and placeholder text/images.
+   
+   - **⭐ 硬规则一：页眉三要素紧凑压缩与空间让渡 (Header Compression & Space Yielding)**:
+     - **三要素界定**：Badge/分类徽章 (`.eyebrow-pill` / `.kicker` / `.slide-label`)、主标题 (`h1` / `h2` / `.slide-title`)、副标题/金句引导语 (`.slide-subtitle` / `.tagline` / `.lead`)。
+     - **空间占比上限**：页眉三要素组合的总高度**严格控制在 <= 200px (约占 1080p 画布的 18%~22%)**，杜绝多层 20px+ 外边距堆叠。
+     - **间距严格规范**：
+       - Badge 与主标题间距：`6px ~ 8px`
+       - 主标题与副标题间距：`8px ~ 12px`
+       - 副标题与下方主内容区间距：`16px ~ 24px`
+     - **紧凑布局推荐形式**：
+       - *方案 A（垂直紧凑容器）*：使用 `.header-compact`，Badge + Title + Subtitle 统一以 `gap: 8px` 紧密编排。
+       - *方案 B（左右分栏 Header Split）*：使用 `.header-split`，左侧为 `Badge + 主标题`，右侧并排为 `副标题/金句`，将纵向 3 行压缩为 1 行。
+       - *方案 C（行内前缀 Badge Inline）*：直接在主标题前放置行内徽章（如 `<h2><span class="eyebrow-pill">DESIGN CANVAS</span> 写 Skill 前先回答四个问题</h2>`）。
+     - **主内容空间保障**：确保下方 4 卡片网格、流程管线、多列对比表等核心内容区拥有 **78%~82% 的充分纵深展开空间**。
+
+   - **⭐ 硬规则二：底部导航控制台四件套（上一页、下一页、全览、全屏）与全景模式 (Mandatory Toolbar & Overview Modal)**:
+     - 每次生成的 HTML 文件必须在 `<body>` 末尾包含标准的悬浮控制台 HTML、全览模态框 HTML 以及完整自包含的 JS 运行引擎。
+     
+     ```html
+     <!-- 标准底部悬浮控制台 (Controls Bar) -->
+     <div class="controls-bar" id="controlsBar">
+         <button class="ctrl-btn" onclick="prevSlide()" title="上一页 (← / PageUp)">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg> 上一页
+         </button>
+         <div class="slide-counter">
+             <span id="counter">01 / 12</span>
+             <div class="slide-progress-track"><div class="slide-progress-fill" id="progressFill" style="width: 8.3%;"></div></div>
+         </div>
+         <button class="ctrl-btn" onclick="nextSlide()" title="下一页 (→ / Space / PageDown)">
+             下一页 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+         </button>
+         <button class="ctrl-btn" onclick="toggleOverview()" title="全览缩略图 (O / Esc)">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 全览
+         </button>
+         <button class="ctrl-btn" onclick="toggleFullScreen()" title="全屏演示 (F)">
+             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> 全屏
+         </button>
+     </div>
+
+     <!-- 标准全览缩略图模态框 (Overview Modal) -->
+     <div class="deck-overview" id="overviewModal">
+         <div class="overview-header">
+             <div class="overview-title">
+                 <span>🗂 幻灯片全览导航</span>
+                 <span class="overview-hint">按 ESC 或 O 键快速退出</span>
+             </div>
+             <button class="overview-close-btn" onclick="toggleOverview()">✕ 关闭全览</button>
+         </div>
+         <div class="overview-grid" id="overviewGrid"></div>
+     </div>
+     ```
+
+     ```html
+     <!-- 标准控制器与全景缩略引擎 JavaScript -->
+     <script>
+         let currentSlide = 1;
+         const slides = document.querySelectorAll('.slide');
+         const totalSlides = slides.length;
+
+         function updateScale() {
+             const stage = document.querySelector('.deck-stage') || document.getElementById('stage') || document.getElementById('deck');
+             if (!stage) return;
+             const scaleX = window.innerWidth / 1920;
+             const scaleY = window.innerHeight / 1080;
+             const scale = Math.min(scaleX, scaleY);
+             const left = (window.innerWidth - 1920 * scale) / 2;
+             const top = (window.innerHeight - 1080 * scale) / 2;
+             stage.style.transform = `translate(${left}px, ${top}px) scale(${scale})`;
+         }
+
+         function updateViewportBg(slideIndex) {
+             const slide = document.getElementById(`s${slideIndex}`) || slides[slideIndex - 1];
+             if (slide) {
+                 const bg = slide.getAttribute('data-bg') || (slide.classList.contains('dark') ? '#0f172a' : '#f8fafc');
+                 document.documentElement.style.setProperty('--viewport-bg', bg);
+             }
+         }
+
+         function showSlide(index) {
+             if (index < 1) index = 1;
+             if (index > totalSlides) index = totalSlides;
+             currentSlide = index;
+             slides.forEach((slide, i) => {
+                 slide.classList.toggle('active', i + 1 === currentSlide);
+             });
+             const counter = document.getElementById('counter');
+             if (counter) counter.innerText = `${String(currentSlide).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+             const progressFill = document.getElementById('progressFill');
+             if (progressFill) progressFill.style.width = `${(currentSlide / totalSlides) * 100}%`;
+             updateViewportBg(currentSlide);
+         }
+
+         function nextSlide() { if (currentSlide < totalSlides) showSlide(currentSlide + 1); }
+         function prevSlide() { if (currentSlide > 1) showSlide(currentSlide - 1); }
+
+         function toggleFullScreen() {
+             if (!document.fullscreenElement) {
+                 document.documentElement.requestFullscreen().catch(() => {});
+             } else {
+                 if (document.exitFullscreen) document.exitFullscreen();
+             }
+         }
+
+         function buildOverview() {
+             const grid = document.getElementById('overviewGrid');
+             if (!grid) return;
+             grid.innerHTML = '';
+             slides.forEach((s, idx) => {
+                 const card = document.createElement('div');
+                 card.className = `overview-card ${idx + 1 === currentSlide ? 'current' : ''}`;
+                 const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero')?.innerText || `Slide ${idx + 1}`;
+                 const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+                 card.innerHTML = `
+                     <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
+                     <div class="overview-card-title">${title}</div>
+                     <div class="overview-card-desc">${desc}</div>
+                 `;
+                 card.onclick = () => { showSlide(idx + 1); toggleOverview(); };
+                 grid.appendChild(card);
+             });
+         }
+
+         function toggleOverview() {
+             const modal = document.getElementById('overviewModal');
+             if (!modal) return;
+             const isOpening = !modal.classList.contains('active');
+             if (isOpening) {
+                 buildOverview();
+                 modal.classList.add('active');
+             } else {
+                 modal.classList.remove('active');
+             }
+         }
+
+         document.addEventListener('keydown', (e) => {
+             const modal = document.getElementById('overviewModal');
+             const isOverviewActive = modal && modal.classList.contains('active');
+             if (e.key === 'Escape') {
+                 if (isOverviewActive) { toggleOverview(); return; }
+             }
+             if (e.key === 'o' || e.key === 'O') { toggleOverview(); return; }
+             if (e.key === 'f' || e.key === 'F') { if (!e.metaKey && !e.ctrlKey) toggleFullScreen(); return; }
+             if (isOverviewActive) return;
+             if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); nextSlide(); }
+             if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); }
+             if (e.key === 'Home') { e.preventDefault(); showSlide(1); }
+             if (e.key === 'End') { e.preventDefault(); showSlide(totalSlides); }
+         });
+
+         window.addEventListener('resize', updateScale);
+         updateScale();
+         updateViewportBg(1);
+     </script>
+     ```
+
    - **Apply Layout Density Strategy (防止中间尴尬中空与过度拉伸)**:
      - *space-between 滥用规避*: 严禁对内容高度较矮（<200px）的中间组件无脑使用 `.between` (`space-between`)，否则会导致元素被甩到最顶和最底，中间形成 200~400px 巨大尴尬空白。
      - *垂直集中分组 (Scheme 1 / center-group)*: 优先使用 `.slide-content.center-group` (`justify-content: center; gap: 40px;`) 或 `.slide-content` (`justify-content: flex-start; gap: 40px;`)，紧密分组标题、中间连通桥与卡片，四周留出自然呼吸 Margins。
      - *中间连通桥 (Middle Bridge Block)*: 
        - 封面/Hero Slide：在标题与底部 Stats 之间加入 `.hero-middle-bridge` 芯片标签行（如 `✦ Viewport 视口无缝同步` 等），消除中空断层。
        - 步骤/流程 Slide：三段式 Pipeline 卡片内务必填充充实的内容要点列表 (Bullet points)，充实卡片纵向高度。
-   - **DO NOT fill detailed paragraphs yet.**
+    - **⭐ 硬规则三：主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**:
+      - 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，所有生成页面必须遵循大字号标准阶梯：
+        - **分类徽章/Pill** (`.eyebrow-pill` / `.kicker` / `.slide-label`): `16px ~ 18px` (`font-weight: 800`)
+        - **主标题** (`.slide-title` / `.h-xl`): `48px ~ 54px` (`font-weight: 800/900`)
+        - **副标题/金句引导语** (`.slide-subtitle` / `.lead` / `.tagline`): `22px ~ 26px` (`font-weight: 600`)
+        - **卡片/分栏标题** (`.b-card h3` / `.card-title`): `26px ~ 28px` (`font-weight: 800`)
+        - **卡片正文/主要段落** (`.b-card p` / `.card-text` / `p`): `20px ~ 22px` (`line-height: 1.62`)
+        - **列表项/Bullet Items** (`.b-card li` / `.feature-desc`): `19px ~ 21px` (`line-height: 1.6`)
+        - **数据大数字** (`.stat-nb`): `56px ~ 72px`，**数据标签** (`.stat-label`): `16px ~ 18px` (`font-weight: 700`)
+        - **流水线/Pipeline** (`.step-nb: 19px~20px`, `h3: 24px`, `p: 19px`)
+        - **表格** (`.data-table`): `th: 21px (w:800)` / `td: 20px (line-height: 1.5)`
+        - **代码块** (`.code-block`): `19px ~ 21px` (`line-height: 1.65`)
+        - **金句/引用与 Callout** (`.quote-text: 34px`, `.callout: 23px`)
+        - **底栏控制按钮** (`.ctrl-btn` / `.slide-counter`): `16px` (`font-weight: 700/800`)
+    - **DO NOT fill detailed paragraphs yet.**
 
 3. **Stop & Present Wireframe for Approval (骨架确认)**
    Show the wireframe HTML to the user and explain the layout structure. **STOP and wait for user approval** before proceeding to fill detailed content.
@@ -127,6 +299,10 @@ Once the wireframe is approved:
 1. **Verify Presentation Features**:
    - Fixed 16:9 stage scaling (`updateScale()` on window resize).
    - Seamless Viewport Background synchronization (`--viewport-bg`).
+   - **Header Area Compactness**: Verify that Badge + Title + Subtitle height is <= 22% of slide canvas, leaving generous space for cards/diagrams.
+   - **Bottom Controls Bar 4 Buttons**: Verify that `上一页`, `下一页`, `全览`, `全屏` buttons exist and are fully functional.
+   - **Overview Gallery**: Test opening via `🗂 全览` button or `O` key, clicking a card jumps to that slide, and `Esc` closes overview.
+   - **Fullscreen Mode**: Test toggle via `⛶ 全屏` button or `F` key.
    - All `.anim` elements trigger entry animations correctly.
    - Zero text clipping, zero vertical scrolling inside slides, zero panel overlap.
 2. **Open in Browser**:

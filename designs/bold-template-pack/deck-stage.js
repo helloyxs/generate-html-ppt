@@ -141,12 +141,12 @@
       filter: blur(6px);
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px;
+      gap: 6px;
+      padding: 6px 10px;
       background: #000;
       color: #fff;
       border-radius: 999px;
-      font-size: 12px;
+      font-size: 14px;
       font-feature-settings: "tnum" 1;
       letter-spacing: 0.01em;
       opacity: 0;
@@ -176,8 +176,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 28px;
-      min-width: 28px;
+      height: 32px;
+      min-width: 32px;
       border-radius: 999px;
       color: rgba(255,255,255,0.72);
       transition: background 140ms ease, color 140ms ease;
@@ -188,9 +188,9 @@
     .btn:focus { outline: none; }
     .btn:focus-visible { outline: none; }
     .btn::-moz-focus-inner { border: 0; }
-    .btn svg { width: 14px; height: 14px; display: block; }
+    .btn svg { width: 16px; height: 16px; display: block; }
     .btn.reset {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 500;
       letter-spacing: 0.02em;
       padding: 0 10px 0 12px;
@@ -201,11 +201,11 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 16px;
-      height: 16px;
+      min-width: 18px;
+      height: 18px;
       padding: 0 4px;
       font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-      font-size: 10px;
+      font-size: 11px;
       line-height: 1;
       color: rgba(255,255,255,0.88);
       background: rgba(255,255,255,0.12);
@@ -217,18 +217,18 @@
       color: #fff;
       font-weight: 500;
       padding: 0 8px;
-      min-width: 42px;
+      min-width: 46px;
       text-align: center;
-      font-size: 12px;
+      font-size: 14px;
     }
     .count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }
     .count .total { color: rgba(255,255,255,0.55); }
 
     .divider {
       width: 1px;
-      height: 14px;
+      height: 16px;
       background: rgba(255,255,255,0.18);
-      margin: 0 2px;
+      margin: 0 3px;
     }
 
     /* ── Print: one page per slide, no chrome ────────────────────────────
@@ -307,6 +307,7 @@
       this._render();
       this._loadNotes();
       this._syncPrintPageRule();
+      this._initImageLightbox();
       window.addEventListener('keydown', this._onKey);
       window.addEventListener('resize', this._onResize);
       window.addEventListener('mousemove', this._onMouseMove, { passive: true });
@@ -367,7 +368,7 @@
       tzFwd.addEventListener('click', this._onTapForward);
       tapzones.append(tzBack, tzMid, tzFwd);
 
-      // Overlay: compact, solid black, with clickable controls.
+      // Overlay: compact, solid black, with clickable controls (上一页/下一页/全览/全屏).
       const overlay = document.createElement('div');
       overlay.className = 'overlay export-hidden';
       overlay.setAttribute('role', 'toolbar');
@@ -382,11 +383,20 @@
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
         </button>
         <span class="divider"></span>
+        <button class="btn overview" type="button" aria-label="Overview gallery" title="Overview (O)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="5" height="5"/><rect x="9" y="2" width="5" height="5"/><rect x="9" y="9" width="5" height="5"/><rect x="2" y="9" width="5" height="5"/></svg>
+        </button>
+        <button class="btn fs" type="button" aria-label="Fullscreen" title="Fullscreen (F)">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 5V2h3m6 0h3v3m0 6v3h-3M5 14H2v-3"/></svg>
+        </button>
+        <span class="divider"></span>
         <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (R)">Reset<span class="kbd">R</span></button>
       `;
 
       overlay.querySelector('.prev').addEventListener('click', () => this._go(this._index - 1, 'click'));
       overlay.querySelector('.next').addEventListener('click', () => this._go(this._index + 1, 'click'));
+      overlay.querySelector('.overview').addEventListener('click', () => this._toggleOverview());
+      overlay.querySelector('.fs').addEventListener('click', () => this._toggleFs());
       overlay.querySelector('.reset').addEventListener('click', () => this._go(0, 'click'));
 
       this._root.append(style, stage, tapzones, overlay);
@@ -586,6 +596,16 @@
         this._go(this._slides.length - 1, 'keyboard');
       } else if (key === 'r' || key === 'R') {
         this._go(0, 'keyboard');
+      } else if (key === 'o' || key === 'O') {
+        this._toggleOverview();
+      } else if (key === 'f' || key === 'F') {
+        this._toggleFs();
+      } else if (key === 'Escape') {
+        if (this._overviewEl && this._overviewEl.classList.contains('active')) {
+          this._toggleOverview();
+        } else {
+          handled = false;
+        }
       } else if (/^[0-9]$/.test(key)) {
         // 1..9 jump to that slide; 0 jumps to 10.
         const n = key === '0' ? 9 : parseInt(key, 10) - 1;
@@ -597,6 +617,56 @@
       if (handled) {
         e.preventDefault();
         this._flashOverlay();
+      }
+    }
+
+    _toggleFs() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+
+    _toggleOverview() {
+      let modal = document.getElementById('overviewModal') || document.querySelector('.deck-overview');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'overviewModal';
+        modal.className = 'deck-overview';
+        modal.innerHTML = `
+          <div class="overview-header">
+            <div class="overview-title"><span>🗂 幻灯片全览导航</span><span class="overview-hint">按 ESC 或 O 键快速退出</span></div>
+            <button class="overview-close-btn" type="button">✕ 关闭全览</button>
+          </div>
+          <div class="overview-grid" id="overviewGrid"></div>
+        `;
+        modal.querySelector('.overview-close-btn').onclick = () => this._toggleOverview();
+        document.body.appendChild(modal);
+      }
+      this._overviewEl = modal;
+      const isOpening = !modal.classList.contains('active');
+      if (isOpening) {
+        const grid = modal.querySelector('.overview-grid') || modal.querySelector('#overviewGrid');
+        if (grid) {
+          grid.innerHTML = '';
+          this._slides.forEach((s, idx) => {
+            const card = document.createElement('div');
+            card.className = `overview-card ${idx === this._index ? 'current' : ''}`;
+            const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero')?.innerText || s.getAttribute('data-label') || `Slide ${idx + 1}`;
+            const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+            card.innerHTML = `
+              <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
+              <div class="overview-card-title">${title}</div>
+              <div class="overview-card-desc">${desc}</div>
+            `;
+            card.onclick = () => { this._go(idx, 'click'); this._toggleOverview(); };
+            grid.appendChild(card);
+          });
+        }
+        modal.classList.add('active');
+      } else {
+        modal.classList.remove('active');
       }
     }
 
@@ -622,6 +692,149 @@
     next() { this._go(this._index + 1, 'api'); }
     prev() { this._go(this._index - 1, 'api'); }
     reset() { this._go(0, 'api'); }
+    toggleFullscreen() { this._toggleFs(); }
+    toggleOverview() { this._toggleOverview(); }
+
+    _initImageLightbox() {
+      let lb = document.getElementById('imgLightbox');
+      if (!lb) {
+        lb = document.createElement('div');
+        lb.id = 'imgLightbox';
+        lb.className = 'img-lightbox';
+        lb.setAttribute('role', 'dialog');
+        lb.setAttribute('aria-hidden', 'true');
+        lb.setAttribute('aria-label', '图片放大预览');
+        lb.innerHTML = `
+          <button class="img-lightbox-close" type="button" aria-label="关闭">×</button>
+          <button class="img-lightbox-prev" type="button" aria-label="上一张" hidden>‹</button>
+          <button class="img-lightbox-next" type="button" aria-label="下一张" hidden>›</button>
+          <div class="img-lightbox-counter" id="imgLightboxCounter" hidden></div>
+          <div class="img-lightbox-frame">
+            <img class="img-lightbox-img" id="imgLightboxImg" alt="放大预览" />
+          </div>
+          <div class="img-lightbox-cap" id="imgLightboxCap" hidden></div>
+          <div class="img-lightbox-hint">双击图片 · ESC · 任意位置关闭</div>
+        `;
+        document.body.appendChild(lb);
+      }
+
+      const lbImg = document.getElementById('imgLightboxImg') || lb.querySelector('.img-lightbox-img');
+      const lbCap = document.getElementById('imgLightboxCap') || lb.querySelector('.img-lightbox-cap');
+      const lbCounter = document.getElementById('imgLightboxCounter') || lb.querySelector('.img-lightbox-counter');
+      const lbClose = lb.querySelector('.img-lightbox-close');
+      const lbPrev = lb.querySelector('.img-lightbox-prev');
+      const lbNext = lb.querySelector('.img-lightbox-next');
+      let currentGroup = { items: [] };
+      let currentIndex = -1;
+
+      const collectGroups = () => {
+        const groups = new Map();
+        const allImgs = document.querySelectorAll('img, [data-zoomable] img');
+        allImgs.forEach(img => {
+          if (img.classList.contains('img-lightbox-img') || img.closest('.deck-overview') || img.closest('.img-lightbox')) return;
+          const slide = img.closest('.slide, [data-slide], section') || document.body;
+          const key = slide.id || ('__grp__' + groups.size);
+          if (!groups.has(key)) groups.set(key, { slide, items: [] });
+          const figure = img.closest('figure');
+          const figCap = figure ? figure.querySelector('figcaption') : null;
+          const capText = figCap ? (figCap.textContent || '').trim() : (img.getAttribute('alt') || img.getAttribute('title') || '');
+          groups.get(key).items.push({
+            img,
+            src: img.getAttribute('src') || img.currentSrc,
+            alt: img.getAttribute('alt') || '',
+            cap: capText
+          });
+        });
+        return groups;
+      };
+
+      const applyItem = (group, index) => {
+        const item = group.items[index];
+        if (!item) return;
+        if (lbImg.src !== item.src) lbImg.src = item.src;
+        lbImg.alt = item.alt;
+        if (item.cap && item.cap !== '放大预览') {
+          lbCap.textContent = item.cap;
+          lbCap.hidden = false;
+        } else {
+          lbCap.hidden = true;
+        }
+        if (group.items.length > 1) {
+          lbCounter.textContent = (index + 1) + ' / ' + group.items.length;
+          lbCounter.hidden = false;
+          lbPrev.hidden = false;
+          lbNext.hidden = false;
+        } else {
+          lbCounter.hidden = true;
+          lbPrev.hidden = true;
+          lbNext.hidden = true;
+        }
+      };
+
+      const openAt = (group, index) => {
+        currentGroup = group;
+        currentIndex = index;
+        applyItem(group, index);
+        lb.classList.add('open');
+        lb.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const close = () => {
+        lb.classList.remove('open');
+        lb.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      };
+
+      const nav = (delta) => {
+        if (!currentGroup.items || !currentGroup.items.length) return;
+        const n = currentGroup.items.length;
+        if (n < 2) return;
+        currentIndex = (currentIndex + delta + n) % n;
+        applyItem(currentGroup, currentIndex);
+      };
+
+      lb.addEventListener('click', (e) => {
+        if (e.target === lb || e.target.classList.contains('img-lightbox-frame')) close();
+      });
+      lb.addEventListener('dblclick', (e) => {
+        e.stopPropagation();
+        close();
+      });
+      if (lbClose) lbClose.addEventListener('click', (e) => { e.stopPropagation(); close(); });
+      if (lbPrev) lbPrev.addEventListener('click', (e) => { e.stopPropagation(); nav(-1); });
+      if (lbNext) lbNext.addEventListener('click', (e) => { e.stopPropagation(); nav(1); });
+
+      const bindEvents = () => {
+        const groups = collectGroups();
+        groups.forEach(g => {
+          g.items.forEach((item, i) => {
+            item.img.addEventListener('dblclick', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              openAt(g, i);
+            });
+            const zoomableParent = item.img.closest('[data-zoomable]');
+            if (zoomableParent) {
+              zoomableParent.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openAt(g, i);
+              });
+            }
+          });
+        });
+      };
+
+      setTimeout(bindEvents, 100);
+
+      document.addEventListener('keydown', (e) => {
+        if (!lb.classList.contains('open')) return;
+        if (e.key === 'Escape') { close(); e.stopPropagation(); e.preventDefault(); }
+        else if (e.key === 'ArrowLeft') { nav(-1); e.stopPropagation(); e.preventDefault(); }
+        else if (e.key === 'ArrowRight') { nav(1); e.stopPropagation(); e.preventDefault(); }
+      }, true);
+    }
   }
 
   if (!customElements.get('deck-stage')) {
