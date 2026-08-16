@@ -188,18 +188,26 @@
         .b-card.amber { --b-accent: var(--b-amber); border-top-color: var(--b-amber); }
         .b-card.violet { --b-accent: var(--b-violet); border-top-color: var(--b-violet); }
 
+        /* Card Header & Components (单行同行并排规范) */
+        .card-header, .b-card-header, .card-title-row, .step-header {
+            display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; width: 100%;
+        }
+        .card-header h3, .b-card-header h3, .card-title-row h3, .step-header h3 {
+            margin: 0 !important; display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+
         .card-num-badge {
-            width: 48px; height: 48px; border-radius: 14px;
+            width: 44px; height: 44px; border-radius: 12px;
             background: var(--b-grad-accent); color: #fff;
-            display: flex; align-items: center; justify-content: center;
+            display: inline-flex; align-items: center; justify-content: center;
             font-family: var(--font-display); font-size: 20px; font-weight: 800;
-            margin-bottom: 18px;
+            flex-shrink: 0; margin-bottom: 0;
         }
         .icon-box {
-            width: 60px; height: 60px; border-radius: 14px;
+            width: 46px; height: 46px; border-radius: 12px;
             background: var(--b-accent-soft); color: var(--b-accent);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 28px; font-weight: 700; margin-bottom: 16px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 24px; font-weight: 700; flex-shrink: 0; margin-bottom: 0;
         }
         .icon-box.teal { background: rgba(13, 148, 136, 0.12); color: var(--b-teal); }
         .icon-box.rose { background: rgba(225, 29, 72, 0.12); color: var(--b-rose); }
@@ -208,7 +216,7 @@
 
         .card-title {
             font-family: var(--font-display); font-size: 28px; font-weight: 800;
-            margin: 0 0 10px 0; color: var(--text-color);
+            margin: 0; color: var(--text-color);
         }
         .card-body {
             font-size: 20px; line-height: 1.62; color: var(--text-sub); margin: 0;
@@ -277,9 +285,8 @@
        }
        .img-lightbox.open { opacity: 1; visibility: visible; }
        .img-lightbox-frame { position: relative; display: flex; align-items: center; justify-content: center; max-width: 100%; max-height: 100%; }
-       .img-lightbox-img { display: block; max-width: 88vw; max-height: 80vh; width: auto; height: auto; border-radius: 8px; box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1); transform: scale(0.94); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: #0f172a; }
+       .img-lightbox-img { display: block; max-width: 90vw; max-height: 85vh; width: auto; height: auto; border-radius: 8px; box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1); transform: scale(0.94); transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); background: #0f172a; }
        .img-lightbox.open .img-lightbox-img { transform: scale(1); }
-       .img-lightbox-cap { margin-top: 14px; font-size: 14px; line-height: 1.5; color: rgba(226, 232, 240, 0.85); text-align: center; max-width: 80ch; font-style: italic; }
        .img-lightbox-close, .img-lightbox-prev, .img-lightbox-next { position: fixed; width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.22); background: rgba(15, 23, 42, 0.65); color: #e2e8f0; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; backdrop-filter: blur(10px); font-family: inherit; font-size: 20px; line-height: 1; }
        .img-lightbox-close:hover, .img-lightbox-prev:hover, .img-lightbox-next:hover { background: var(--b-accent, #4f46e5); border-color: var(--b-accent, #4f46e5); color: #fff; transform: scale(1.08); }
        .img-lightbox-close { top: 26px; right: 32px; font-size: 24px; }
@@ -540,19 +547,21 @@
         .overview-close-btn:hover { background: rgba(239, 68, 68, 0.25); color: #fca5a5; }
         .overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; width: 100%; }
         .overview-card {
-            background: rgba(30, 41, 59, 0.7); border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.2s ease;
-            display: flex; flex-direction: column; gap: 10px; position: relative;
+            background: rgba(30, 41, 59, 0.75); border: 2px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px; padding: 22px 20px 18px; cursor: pointer; transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column; justify-content: flex-start; gap: 8px; position: relative;
+            overflow: hidden; min-height: 130px; box-sizing: border-box;
         }
-        .overview-card:hover { border-color: var(--b-accent-cyan); transform: translateY(-4px); background: rgba(30, 41, 59, 0.95); }
-        .overview-card.current { border-color: var(--b-accent-cyan); box-shadow: 0 0 20px rgba(6, 182, 212, 0.3); background: rgba(14, 116, 144, 0.25); }
+        .overview-card:hover { border-color: var(--b-accent-cyan); transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45); background: rgba(30, 41, 59, 0.95); }
+        .overview-card.current { border-color: var(--b-accent-cyan); box-shadow: 0 0 24px rgba(6, 182, 212, 0.35); background: rgba(14, 116, 144, 0.3); }
         .overview-card-badge {
-            position: absolute; top: 12px; right: 12px; font-family: var(--font-mono, monospace);
-            font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
-            background: rgba(255, 255, 255, 0.12); color: #e2e8f0;
+            position: absolute; top: 14px; right: 14px; font-family: var(--font-mono, monospace);
+            font-size: 13px; font-weight: 800; padding: 3px 10px; border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14); color: #e2e8f0;
         }
-        .overview-card-title { font-size: 16px; font-weight: 700; color: #fff; line-height: 1.3; margin-right: 48px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .overview-card-desc { font-size: 13px; color: #94a3b8; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .overview-card.current .overview-card-badge { background: var(--b-accent-cyan); color: #042f2e; }
+        .overview-card-title { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.38; padding-right: 56px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; }
+        .overview-card-desc { font-size: 13px; color: #94a3b8; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -611,9 +620,11 @@
                     <div class="grid-2col anim d4">
                         <div class="b-card rose">
                             <div>
-                                <div class="icon-box rose">✕</div>
-                                <h3 class="card-title">传统 Web 演示文稿痛点</h3>
-                                <ul style="padding-left: 20px; color: #94a3b8; font-size: 18px; line-height: 1.8;">
+                                <div class="card-header">
+                                    <span class="icon-box rose">✕</span>
+                                    <h3 class="card-title">传统 Web 演示文稿痛点</h3>
+                                </div>
+                                <ul style="padding-left: 20px; color: #94a3b8; font-size: 18px; line-height: 1.8; margin-top: 10px;">
                                     <li><strong>中间中空断层</strong>：流式布局导致不同分辨率下中间大面积尴尬空白</li>
                                     <li><strong>黑框割裂感</strong>：视口边缘与幻灯片画布背景色不匹配，边界生硬</li>
                                     <li><strong>动效死板</strong>：使用线性渐变或机械位移，缺乏现代 App 的弹性回响</li>
@@ -623,9 +634,11 @@
 
                         <div class="b-card teal">
                             <div>
-                                <div class="icon-box teal">✓</div>
-                                <h3 class="card-title">Beautiful Modern 解决之道</h3>
-                                <ul style="padding-left: 20px; color: #94a3b8; font-size: 18px; line-height: 1.8;">
+                                <div class="card-header">
+                                    <span class="icon-box teal">✓</span>
+                                    <h3 class="card-title">Beautiful Modern 解决之道</h3>
+                                </div>
+                                <ul style="padding-left: 20px; color: #94a3b8; font-size: 18px; line-height: 1.8; margin-top: 10px;">
                                     <li><strong>Scheme 1/2 密度控制</strong>：紧凑分组与中间连通桥，彻底消除尴尬留白</li>
                                     <li><strong>Seamless Viewport Sync</strong>：视口背景与当前页沉浸式同步</li>
                                     <li><strong>Spring 弹性物理微交互</strong>：采用 60fps 弹簧曲线与微光悬浮</li>
@@ -648,32 +661,40 @@
                     <div class="grid-4col anim d4">
                         <div class="b-card accent-top">
                             <div>
-                                <div class="card-num-badge">01</div>
-                                <h3 class="card-title">Typography 双核</h3>
+                                <div class="card-header">
+                                    <span class="card-num-badge">01</span>
+                                    <h3 class="card-title">Typography 双核</h3>
+                                </div>
                                 <p class="card-body"><strong>Display</strong>: Outfit (800)<br><strong>Body</strong>: Plus Jakarta Sans / Noto Sans SC 中英文组合</p>
                             </div>
                         </div>
 
                         <div class="b-card teal accent-top">
                             <div>
-                                <div class="card-num-badge" style="background: var(--b-teal);">02</div>
-                                <h3 class="card-title">Teal Accent</h3>
+                                <div class="card-header">
+                                    <span class="card-num-badge" style="background: var(--b-teal);">02</span>
+                                    <h3 class="card-title">Teal Accent</h3>
+                                </div>
                                 <p class="card-body">青翡标点调色盘，用于表达技术、数据与逻辑严密性场景</p>
                             </div>
                         </div>
 
                         <div class="b-card rose accent-top">
                             <div>
-                                <div class="card-num-badge" style="background: var(--b-rose);">03</div>
-                                <h3 class="card-title">Rose Alert</h3>
+                                <div class="card-header">
+                                    <span class="card-num-badge" style="background: var(--b-rose);">03</span>
+                                    <h3 class="card-title">Rose Alert</h3>
+                                </div>
                                 <p class="card-body">玫瑰红高亮警示，用于表达痛点、对比差异与关键警告</p>
                             </div>
                         </div>
 
                         <div class="b-card violet accent-top">
                             <div>
-                                <div class="card-num-badge" style="background: var(--b-violet);">04</div>
-                                <h3 class="card-title">Violet Glass</h3>
+                                <div class="card-header">
+                                    <span class="card-num-badge" style="background: var(--b-violet);">04</span>
+                                    <h3 class="card-title">Violet Glass</h3>
+                                </div>
                                 <p class="card-body">紫罗兰晶体毛玻璃，搭配 `blur(16px)` 与微发光高精边框</p>
                             </div>
                         </div>
@@ -693,27 +714,33 @@
                     <!-- Pipeline Flow Bridge Component -->
                     <div class="pipeline anim d4">
                         <div class="pipeline-step">
-                            <div class="step-nb">1</div>
-                            <h3 style="margin: 0 0 10px 0; font-size: 22px;">2 区块场景 (Scheme 1)</h3>
-                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                            <div class="step-header">
+                                <span class="step-nb">1</span>
+                                <h3 style="margin: 0; font-size: 22px;">2 区块场景 (Scheme 1)</h3>
+                            </div>
+                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6; margin-top: 10px;">
                                 <li>标题 + 卡片两组顶端对齐</li>
                                 <li>使用 `gap: 40px` 紧凑靠拢</li>
                                 <li>底部自然留出呼吸空间</li>
                             </ul>
                         </div>
                         <div class="pipeline-step">
-                            <div class="step-nb">2</div>
-                            <h3 style="margin: 0 0 10px 0; font-size: 22px;">3 区块场景 (Scheme 2)</h3>
-                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                            <div class="step-header">
+                                <span class="step-nb">2</span>
+                                <h3 style="margin: 0; font-size: 22px;">3 区块场景 (Scheme 2)</h3>
+                            </div>
+                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6; margin-top: 10px;">
                                 <li>三层结构使用 `.between` 铺满</li>
                                 <li>中间插入 Pipeline 或 Stat 连通桥</li>
                                 <li>强行拉紧上下元素视觉关联</li>
                             </ul>
                         </div>
                         <div class="pipeline-step">
-                            <div class="step-nb">3</div>
-                            <h3 style="margin: 0 0 10px 0; font-size: 22px;">全视口无缝统一</h3>
-                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6;">
+                            <div class="step-header">
+                                <span class="step-nb">3</span>
+                                <h3 style="margin: 0; font-size: 22px;">全视口无缝统一</h3>
+                            </div>
+                            <ul style="margin: 0; padding-left: 18px; font-size: 16px; color: #94a3b8; line-height: 1.6; margin-top: 10px;">
                                 <li>JS 实时提取幻灯片背景底色</li>
                                 <li>动态同步屏幕视口 `--viewport-bg`</li>
                                 <li>彻底消除边缘黑框与视觉分界</li>
@@ -1278,8 +1305,14 @@
             document.querySelectorAll('.slide').forEach((s, idx) => {
                 const card = document.createElement('div');
                 card.className = `overview-card ${idx + 1 === currentSlide ? 'current' : ''}`;
-                const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero, .display-hero')?.innerText || `Slide ${idx + 1}`;
-                const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+                const titleEl = s.querySelector('h1, h2, h3, .slide-title, .h-hero, .h-xl, .h-lg, .h-md, .display-hero, .display-chapter, .cover-title, .section-title, .chapter-title, [data-title]');
+                let title = titleEl ? (titleEl.textContent || titleEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+                if (!title) {
+                    title = s.getAttribute('data-title') || s.getAttribute('data-label') || `第 ${idx + 1} 页`;
+                }
+                const descEl = s.querySelector('.slide-subtitle, .tagline, .lead, .cover-sub, .body-desc, .desc-compact, p, .card-text, .feature-desc');
+                let desc = descEl ? (descEl.textContent || descEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+                if (desc.length > 90) desc = desc.slice(0, 88) + '...';
                 card.innerHTML = `
                     <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
                     <div class="overview-card-title">${title}</div>
@@ -1344,7 +1377,6 @@
                         <div class="img-lightbox-frame">
                             <img class="img-lightbox-img" id="imgLightboxImg" alt="放大预览" />
                         </div>
-                        <div class="img-lightbox-cap" id="imgLightboxCap" hidden></div>
                         <div class="img-lightbox-hint">双击图片 · ESC · 任意位置关闭</div>
                     `;
                     document.body.appendChild(lb);
@@ -1354,7 +1386,6 @@
 
             const lb = ensureLightboxDOM();
             const lbImg = document.getElementById('imgLightboxImg');
-            const lbCap = document.getElementById('imgLightboxCap');
             const lbCounter = document.getElementById('imgLightboxCounter');
             const lbClose = lb.querySelector('.img-lightbox-close');
             const lbPrev = lb.querySelector('.img-lightbox-prev');
@@ -1370,14 +1401,10 @@
                     const slide = img.closest('.slide') || document.body;
                     const key = slide.id || '__global_imgs__';
                     if (!groups.has(key)) groups.set(key, { slide, items: [] });
-                    const figure = img.closest('figure');
-                    const figCap = figure ? figure.querySelector('figcaption') : null;
-                    const caption = figCap ? (figCap.textContent || '').trim() : (img.getAttribute('alt') || img.getAttribute('title') || '');
                     groups.get(key).items.push({
                         img,
                         src: img.getAttribute('src') || img.currentSrc,
-                        alt: img.getAttribute('alt') || '',
-                        cap: caption
+                        alt: img.getAttribute('alt') || ''
                     });
                 });
                 return groups;
@@ -1388,12 +1415,6 @@
                 if (!item) return;
                 if (lbImg.src !== item.src) lbImg.src = item.src;
                 lbImg.alt = item.alt;
-                if (item.cap && item.cap !== '放大预览') {
-                    lbCap.textContent = item.cap;
-                    lbCap.hidden = false;
-                } else {
-                    lbCap.hidden = true;
-                }
                 if (group.items.length > 1) {
                     lbCounter.textContent = (index + 1) + ' / ' + group.items.length;
                     lbCounter.hidden = false;

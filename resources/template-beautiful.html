@@ -558,17 +558,22 @@
       background: rgba(30, 41, 59, 0.75);
       border: 2px solid rgba(255, 255, 255, 0.12);
       border-radius: 14px;
-      padding: 20px;
+      padding: 22px 20px 18px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      justify-content: flex-start;
+      gap: 8px;
       position: relative;
+      overflow: hidden;
+      min-height: 130px;
+      box-sizing: border-box;
     }
     .overview-card:hover {
       border-color: var(--b-accent-cyan, #06b6d4);
       transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
       background: rgba(30, 41, 59, 0.95);
     }
     .overview-card.current {
@@ -588,24 +593,32 @@
       background: rgba(255, 255, 255, 0.14);
       color: #e2e8f0;
     }
+    .overview-card.current .overview-card-badge {
+      background: var(--b-accent-cyan, #06b6d4);
+      color: #042f2e;
+    }
     .overview-card-title {
-      font-size: 19px;
+      font-size: 17px;
       font-weight: 800;
       color: #fff;
-      line-height: 1.35;
-      margin-right: 52px;
-      white-space: nowrap;
+      line-height: 1.38;
+      padding-right: 56px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
+      word-break: break-word;
     }
     .overview-card-desc {
-      font-size: 15px;
+      font-size: 13px;
       color: #94a3b8;
       line-height: 1.5;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      word-break: break-word;
+      margin-top: 2px;
     }
 
    .watermark {
@@ -671,37 +684,70 @@
    .b-card.accent-top { border-top: 4px solid var(--b-accent); }
    .b-card.accent-left { border-left: 4px solid var(--b-accent); }
 
-   .icon-box {
-     width: 56px;
-     height: 56px;
-     border-radius: var(--radius-sm);
-     background: var(--b-accent-soft);
-     color: var(--b-accent);
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     font-size: 28px;
-     margin-bottom: var(--space-2);
-   }
+    /* Card Header / Title Row (单行同行并排标准) */
+    .card-header,
+    .b-card-header,
+    .card-title-row,
+    .step-header,
+    .tier-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .card-header h3,
+    .b-card-header h3,
+    .card-title-row h3,
+    .step-header h3,
+    .tier-header h3 {
+      margin: 0 !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-sm);
+      background: var(--b-accent-soft);
+      color: var(--b-accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
    .icon-box.round { border-radius: 50%; }
    .icon-box.teal { background: rgba(13, 148, 136, 0.12); color: var(--b-teal); }
    .icon-box.rose { background: rgba(225, 29, 72, 0.12); color: var(--b-rose); }
    .icon-box.amber { background: rgba(217, 119, 6, 0.12); color: var(--b-amber); }
    .icon-box.violet { background: rgba(124, 58, 237, 0.12); color: var(--b-violet); }
 
-   .b-card h3 {
-     font-family: var(--font-display);
-     font-size: 28px;
-     font-weight: 800;
-     color: var(--b-text);
-     line-height: 1.25;
-     margin-bottom: 8px;
-   }
-   .b-card p {
-     font-size: 20px;
-     line-height: 1.62;
-     color: var(--b-text-secondary);
-   }
+    .b-card h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--b-text);
+      line-height: 1.25;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .b-card h3 .icon-box,
+    .b-card h3 .card-num-badge {
+      margin-bottom: 0;
+    }
+    .b-card p {
+      font-size: 20px;
+      line-height: 1.62;
+      color: var(--b-text-secondary);
+    }
    .b-card ul {
      list-style: none;
      margin-top: var(--space-2);
@@ -1166,7 +1212,7 @@
     }
     .img-lightbox-img {
       display: block;
-      max-width: 88vw; max-height: 78vh;
+      max-width: 90vw; max-height: 85vh;
       width: auto; height: auto;
       border-radius: 6px;
       box-shadow: 0 60px 120px -30px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.08);
@@ -1175,13 +1221,6 @@
       background: var(--b-bg-elevated, #0f172a);
     }
     .img-lightbox.open .img-lightbox-img { transform: scale(1); }
-    .img-lightbox-cap {
-      margin-top: 14px;
-      font-size: 13px; line-height: 1.5;
-      color: rgba(226, 232, 240, 0.78);
-      text-align: center; max-width: 80ch;
-      font-style: italic;
-    }
 
     .img-lightbox-close,
     .img-lightbox-prev,
@@ -1540,23 +1579,23 @@
  <div class="deck" id="deck">
 
  <!-- SLIDES_GO_HERE -->
- <!-- Example Cover Slide:
- <div class="slide hero light active" id="s1">
-   <div class="cover-orb one anim-float"></div>
-   <div class="cover-orb two anim-float" style="animation-delay:-2s"></div>
-   <div class="cover-frame">
-     <div class="cover-logo anim d1">BRAND<span>NAME</span></div>
-     <div class="cover-title anim d2"><span class="gradient-text">Beautiful Presentations</span></div>
-     <div class="cover-sub anim d3">Automatically designed, fluidly animated, effortlessly clear.</div>
-     <div class="cover-divider anim d3"></div>
-     <div class="cover-stats anim d4">
-       <div class="cover-stat"><div class="n">12</div><div class="l">Layouts</div></div>
-       <div class="cover-stat"><div class="n">8</div><div class="l">Themes</div></div>
-       <div class="cover-stat"><div class="n">∞</div><div class="l">Possibilities</div></div>
-     </div>
-   </div>
- </div>
- -->
+ <!-- Example Cover Slide (首页专属宽间距排版示范):
+  <div class="slide hero light active" id="s1">
+    <div class="cover-orb one anim-float"></div>
+    <div class="cover-orb two anim-float" style="animation-delay:-2s"></div>
+    <div class="cover-frame">
+      <div class="cover-badge anim d1">DESIGN CANVAS</div>
+      <h1 class="cover-title anim d2"><span class="gradient-text">写 Skill 前先回答四个问题</span></h1>
+      <p class="cover-sub anim d3">“想清楚问题，比直接写代码更重要” —— 四问设计画布与核心架构规范</p>
+      <div class="cover-divider anim d3"></div>
+      <div class="cover-stats anim d4">
+        <div class="cover-stat"><div class="n">04</div><div class="l">Core Questions</div></div>
+        <div class="cover-stat"><div class="n">100%</div><div class="l">Clarity</div></div>
+        <div class="cover-stat"><div class="n">Zero</div><div class="l">Wasted Code</div></div>
+      </div>
+    </div>
+  </div>
+  -->
  <!-- Example Content Slide:
  <div class="slide light" id="s2">
    <div class="chrome"><div>Section · 01</div><div>02 / 12</div></div>
@@ -1566,23 +1605,20 @@
        <div class="h-xl anim d2">Content finds its <span class="em">perfect shape</span></div>
        <div class="lead anim d3" style="max-width:900px">Twelve battle-tested layouts adapt to your story, from hero covers to data grids.</div>
      </div>
-     <div class="grid-3 anim d4">
-       <div class="b-card">
-         <div class="icon-box">✦</div>
-         <h3>Hero Covers</h3>
-         <p>Big type, soft gradients, and stats that make the first impression count.</p>
-       </div>
-       <div class="b-card teal">
-         <div class="icon-box teal">◎</div>
-         <h3>Data Grids</h3>
-         <p>Numbers become narratives with animated stat cards and big-number layouts.</p>
-       </div>
-       <div class="b-card violet">
-         <div class="icon-box violet">◈</div>
-         <h3>Visual Stories</h3>
-         <p>Left-text-right-image, timelines, and comparison blocks keep the eye moving.</p>
-       </div>
-     </div>
+      <div class="grid-3 anim d4">
+        <div class="b-card">
+          <div class="card-header"><span class="icon-box">✦</span><h3>Hero Covers</h3></div>
+          <p>Big type, soft gradients, and stats that make the first impression count.</p>
+        </div>
+        <div class="b-card teal">
+          <div class="card-header"><span class="icon-box teal">◎</span><h3>Data Grids</h3></div>
+          <p>Numbers become narratives with animated stat cards and big-number layouts.</p>
+        </div>
+        <div class="b-card violet">
+          <div class="card-header"><span class="icon-box violet">◈</span><h3>Visual Stories</h3></div>
+          <p>Left-text-right-image, timelines, and comparison blocks keep the eye moving.</p>
+        </div>
+      </div>
    </div>
    <div class="foot"><div>Footer left</div><div>02 / 12</div></div>
  </div>
@@ -1639,7 +1675,6 @@
   <div class="img-lightbox-frame">
     <img class="img-lightbox-img" id="imgLightboxImg" alt="放大预览" />
   </div>
-  <div class="img-lightbox-cap" id="imgLightboxCap" hidden></div>
   <div class="img-lightbox-hint">双击图片 · ESC · 任意位置关闭</div>
 </div>
 
@@ -1840,8 +1875,18 @@
      slides.forEach((s, idx) => {
        const card = document.createElement('div');
        card.className = `overview-card ${idx === cur ? 'current' : ''}`;
-       const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero, .cover-title')?.innerText || `Slide ${idx + 1}`;
-       const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+       
+       // 关键修复：优先使用 textContent 而非 innerText，因为非激活 slide 带有 visibility:hidden，innerText 会返回空字符串 ""
+       const titleEl = s.querySelector('h1, h2, h3, .slide-title, .h-hero, .h-xl, .h-lg, .h-md, .display-hero, .display-chapter, .cover-title, .section-title, .chapter-title, [data-title]');
+       let title = titleEl ? (titleEl.textContent || titleEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+       if (!title) {
+         title = s.getAttribute('data-title') || s.getAttribute('data-label') || `第 ${idx + 1} 页`;
+       }
+       
+       const descEl = s.querySelector('.slide-subtitle, .tagline, .lead, .cover-sub, .body-desc, .desc-compact, p, .card-text, .feature-desc');
+       let desc = descEl ? (descEl.textContent || descEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+       if (desc.length > 90) desc = desc.slice(0, 88) + '...';
+
        card.innerHTML = `
          <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
          <div class="overview-card-title">${title}</div>
@@ -2057,12 +2102,12 @@
       - 默认支持鼠标双击任意图片(img)全屏放大
       - 同时支持点击带有 [data-zoomable] 的图片/卡片
       - 再次双击/单击背景/按ESC关闭，同页多图支持左右箭头切换
+      - 全屏纯净大图视觉，不展示多余图说与文字
       ========================================================== */
    (function() {
      const lb = document.getElementById('imgLightbox');
      if (!lb) return;
      const lbImg = document.getElementById('imgLightboxImg');
-     const lbCap = document.getElementById('imgLightboxCap');
      const lbCounter = document.getElementById('imgLightboxCounter');
      const lbClose = lb.querySelector('.img-lightbox-close');
      const lbPrev = lb.querySelector('.img-lightbox-prev');
@@ -2078,14 +2123,10 @@
          const slide = img.closest('.slide') || document.body;
          const key = slide.id || ('__group__' + groups.size);
          if (!groups.has(key)) groups.set(key, { slide, items: [] });
-         const figure = img.closest('figure');
-         const figCap = figure ? figure.querySelector('figcaption') : null;
-         const capText = figCap ? (figCap.textContent || '').trim() : (img.getAttribute('alt') || img.getAttribute('title') || '');
          groups.get(key).items.push({
            img,
            src: img.getAttribute('src') || img.currentSrc,
-           alt: img.getAttribute('alt') || '',
-           cap: capText
+           alt: img.getAttribute('alt') || ''
          });
        });
        return groups;
@@ -2096,12 +2137,6 @@
        if (!item) return;
        if (lbImg.src !== item.src) lbImg.src = item.src;
        lbImg.alt = item.alt;
-       if (item.cap && item.cap !== '放大预览') {
-         lbCap.textContent = item.cap;
-         lbCap.hidden = false;
-       } else {
-         lbCap.hidden = true;
-       }
        if (group.items.length > 1) {
          lbCounter.textContent = (index + 1) + ' / ' + group.items.length;
          lbCounter.hidden = false;

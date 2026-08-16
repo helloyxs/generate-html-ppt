@@ -40,13 +40,16 @@ An AI Coding-Agent Skill for creating stunning, interactive HTML presentations �
 * Built-in support for interactive **ECharts charts**, **Mermaid.js vector diagrams**, **syntax highlighting**, **number count-up animations (`.count-up`)**, and **spring physics entry animations (`.anim`)**.
 
 ### 8. 🎛️ 4-Button Bottom Controls & Overview Gallery Mode
-* Every presentation automatically comes equipped with a floating glassmorphism bottom bar containing **`◀ Previous`**, **`Slide Counter & Progress`**, **`Next ▶`**, **`🗂 Overview`**, and **`⛶ Fullscreen`** buttons. Includes instant slide thumbnail grid navigation (`O` for Overview, `F` for Fullscreen, `Esc` to close) paired with **Header Area Compactness Rules** yielding 78%+ vertical canvas space for main content.
+* Every presentation automatically comes equipped with a floating glassmorphism bottom bar containing **`◀ Previous`**, **`Slide Counter & Progress`**, **`Next ▶`**, **`🗂 Overview`**, and **`⛶ Fullscreen`** buttons. Includes instant slide thumbnail grid navigation (`O` for Overview, `F` for Fullscreen, `Esc` to close) paired with **Dual-Track Spacing Standards** (spacious breathing room on Cover Slides ↔ compact header compression on Content Slides) yielding 78%+ vertical canvas space for main content.
 
 ### 9. 🔤 High-Legibility Large Font Standard
 * Eliminates tiny, illegible 12px~14px text. Under the 1920×1080 canvas stage, all typography is tuned for speech presentation clarity: Body Paragraphs `20px~22px`, Subtitles `22px~26px`, Card Titles `26px~28px`, Badges `16px~18px`, Big Stats `56px~72px`, Tables & Code `19px~21px` — ensuring effortless reading across both large projection screens and scaled laptop viewports.
 
 ### 10. 🔍 Default Double-Click Image Zoom & Lightbox
 * Built-in interactive fullscreen image lightbox: Any image across the presentation **supports double-clicking (`dblclick`) to zoom and enlarge into a backdrop-blurred lightbox overlay**. Double-click again, click anywhere, or press `Esc` to close; multi-image slides support fluid keyboard `←` / `→` arrow navigation.
+
+### 11. 🏷️ Inline Icon, Badge & Title Standard
+* In cards, pipeline steps, architecture layers, and feature grids, icons, emojis, images, or numerical badges stay horizontally aligned on the same row with their paired title text by default, eliminating unnecessary two-line vertical stacking and wasted canvas height. Graceful two-line wrapping is reserved exclusively for narrow columns or exceptionally long text.
 
 ---
 

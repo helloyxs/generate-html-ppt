@@ -17,9 +17,10 @@ Presentations are generated using a **Design System Specification (`design.md`)*
 3. **Fixed 16:9 Stage (NON-NEGOTIABLE)**: Every slide canvas is authored inside a 1920×1080 stage scaled uniformly to the viewport using JavaScript (`updateScale()`). Content never reflows per device.
 4. **Seamless Viewport Rule (视口无缝融合规范)**: All presentations must use CSS variables (`--viewport-bg`) on `body` / `.deck-viewport` and dynamic JavaScript (`updateViewportBg()`) to synchronize the outer screen background with the active slide's background.
 5. **Text-First Workflow**: Preserves the signature 3-stage user workflow: **Text-based requirement alignment ➔ Design-guided wireframing (灰度骨架确认) ➔ Guided batch content filling ➔ Verification**.
-6. **页眉三要素紧凑压缩与空间让渡规范 (Header Area Compression Rule · NON-NEGOTIABLE)**: Badge/分类标签、主标题、副标题/金句引导语这三项在纵向空间的占用必须保持扁平紧凑，**页眉总高度严格控制在画布的 18%~22% 以内（<= 200px~220px on 1080p）**，坚决杜绝层层大外边距堆叠，将 78%~82% 以上的黄金垂直空间完整让渡给核心内容区（卡片网格、流程图、对比表、数据图表等）。
+6. **页眉三要素紧凑压缩与空间让渡规范 (Header Area Compression Rule · NON-NEGOTIABLE)**: 正文页（Content Slides）的 Badge/分类标签、主标题、副标题/金句引导语在纵向空间的占用必须保持扁平紧凑，**页眉总高度严格控制在画布的 18%~22% 以内（<= 200px~220px on 1080p）**，杜绝多层大外边距堆叠，将 78%~82% 黄金垂直空间完整让渡给核心内容区。**注意**：首页 PPT（Cover Slide / 封面页）作为整套演示门面与视觉焦点，豁免紧凑压缩，采用开阔舒展的专属宽纵向间距。
 7. **每次生成必配底栏四件套与全景缩略图交互 (Mandatory 4-Button Toolbar & Overview Gallery · NON-NEGOTIABLE)**: 每次生成 HTML PPT 必须在底部居中配备毛玻璃控制栏，包含 **`◀ 上一页`**、**`页码/进度条`**、**`下一页 ▶`**、**`🗂 全览`** 与 **`⛶ 全屏`** 按钮，并内置基于 DOM/JS 的全景缩略图模态框与快捷键引擎（`←`/`→`/`Space` 翻页，`O` 打开全览，`F` 全屏，`Esc` 关闭全览/全屏）。
 8. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演说与移动/笔记本视口缩放下的极佳易读性。
+9. **图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**: 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）、功能列表等模块中，**图片、图标、Emoji 或序号徽章与对应的标题文字必须处于同一行展示（`display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故上下拆成两行展示**。**唯一豁免例外**：仅当图片/图标与文字极长、在一行内确实无法完整容纳导致溢出或排版坍塌时，才可酌情拆为两行展示。
 
 ---
 
@@ -79,7 +80,7 @@ Prepare visual assets before building wireframes:
 - 多图分组: 用 T6 (Quiet Frame),单图不加 figcaption。
 
 **图片处理硬规则(全范式通用)**:
-- **默认支持鼠标双击图片放大 (Default Double-Click Image Zoom & Lightbox · NON-NEGOTIABLE)**: 生成的页面必须默认支持鼠标双击（dblclick）任意幻灯片图片全屏毛玻璃放大预览，再次双击/单击背景/按 Esc 退出；显式添加 `data-zoomable` 可支持单击放大。
+- **默认支持鼠标双击图片放大 (Default Double-Click Image Zoom & Lightbox · NON-NEGOTIABLE)**: 生成的页面必须默认支持鼠标双击（dblclick）任意幻灯片图片全屏毛玻璃放大预览，再次双击/单击背景/按 Esc 退出；显式添加 `data-zoomable` 可支持单击放大。全屏放大仅聚焦纯净大图视觉，旁边及下方不展示文字、标题或描述（No caption text display）。
 - 禁止 `<figcaption>` 写"原始截图 / 产品截图 / Screenshot / Untitled / Sample" 这类空标签。
 - 禁止默认 `.frame-img` 带 `border-radius ≥ 12px` + 中-重 `box-shadow`;默认应为无圆角无阴影(已在 `template-beautiful.html` 重置)。
 - 禁止 hover 时 `transform: scale(1.02)` (旧 Beautiful 模板行为)。
@@ -106,17 +107,26 @@ Prepare visual assets before building wireframes:
    - Include slide titles, structural grid/card layout classes, and placeholder text/images.
    
    - **⭐ 硬规则一：页眉三要素紧凑压缩与空间让渡 (Header Compression & Space Yielding)**:
-     - **三要素界定**：Badge/分类徽章 (`.eyebrow-pill` / `.kicker` / `.slide-label`)、主标题 (`h1` / `h2` / `.slide-title`)、副标题/金句引导语 (`.slide-subtitle` / `.tagline` / `.lead`)。
-     - **空间占比上限**：页眉三要素组合的总高度**严格控制在 <= 200px (约占 1080p 画布的 18%~22%)**，杜绝多层 20px+ 外边距堆叠。
-     - **间距严格规范**：
-       - Badge 与主标题间距：`6px ~ 8px`
-       - 主标题与副标题间距：`8px ~ 12px`
-       - 副标题与下方主内容区间距：`16px ~ 24px`
-     - **紧凑布局推荐形式**：
-       - *方案 A（垂直紧凑容器）*：使用 `.header-compact`，Badge + Title + Subtitle 统一以 `gap: 8px` 紧密编排。
-       - *方案 B（左右分栏 Header Split）*：使用 `.header-split`，左侧为 `Badge + 主标题`，右侧并排为 `副标题/金句`，将纵向 3 行压缩为 1 行。
-       - *方案 C（行内前缀 Badge Inline）*：直接在主标题前放置行内徽章（如 `<h2><span class="eyebrow-pill">DESIGN CANVAS</span> 写 Skill 前先回答四个问题</h2>`）。
-     - **主内容空间保障**：确保下方 4 卡片网格、流程管线、多列对比表等核心内容区拥有 **78%~82% 的充分纵深展开空间**。
+     - **适用场景与双轨规范 (Dual-Track Spacing Standard)**:
+       - **🟢 场景 A：仅首页 PPT / 封面页（Cover Slide / Hero Slide）—— 豁免紧凑，采用开阔舒展宽纵向间距 (Spacious Hero Layout)**:
+         - 封面页是整套 PPT 的门面与视觉焦点（Hero Impact），无需为下方多卡片让渡纵深。
+         - **首页三要素专属宽间距阶梯**：
+           - **Badge / 分类标签** (`.eyebrow-pill` / `.kicker` / `.cover-badge` 如 `DESIGN CANVAS`) 与主标题间距：`16px ~ 28px`（开阔舒展，坚决不局促挤压）
+           - **主标题** (`h1` / `.slide-title` / `.cover-title` 如 `写 Skill 前先回答四个问题`) 与副标题/金句引导语间距：`20px ~ 32px`
+           - **副标题 / 金句引导语** (`.slide-subtitle` / `.lead` / `.cover-sub` 如 `"想清楚问题，比直接写代码更重要" —— 四问设计画布`) 与下方元素（`.cover-stats` / `.cover-divider` / `.hero-middle-bridge` / 作者信息）间距：`36px ~ 56px`
+         - **推荐排版**：使用 `.cover-frame` 或 `.slide.hero` 居中或左对齐开阔容器，充分释放纵向呼吸空间与高端大气的视觉门面质感。
+       - **🔵 场景 B：正文内容页（Content Slides / 过程页 / 章节页）—— 严格执行页眉三要素紧凑压缩 (Compact Header)**:
+         - **三要素界定**：Badge/分类徽章 (`.eyebrow-pill` / `.kicker` / `.slide-label`)、主标题 (`h1` / `h2` / `.slide-title`)、副标题/金句引导语 (`.slide-subtitle` / `.tagline` / `.lead`)。
+         - **空间占比上限**：页眉三要素组合的总高度**严格控制在 <= 200px (约占 1080p 画布的 18%~22%)**，杜绝多层 20px+ 外边距堆叠。
+         - **正文间距严格规范**：
+           - Badge 与主标题间距：`6px ~ 8px`
+           - 主标题与副标题间距：`8px ~ 12px`
+           - 副标题与下方主内容区间距：`16px ~ 24px`
+         - **紧凑布局推荐形式**：
+           - *方案 A（垂直紧凑容器）*：使用 `.header-compact`，Badge + Title + Subtitle 统一以 `gap: 8px` 紧密编排。
+           - *方案 B（左右分栏 Header Split）*：使用 `.header-split`，左侧为 `Badge + 主标题`，右侧并排为 `副标题/金句`，将纵向 3 行压缩为 1 行。
+           - *方案 C（行内前缀 Badge Inline）*：直接在主标题前放置行内徽章（如 `<h2><span class="eyebrow-pill">DESIGN CANVAS</span> 主标题内容</h2>`）。
+         - **主内容空间保障**：确保下方 4 卡片网格、流程管线、多列对比表等核心内容区拥有 **78%~82% 的充分纵深展开空间**。
 
    - **⭐ 硬规则二：底部导航控制台四件套（上一页、下一页、全览、全屏）与全景模式 (Mandatory Toolbar & Overview Modal)**:
      - 每次生成的 HTML 文件必须在 `<body>` 末尾包含标准的悬浮控制台 HTML、全览模态框 HTML 以及完整自包含的 JS 运行引擎。
@@ -213,8 +223,18 @@ Prepare visual assets before building wireframes:
              slides.forEach((s, idx) => {
                  const card = document.createElement('div');
                  card.className = `overview-card ${idx + 1 === currentSlide ? 'current' : ''}`;
-                 const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero')?.innerText || `Slide ${idx + 1}`;
-                 const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+                 
+                 // 注意：必须优先使用 textContent 而非 innerText，因为处于非激活状态的幻灯片带有 visibility:hidden，此时浏览器中 innerText 会返回空字符串 ""
+                 const titleEl = s.querySelector('h1, h2, h3, .slide-title, .h-hero, .h-xl, .h-lg, .h-md, .display-hero, .display-chapter, .cover-title, .section-title, .chapter-title, [data-title]');
+                 let title = titleEl ? (titleEl.textContent || titleEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+                 if (!title) {
+                     title = s.getAttribute('data-title') || s.getAttribute('data-label') || `第 ${idx + 1} 页`;
+                 }
+                 
+                 const descEl = s.querySelector('.slide-subtitle, .tagline, .lead, .cover-sub, .body-desc, .desc-compact, p, .card-text, .feature-desc');
+                 let desc = descEl ? (descEl.textContent || descEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+                 if (desc.length > 90) desc = desc.slice(0, 88) + '...';
+
                  card.innerHTML = `
                      <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
                      <div class="overview-card-title">${title}</div>
@@ -278,6 +298,43 @@ Prepare visual assets before building wireframes:
         - **代码块** (`.code-block`): `19px ~ 21px` (`line-height: 1.65`)
         - **金句/引用与 Callout** (`.quote-text: 34px`, `.callout: 23px`)
         - **底栏控制按钮** (`.ctrl-btn` / `.slide-counter`): `16px` (`font-weight: 700/800`)
+
+    - **⭐ 硬规则四：图片/图标/序号徽章与标题单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**:
+      - **排版核心原则**：在所有卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）等结构中，**图标、Emoji、图片或序号徽章必须与对应的标题文字位于同一行展示**（水平弹性盒 `display: flex; align-items: center; gap: 10px~14px;` 或直接在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故分两行上下堆叠。
+      - **豁免与折行例外 (Exemption Rule)**：除非在极限窄栏或极长文字场景下，图片/图标与文字同行并排确实放不下（导致严重文字溢出或卡片过宽挤压），才可酌情折行拆为两行展示。
+      - **推荐与禁止写法对比 (Best Practice vs Anti-Pattern)**:
+        ```html
+        <!-- ❌ 错误反例：图标/序号与标题上下分两行（浪费纵向空间且排版松散） -->
+        <div class="b-card">
+          <div class="card-num-badge">01</div>
+          <h3 class="card-title">触发条件 Trigger</h3>
+          <p>用户说什么话或发生什么事件激活？提取高频关键词与意图模式。</p>
+        </div>
+
+        <!-- ✅ 正确写法 A：使用 .card-header / .card-title-row 水平弹性盒同行并排 -->
+        <div class="b-card">
+          <div class="card-header">
+            <span class="card-num-badge">01</span>
+            <h3 class="card-title">触发条件 Trigger</h3>
+          </div>
+          <p>用户说什么话或发生什么事件激活？提取高频关键词与意图模式。</p>
+        </div>
+
+        <!-- ✅ 正确写法 B：直接在 h3 内前置 badge / 图标 -->
+        <div class="b-card">
+          <h3 class="card-title"><span class="icon-box">💳</span> 第一层: 名片索引 ~100 词·永远常驻</h3>
+          <p>充当 AI 的轻量索引路由表，仅负责判断"要不要激活此 Skill"。</p>
+        </div>
+
+        <!-- ✅ 正确写法 C：流水线 / Pipeline 步骤序号与标题同行并排 -->
+        <div class="pipeline-step">
+          <div class="step-header">
+            <span class="step-nb">01</span>
+            <h3>Draft 初稿起草</h3>
+          </div>
+          <p>AI 帮我起草初稿与核心架构</p>
+        </div>
+        ```
     - **DO NOT fill detailed paragraphs yet.**
 
 3. **Stop & Present Wireframe for Approval (骨架确认)**
@@ -300,6 +357,7 @@ Once the wireframe is approved:
    - Fixed 16:9 stage scaling (`updateScale()` on window resize).
    - Seamless Viewport Background synchronization (`--viewport-bg`).
    - **Header Area Compactness**: Verify that Badge + Title + Subtitle height is <= 22% of slide canvas, leaving generous space for cards/diagrams.
+   - **Inline Icon & Badge Standard**: Verify that all card badges, icons, numbers, and titles are aligned on the same horizontal row, with zero unwanted vertical two-line stacking.
    - **Bottom Controls Bar 4 Buttons**: Verify that `上一页`, `下一页`, `全览`, `全屏` buttons exist and are fully functional.
    - **Overview Gallery**: Test opening via `🗂 全览` button or `O` key, clicking a card jumps to that slide, and `Esc` closes overview.
    - **Fullscreen Mode**: Test toggle via `⛶ 全屏` button or `F` key.

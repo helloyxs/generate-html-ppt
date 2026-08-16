@@ -5,7 +5,9 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 **Viewport CSS:** For mandatory base styles, see [viewport-base.css](viewport-base.css). Include in every presentation.
 
 **Core Presentation Rules**:
-1. **Header Area Compression (页眉三要素紧凑压缩)**: Badge (`.eyebrow-pill` / `.kicker`), Main Title (`.slide-title` / `.h-xl`), and Subtitle (`.slide-subtitle` / `.lead`) must be vertically compact, with total height <= 200px (18%~22% of 1080p canvas), keeping Badge-to-Title 6~8px, Title-to-Subtitle 8~12px, Subtitle-to-Body 16~24px to preserve 78%+ vertical space for content.
+1. **Dual-Track Header & Cover Spacing Standard (双轨间距规范：首页舒展大气 ↔ 正文紧凑空间让渡)**:
+   - **仅首页 PPT / 封面页 (Cover Slide / Hero Slide)**: 豁免紧凑压缩，采用开阔舒展的纵向呼吸排版。Badge-to-Title: `16px ~ 28px`，Title-to-Subtitle: `20px ~ 32px`，Subtitle-to-Bottom: `36px ~ 56px`，营造大气大格局的门面视觉。
+   - **正文内容页 (Content Slides)**: 严格执行页眉三要素紧凑压缩，Badge (`.eyebrow-pill` / `.kicker`)、主标题 (`.slide-title` / `.h-xl`) 和副标题 (`.slide-subtitle` / `.lead`) 紧凑编排，总高度 `<= 200px` (18%~22% 画布高)，Badge-to-Title `6~8px`，Title-to-Subtitle `8~12px`，Subtitle-to-Body `16~24px`，确保 78%+ 黄金垂直空间留给卡片与图表内容。
 2. **Mandatory 4 Controls Bar & Overview Modal (底栏四件套与全景模式)**: Every presentation must include `.controls-bar` (`◀ 上一页`, `01 / N`, `下一页 ▶`, `🗂 全览`, `⛶ 全屏`) and `#overviewModal` with full keyboard shortcuts (`←`/`→`/`Space` 翻页, `O` 全览, `F` 全屏, `Esc` 退出).
 3. **High-Legibility Large Font Standard (主要内容大字号高可读性规范 · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，所有生成页面必须遵循大字号标准阶梯：
    - **分类徽章/Pill** (`.eyebrow-pill` / `.kicker`): `16px ~ 18px` (font-weight: 800)
@@ -18,6 +20,9 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
    - **表格** (`.data-table`): `th: 21px` (font-weight: 800) / `td: 20px` (line-height: 1.5)
    - **代码块** (`.code-block`): `19px ~ 21px` (line-height: 1.65)
    - **底栏控制台** (`.ctrl-btn` / `.slide-counter`): `16px` (font-weight: 700/800)
+4. **Inline Icon, Badge & Title Standard (图片/图标/序号徽章与文字单行同行并排规范 · NON-NEGOTIABLE)**:
+   - 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）等组件中，**图标、Emoji、图片或序号徽章必须与对应的标题文字处于同一行展示**（水平弹性盒 `display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故分两行上下堆叠。
+   - **豁免与折行例外 (Exemption Rule)**：除非在极限窄栏或超长标题文字场景下，图片/图标与文字在一行内确实放不下导致溢出，才可酌情折行拆为两行展示。
 
 ---
 

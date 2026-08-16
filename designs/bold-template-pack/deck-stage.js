@@ -653,8 +653,14 @@
           this._slides.forEach((s, idx) => {
             const card = document.createElement('div');
             card.className = `overview-card ${idx === this._index ? 'current' : ''}`;
-            const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero')?.innerText || s.getAttribute('data-label') || `Slide ${idx + 1}`;
-            const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+            const titleEl = s.querySelector('h1, h2, h3, .slide-title, .h-hero, .h-xl, .h-lg, .h-md, .display-hero, .display-chapter, .cover-title, .section-title, .chapter-title, [data-title]');
+            let title = titleEl ? (titleEl.textContent || titleEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+            if (!title) {
+              title = s.getAttribute('data-title') || s.getAttribute('data-label') || `第 ${idx + 1} 页`;
+            }
+            const descEl = s.querySelector('.slide-subtitle, .tagline, .lead, .cover-sub, .body-desc, .desc-compact, p, .card-text, .feature-desc');
+            let desc = descEl ? (descEl.textContent || descEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+            if (desc.length > 90) desc = desc.slice(0, 88) + '...';
             card.innerHTML = `
               <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
               <div class="overview-card-title">${title}</div>
@@ -712,14 +718,12 @@
           <div class="img-lightbox-frame">
             <img class="img-lightbox-img" id="imgLightboxImg" alt="放大预览" />
           </div>
-          <div class="img-lightbox-cap" id="imgLightboxCap" hidden></div>
           <div class="img-lightbox-hint">双击图片 · ESC · 任意位置关闭</div>
         `;
         document.body.appendChild(lb);
       }
 
       const lbImg = document.getElementById('imgLightboxImg') || lb.querySelector('.img-lightbox-img');
-      const lbCap = document.getElementById('imgLightboxCap') || lb.querySelector('.img-lightbox-cap');
       const lbCounter = document.getElementById('imgLightboxCounter') || lb.querySelector('.img-lightbox-counter');
       const lbClose = lb.querySelector('.img-lightbox-close');
       const lbPrev = lb.querySelector('.img-lightbox-prev');
@@ -735,14 +739,10 @@
           const slide = img.closest('.slide, [data-slide], section') || document.body;
           const key = slide.id || ('__grp__' + groups.size);
           if (!groups.has(key)) groups.set(key, { slide, items: [] });
-          const figure = img.closest('figure');
-          const figCap = figure ? figure.querySelector('figcaption') : null;
-          const capText = figCap ? (figCap.textContent || '').trim() : (img.getAttribute('alt') || img.getAttribute('title') || '');
           groups.get(key).items.push({
             img,
             src: img.getAttribute('src') || img.currentSrc,
-            alt: img.getAttribute('alt') || '',
-            cap: capText
+            alt: img.getAttribute('alt') || ''
           });
         });
         return groups;
@@ -753,12 +753,6 @@
         if (!item) return;
         if (lbImg.src !== item.src) lbImg.src = item.src;
         lbImg.alt = item.alt;
-        if (item.cap && item.cap !== '放大预览') {
-          lbCap.textContent = item.cap;
-          lbCap.hidden = false;
-        } else {
-          lbCap.hidden = true;
-        }
         if (group.items.length > 1) {
           lbCounter.textContent = (index + 1) + ' / ' + group.items.length;
           lbCounter.hidden = false;

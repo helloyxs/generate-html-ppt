@@ -156,9 +156,11 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 .b-card.amber { --b-accent: var(--b-amber); }
 .b-card.violet { --b-accent: var(--b-violet); }
 
-/* Card Components */
-.card-num-badge { width: 48px; height: 48px; border-radius: 14px; background: var(--b-grad-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 20px; font-weight: 800; margin-bottom: 18px; }
-.icon-box { width: 60px; height: 60px; border-radius: 14px; background: var(--b-accent-soft); color: var(--b-accent); display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 16px; }
+/* Card Header & Components (单行同行并排标准) */
+.card-header, .b-card-header, .card-title-row, .step-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; width: 100%; }
+.card-header h3, .b-card-header h3, .card-title-row h3, .step-header h3 { margin: 0 !important; display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.card-num-badge { width: 44px; height: 44px; border-radius: 12px; background: var(--b-grad-accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 20px; font-weight: 800; flex-shrink: 0; }
+.icon-box { width: 48px; height: 48px; border-radius: 12px; background: var(--b-accent-soft); color: var(--b-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
 .icon-box.teal { background: rgba(13,148,136,0.12); color: var(--b-teal); }
 .icon-box.rose { background: rgba(225,29,72,0.12); color: var(--b-rose); }
 .icon-box.amber { background: rgba(217,119,6,0.12); color: var(--b-amber); }
@@ -169,7 +171,7 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 .pipeline-step { flex: 1; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 24px; position: relative; backdrop-filter: blur(16px); }
 .pipeline-step::after { content: ''; position: absolute; top: 50%; right: -20px; width: 14px; height: 14px; border-top: 3px solid var(--b-accent-cyan); border-right: 3px solid var(--b-accent-cyan); transform: translateY(-50%) rotate(45deg); opacity: 0.8; }
 .pipeline-step:last-child::after { display: none; }
-.step-nb { width: 42px; height: 42px; border-radius: 50%; background: var(--b-grad-accent); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; margin-bottom: 12px; font-size: 19px; }
+.step-nb { width: 38px; height: 38px; border-radius: 50%; background: var(--b-grad-accent); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 18px; flex-shrink: 0; }
 
 /* Stat Cards */
 .stat-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-md); padding: 24px; backdrop-filter: blur(16px); }
@@ -291,8 +293,14 @@ Include this HTML & script at the end of the presentation file:
         slides.forEach((s, idx) => {
             const card = document.createElement('div');
             card.className = `overview-card ${idx + 1 === currentSlide ? 'current' : ''}`;
-            const title = s.querySelector('h1, h2, .slide-title, .h-xl, .h-hero')?.innerText || `Slide ${idx + 1}`;
-            const desc = s.querySelector('.slide-subtitle, .tagline, .lead, p')?.innerText || '';
+            const titleEl = s.querySelector('h1, h2, h3, .slide-title, .h-hero, .h-xl, .h-lg, .h-md, .display-hero, .display-chapter, .cover-title, .section-title, .chapter-title, [data-title]');
+            let title = titleEl ? (titleEl.textContent || titleEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+            if (!title) {
+                title = s.getAttribute('data-title') || s.getAttribute('data-label') || `第 ${idx + 1} 页`;
+            }
+            const descEl = s.querySelector('.slide-subtitle, .tagline, .lead, .cover-sub, .body-desc, .desc-compact, p, .card-text, .feature-desc');
+            let desc = descEl ? (descEl.textContent || descEl.innerText || '').replace(/\s+/g, ' ').trim() : '';
+            if (desc.length > 90) desc = desc.slice(0, 88) + '...';
             card.innerHTML = `
                 <span class="overview-card-badge">${String(idx + 1).padStart(2, '0')}</span>
                 <div class="overview-card-title">${title}</div>

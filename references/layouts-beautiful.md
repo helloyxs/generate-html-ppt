@@ -32,12 +32,13 @@
  7. **纵向布局自适应策略（杜绝巨幅中空）**：
     - **无中间扩展内容（如仅有标题+2列卡片）**：使用 **方案一** `.frame.vstack`，设置 `justify-content: flex-start; gap: 40px;`（或 `justify-content: center;`），使内容紧凑靠拢，留白集中在底部。
     - **含流程图/数据指标（3段式结构）**：使用 **方案二** `.frame.between`，配合 `justify-content: space-between`，并在中间插入 `.pipeline`（步骤流程）或 `.stat-card`（指标行）填补空白。
- 8. **页眉三要素紧凑压缩与空间让渡原则 (Header Compression)**：
-    - Badge/Eyebrow (`.eyebrow-pill` / `.kicker`)、主标题 (`.h-xl` / `.slide-title`)、副标题 (`.lead` / `.slide-subtitle`) 必须紧凑编排，严格控制页眉总高度 <= 200px (18%~22% 画布高)。
-    - Badge-to-Title 6~8px，Title-to-Subtitle 8~12px，Subtitle-to-Content 16~24px。
-    - 严禁层层堆叠 20~30px 外边距，将 78%+ 纵向空间让渡给卡片、图表与正文。可采用 `.header-compact` 容器或 `.header-split` 左右分栏容器。
+ 8. **双轨间距规范（首页舒展大气 ↔ 正文紧凑空间让渡）**：
+    - **🟢 仅首页 PPT / 封面页 (Cover Slide / Hero Slide)**：豁免紧凑压缩，采用开阔舒展的纵向呼吸排版。Badge-to-Title: `16px ~ 28px`，Title-to-Subtitle: `20px ~ 32px`，Subtitle-to-Bottom: `36px ~ 56px`，赋予门面标题与金句极强的视觉冲击力与留白。
+    - **🔵 正文内容页 (Content Slides)**：Badge/Eyebrow (`.eyebrow-pill` / `.kicker`)、主标题 (`.h-xl` / `.slide-title`)、副标题 (`.lead` / `.slide-subtitle`) 必须紧凑编排，严格控制页眉总高度 <= 200px (18%~22% 画布高)。Badge-to-Title 6~8px，Title-to-Subtitle 8~12px，Subtitle-to-Content 16~24px，将 78%+ 纵向空间让渡给卡片、图表与正文。可采用 `.header-compact` 容器或 `.header-split` 左右分栏容器。
  9. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**：
     - 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演示与各种缩放比例下的极佳易读性。
+ 10. **图片/图标/序号与标题单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**：
+    - 在卡片（`.b-card`）、流水线步骤（`.pipeline-step`）、架构层等组件中，**图标（`.icon-box`）、序号徽标（`.card-num-badge` / `.step-nb`）与标题文字必须处于同一行展示**（使用 `.card-header` / `.step-header` 或在 `<h3>` 内前置图标），严禁无故分两行上下堆叠。**唯一例外**：仅在文字与图标过宽一行放不下时才酌情折行。
 
  ## 基础结构
 
@@ -55,21 +56,21 @@
  - `.hero.light` — 浅底 + 渐变光晕
  - `.hero.dark` — 深底 + 渐变光晕
 
- ## L01 开场封面 (Hero Cover)
+ ## L01 开场封面 (Hero Cover · 首页专属宽间距排版)
 
  ```html
  <div class="slide hero light active" id="s1">
    <div class="cover-orb one anim-float"></div>
    <div class="cover-orb two anim-float" style="animation-delay:-2s"></div>
    <div class="cover-frame">
-     <div class="cover-logo anim d1">BRAND<span>NAME</span></div>
-     <div class="cover-title anim d2"><span class="gradient-text">主标题</span></div>
-     <div class="cover-sub anim d3">一句话副标题</div>
+     <div class="cover-badge anim d1">DESIGN CANVAS</div>
+     <h1 class="cover-title anim d2"><span class="gradient-text">写 Skill 前先回答四个问题</span></h1>
+     <p class="cover-sub anim d3">“想清楚问题，比直接写代码更重要” —— 四问设计画布与核心架构规范</p>
      <div class="cover-divider anim d3"></div>
      <div class="cover-stats anim d4">
-       <div class="cover-stat"><div class="n">12</div><div class="l">指标</div></div>
-       <div class="cover-stat"><div class="n">8</div><div class="l">指标</div></div>
-       <div class="cover-stat"><div class="n">∞</div><div class="l">指标</div></div>
+       <div class="cover-stat"><div class="n">04</div><div class="l">核心问题</div></div>
+       <div class="cover-stat"><div class="n">100%</div><div class="l">架构清晰</div></div>
+       <div class="cover-stat"><div class="n">Zero</div><div class="l">冗余代码</div></div>
      </div>
    </div>
  </div>
@@ -101,9 +102,9 @@
        <div class="lead anim d3" style="max-width:900px">说明文字</div>
      </div>
      <div class="grid-3 anim d4">
-       <div class="b-card"><div class="icon-box">✦</div><h3>卡片标题</h3><p>内容</p></div>
-       <div class="b-card teal"><div class="icon-box teal">◎</div><h3>卡片标题</h3><p>内容</p></div>
-       <div class="b-card violet"><div class="icon-box violet">◈</div><h3>卡片标题</h3><p>内容</p></div>
+       <div class="b-card"><div class="card-header"><span class="icon-box">✦</span><h3>卡片标题</h3></div><p>内容</p></div>
+       <div class="b-card teal"><div class="card-header"><span class="icon-box teal">◎</span><h3>卡片标题</h3></div><p>内容</p></div>
+       <div class="b-card violet"><div class="card-header"><span class="icon-box violet">◈</span><h3>卡片标题</h3></div><p>内容</p></div>
      </div>
    </div>
    <div class="foot"><div>左</div><div>右</div></div>
@@ -189,10 +190,10 @@
        <div class="h-xl anim d2">流程标题</div>
      </div>
      <div class="pipeline anim d3">
-       <div class="pipeline-step"><div class="step-nb">01</div><h3>步骤一</h3><p>说明</p></div>
-       <div class="pipeline-step"><div class="step-nb">02</div><h3>步骤二</h3><p>说明</p></div>
-       <div class="pipeline-step"><div class="step-nb">03</div><h3>步骤三</h3><p>说明</p></div>
-       <div class="pipeline-step"><div class="step-nb">04</div><h3>步骤四</h3><p>说明</p></div>
+       <div class="pipeline-step"><div class="step-header"><span class="step-nb">01</span><h3>步骤一</h3></div><p>说明</p></div>
+       <div class="pipeline-step"><div class="step-header"><span class="step-nb">02</span><h3>步骤二</h3></div><p>说明</p></div>
+       <div class="pipeline-step"><div class="step-header"><span class="step-nb">03</span><h3>步骤三</h3></div><p>说明</p></div>
+       <div class="pipeline-step"><div class="step-header"><span class="step-nb">04</span><h3>步骤四</h3></div><p>说明</p></div>
      </div>
    </div>
  </div>

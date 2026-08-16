@@ -1,8 +1,14 @@
-- **Compact Slide Headers (页眉三要素紧凑布局与空间让渡)**:
-  - `.header-compact` (垂直紧凑页眉容器): Badge + Title + Subtitle 统一以 `gap: 8px` 紧凑编排，总高严格控制在画布的 18%~22% 以内（<= 200px），将 78%+ 黄金纵向空间留给主内容。
-  - `.header-split` (左右水平分栏页眉): `display: flex; justify-content: space-between; align-items: flex-end;`，左侧为 Badge + 主标题，右侧并排为副标题/金句引导语，纵向 3 行压减为 1 行。
-  - `.eyebrow-pill` / `.kicker` / `.slide-label`: 胶囊分类微徽章（`margin-bottom: 4px ~ 6px`）。
-  - **行内徽标前缀**: 直接在 `<h2>` 内前置 `<span class="eyebrow-pill">TAG</span>` 实现单行紧凑。
+- **Dual-Track Header & Cover Spacing (双轨间距规范：首页舒展大气 ↔ 正文紧凑空间让渡)**:
+  - **🟢 仅首页 PPT / 封面页 (Cover Slide / Hero Slide)**: 豁免紧凑压缩，采用开阔舒展的纵向呼吸排版。
+    - Badge / 分类标签 (`.eyebrow-pill` / `.cover-badge` 如 `DESIGN CANVAS`): `margin-bottom: 22px` (间距 `16px ~ 28px`)
+    - 主标题 (`.cover-title` / `h1` 如 `写 Skill 前先回答四个问题`): `margin-bottom: 26px` (间距 `20px ~ 32px`)
+    - 副标题 / 金句引导语 (`.cover-sub` 如 `"想清楚问题，比直接写代码更重要" —— 四问设计画布`): `margin-bottom: 44px` (间距 `36px ~ 56px`)
+    - 容器: `.cover-frame` 或 `.slide.hero .slide-header` 居中/左对齐舒展排版。
+  - **🔵 正文内容页 (Content Slides)**:
+    - `.header-compact` (垂直紧凑页眉容器): Badge + Title + Subtitle 统一以 `gap: 8px` 紧凑编排，总高严格控制在画布的 18%~22% 以内（<= 200px），将 78%+ 黄金纵向空间留给主内容。
+    - `.header-split` (左右水平分栏页眉): `display: flex; justify-content: space-between; align-items: flex-end;`，左侧为 Badge + 主标题，右侧并排为副标题/金句引导语，纵向 3 行压减为 1 行。
+    - `.eyebrow-pill` / `.kicker` / `.slide-label`: 胶囊分类微徽章（`margin-bottom: 4px ~ 6px`）。
+    - **行内徽标前缀**: 直接在 `<h2>` 内前置 `<span class="eyebrow-pill">TAG</span>` 实现单行紧凑。
 - **Bottom Navigation Toolbar & Overview (底栏四件套与全景缩略图)**:
   - `.controls-bar` / `.deck-controls`: 底部居中毛玻璃悬浮控制栏，包含：
     - `◀ 上一页` (button with `prevSlide()`)
@@ -28,14 +34,20 @@
     - **底栏控制台** (`.ctrl-btn` / `.slide-counter`): `16px` (font-weight: 700/800)
   - 强调色类名: `.em` (blue), `.em-teal`, `.em-red`, `.em-amber`.
 - **Layouts**: `.grid-2`, `.grid-3`, `.grid-4` for multiple columns; `.stack-col` for a vertical stack of `.stack-row` layers.
-- **Cards**: `.card` (general card), `.feat-card` (feature card with full colored border), `.plat-card` (compact platform card).
+- **Cards & Card Headers (卡片与单行同行标题规范 · NON-NEGOTIABLE)**:
+  - `.card` (general card), `.b-card` (Beautiful modern glass card), `.feat-card` (feature card with full colored border), `.plat-card` (compact platform card).
+  - **Inline Icon & Badge Standard (图片/图标/序号徽章与标题单行同行并排)**: 
+    - 绝不在卡片内将图标/序号徽标放在标题正上方拆成两行展示（浪费纵深且视觉散乱）。
+    - 必须使用 `.card-header` / `.card-title-row` / `.b-card-header` 水平弹性盒（`display: flex; align-items: center; gap: 12px;`）或直接在 `<h3>` 内包含 `<span class="badge">` / `<span class="card-num-badge">` / `<span class="icon-box">` 实现同行并排。
+    - **豁免条件**：仅在极窄列宽或超长文字确实无法单排放下时，才可酌情折行两行展示。
 - **Color variants**: colored components take a `-blue` / `-teal` / `-red` / `-amber` / `-violet` (or `.b-*` / `.fill-*`) modifier class; always pair them:
   - `.card` + `.b-blue` / `.b-teal` / `.b-red` / `.b-amber` (adds a thick colored top border and colors all list bullet dots inside the card). **IMPORTANT:** Always use these color modifiers on `.card` elements side-by-side in a grid to visually distinguish different key points or topics (e.g., `<div class="card b-blue">`, `<div class="card b-teal">`).
   - `.card` + `.fill-blue` / `.fill-teal` / `.fill-red` / `.fill-amber` / `.fill-violet` (adds a full 2px colored border and a soft wash background). Use this when you want a strongly highlighted, fully colored box.
   - `.feat-card` + `.feat-blue` / `.feat-teal` / `.feat-red` / `.feat-amber` (sets full border and heading color).
-  - `.badge` (inside `.card`): automatically inherits the color of the parent card if the card uses a `.b-*` or `.fill-*` modifier. **TIP:** Place the `<span class="badge">` directly inside the `<h3>` (e.g., `<h3><span class="badge">1</span> Title</h3>`) to align the badge and the text perfectly on the same line.
+  - `.badge` / `.card-num-badge` (inside `.card`): automatically inherits the color of the parent card if the card uses a `.b-*` or `.fill-*` modifier. **STANDARD:** Place the badge/icon inside `.card-header` or directly inside the `<h3>` (e.g., `<div class="card-header"><span class="badge">1</span><h3>Title</h3></div>` or `<h3><span class="badge">1</span> Title</h3>`) to align the badge and the text perfectly on the same line.
   - `.tag` (standalone label) + `.tag-blue` / `.tag-teal` / `.tag-red` / `.tag-amber`.
   - `.stack-row` + `.stack-blue` / `.stack-teal` / `.stack-red` / `.stack-amber` / `.stack-navy` (for layered architecture diagrams).
+  - `.step-header` / `.pipeline-step`: 流水线步骤中，`<span class="step-nb">01</span>` 与 `<h3>步骤标题</h3>` 必须水平同行对齐。
 - **Images (必读 [`image-treatments.md`](image-treatments.md))**: 所有图片必须按场景选 8 套范式(T1-T8)之一,不再用旧的 `.slide-img` + `.img-grid` + `.img-cap` 组合:
   - **T2 Float 自由留白** (默认): 单图,纯留白无框无阴影,用于照片、纪实、人物、辅助图
   - **T1 Bleed 全屏出血**: 主视觉,图延伸到 slide 边缘

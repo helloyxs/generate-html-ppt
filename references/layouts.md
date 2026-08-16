@@ -39,17 +39,23 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 - 如果一张截图/UI 情景图在横向页面里变成很长的条,不要硬拉满宽;改成极宽横图素材,或拆成 2-3 个局部面板拼排
 - 多图面板必须使用同一个高度类,不要混用 `h-16` / `h-22` 或手写不同 `height`
 
-### B3. 页眉三要素（Badge + 主标题 + 副标题）紧凑压缩与空间让渡
+### B3. 双轨间距规范（首页舒展大气 ↔ 正文紧凑空间让渡）
 
-- **页眉三要素组合**（分类 Badge、主标题 h1/h2、副标题/说明 lead/tagline）必须保持紧凑扁平，**总高度严格控制在 <= 200px（约占 1080p 画布的 18%~22%）**，杜绝层层堆叠 20~30px 大外边距，为下方主内容（卡片、图表、流程等）留出 78%+ 黄金纵向空间。
-- **具体间距标准**：
-  - Badge 与主标题间距：`6px ~ 8px`
-  - 主标题与副标题间距：`8px ~ 12px`
-  - 副标题与下方主内容区间距：`16px ~ 24px`
-- **推荐排版方案**：
-  - 使用 `.header-compact` 垂直紧凑编排
-  - 使用 `.header-split` 左右水平分栏（左标题 + 右副标题，将 3 行压缩为 1 行）
-  - 使用行内徽标前缀（如 `<h2><span class="eyebrow-pill">TAG</span> 主标题</h2>`）
+- **🟢 仅首页 PPT / 封面页 (Cover Slide / Hero Cover)**：
+  - 豁免紧凑压缩，采用开阔舒展的纵向呼吸排版，赋予主标题与副标题/金句引导语极强的大格局留白。
+  - **Badge 与主标题间距**：`16px ~ 28px`（如 `DESIGN CANVAS` 与大标题）
+  - **主标题与副标题/金句间距**：`20px ~ 32px`（如 `写 Skill 前先回答四个问题` 与金句引导语）
+  - **副标题与下方元素间距**：`36px ~ 56px`（与 Stats/Divider/作者信息/芯片桥接行）
+- **🔵 正文内容页 (Content Slides)**：
+  - **页眉三要素组合**（分类 Badge、主标题 h1/h2、副标题/说明 lead/tagline）必须保持紧凑扁平，**总高度严格控制在 <= 200px（约占 1080p 画布的 18%~22%）**，杜绝层层堆叠 20~30px 大外边距，为下方主内容（卡片、图表、流程等）留出 78%+ 黄金纵向空间。
+  - **具体间距标准**：
+    - Badge 与主标题间距：`6px ~ 8px`
+    - 主标题与副标题间距：`8px ~ 12px`
+    - 副标题与下方主内容区间距：`16px ~ 24px`
+  - **推荐排版方案**：
+    - 使用 `.header-compact` 垂直紧凑编排
+    - 使用 `.header-split` 左右水平分栏（左标题 + 右副标题，将 3 行压缩为 1 行）
+    - 使用行内徽标前缀（如 `<h2><span class="eyebrow-pill">TAG</span> 主标题</h2>`）
 - 居中大标题页必须让主标题在页面水平居中,使用 `.center` 或 `text-align:center; margin-inline:auto`
 
 ### B4. 主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)
@@ -66,6 +72,11 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
   - **表格** (`.data-table`): `th: 21px (w:800)` / `td: 20px (line-height: 1.5)`
   - **代码块** (`.code-block`): `19px ~ 21px` (`line-height: 1.65`)
   - **底栏控制按钮** (`.ctrl-btn` / `.slide-counter`): `16px` (`font-weight: 700/800`)
+
+### B5. 图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)
+
+- **排版原则**：在卡片（`.card` / `.b-card`）、步骤（`.step` / `.pipeline-step`）、架构层级（`.stack-row`）中，**图片、图标、Emoji 或序号徽章必须与对应的标题文字处于同一行展示**（使用 `.card-header` / `.step-header` 配合 `display: flex; align-items: center; gap: 10px~14px;` 或直接在 `<h3>` 内包含 `<span class="badge">`），严禁上下拆成两行展示。
+- **豁免条件**：除非在极端窄栏或超长文字确实无法单排放下时，才可酌情折行两行展示。
 
 ### C. 图片定位准则（避免图片堆到页面最底部、被浏览器工具栏遮挡）
 
@@ -212,6 +223,7 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 **要点**：
 - 用 `hero dark` 让 WebGL 背景在大部分区域透出
 - `h-hero` 是最大字号（10vw），这里作标题主视觉
+- 采用开阔纵向呼吸间距（Badge-to-Title `16px ~ 28px`，Title-to-Subtitle `20px ~ 32px`，Subtitle-to-Bottom `36px ~ 56px`），严禁按正文页 `6~8px` 紧凑挤压
 - 用 `min-height:80vh + align-content:center` 让内容整体垂直居中
 - 不需要 `.chrome` 里写页码，封面页自成一体
 
@@ -410,28 +422,23 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
       <div class="pipeline-label">文本侧 · Text Pipeline</div>
       <div class="pipeline">
         <div class="step" data-anim="step">
-          <div class="step-nb">01</div>
-          <div class="step-title">Draft</div>
+          <div class="step-header"><span class="step-nb">01</span><div class="step-title">Draft</div></div>
           <div class="step-desc">AI 帮我起草初稿</div>
         </div>
         <div class="step" data-anim="step">
-          <div class="step-nb">02</div>
-          <div class="step-title">Polish</div>
+          <div class="step-header"><span class="step-nb">02</span><div class="step-title">Polish</div></div>
           <div class="step-desc">AI 润色去 AI 味</div>
         </div>
         <div class="step" data-anim="step">
-          <div class="step-nb">03</div>
-          <div class="step-title">Morph</div>
+          <div class="step-header"><span class="step-nb">03</span><div class="step-title">Morph</div></div>
           <div class="step-desc">AI 变形成推特 / 小红书</div>
         </div>
         <div class="step" data-anim="step">
-          <div class="step-nb">04</div>
-          <div class="step-title">Illustrate</div>
+          <div class="step-header"><span class="step-nb">04</span><div class="step-title">Illustrate</div></div>
           <div class="step-desc">AI 生成信息图</div>
         </div>
         <div class="step" data-anim="step">
-          <div class="step-nb">05</div>
-          <div class="step-title">Distribute</div>
+          <div class="step-header"><span class="step-nb">05</span><div class="step-title">Distribute</div></div>
           <div class="step-desc">一键分发 9 平台</div>
         </div>
       </div>
@@ -442,18 +449,15 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
       <div class="pipeline-label">视觉 · 视频侧 · Video Pipeline</div>
       <div class="pipeline">
         <div class="step" data-anim="step">
-          <div class="step-nb">06</div>
-          <div class="step-title">Cut</div>
+          <div class="step-header"><span class="step-nb">06</span><div class="step-title">Cut</div></div>
           <div class="step-desc">AI 帮我剪辑</div>
         </div>
         <div class="step" data-anim="step">
-          <div class="step-nb">07</div>
-          <div class="step-title">Wrap</div>
+          <div class="step-header"><span class="step-nb">07</span><div class="step-title">Wrap</div></div>
           <div class="step-desc">AI 帮我包装</div>
         </div>
         <div class="step" data-anim="step">
-          <div class="step-nb">08</div>
-          <div class="step-title">Cover</div>
+          <div class="step-header"><span class="step-nb">08</span><div class="step-title">Cover</div></div>
           <div class="step-desc">AI 生成封面</div>
         </div>
       </div>
