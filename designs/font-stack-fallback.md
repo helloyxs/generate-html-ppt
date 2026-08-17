@@ -109,15 +109,54 @@ the audience is on Windows, declare weights in 400/700/900 only.
 
 ## 4. Failure Mode & User-Visible Fallback
 
-If `document.fonts.ready` does not resolve within 2500ms, the agent-injected
+### 4.1 Initial degradation
+
+If `document.fonts.ready` does not resolve within **2500ms**, the agent-injected
 runtime (see `template.html` P0 patch) MUST:
 
-1. Show a small dismissible banner: "字体加载超时，已使用本地系统字体。"
+1. Show a small dismissible banner: **"字体加载超时，正在重试…"**
 2. Force re-apply the local stack by adding a class `font-fallback` to `<html>`.
    This class strips any `letter-spacing` heavier than `-0.02em` and forces
    `font-feature-settings: normal` so Chinese punctuation does not look squished.
 3. Keep the page fully readable. **Never** hide text while waiting for a web
    font.
+
+### 4.2 Auto-retry ladder (recovery before giving up)
+
+A flaky network must not lock the page into the system-font fallback. After
+the initial 2.5s timeout, the runtime MUST attempt recovery on this ladder:
+
+- **+5s** — Timer 1: re-attach a fresh `<link rel="stylesheet" href="…?retry=…">`
+  with a cache-buster, race `document.fonts.ready` against a 4s timeout.
+- **+12s** — Timer 2: same probe.
+- **+25s** — Timer 3: same probe. If still failing, transition to **failed**
+  state (see §4.3).
+- **`window.online` event** — Immediate: same probe; fires the moment the
+  browser regains connectivity without waiting for the next scheduled timer.
+
+On the first successful probe:
+
+- Remove the `font-fallback` class from `<html>`.
+- Cancel all remaining retry timers.
+- Update the banner to **"字体已恢复加载"** and auto-hide it after 2.5s.
+
+### 4.3 Terminal state
+
+After Timer 3 fails (or the page has been in fallback for ~30s with no
+`online` event), the runtime transitions to a **failed** state and shows:
+
+**"字体加载失败，已使用本地系统字体"**
+
+This state is terminal: no further retries are attempted. The banner stays
+until the user dismisses it. The local system stack remains in effect.
+
+### 4.4 Detection contract
+
+The runtime is only armed when the template includes a link tag with
+`data-fonts-css="…"` in `<head>`. If no such link is present, the runtime is
+a no-op. This is what lets `template.html` (system-fonts-only) coexist with
+`template-beautiful.html` / `template-swiss.html` (web fonts) using the same
+shared runtime.
 
 ```css
 .font-fallback body,
@@ -139,23 +178,30 @@ runtime (see `template.html` P0 patch) MUST:
 ## 5. Self-Test in Template
 
 The `template.html` P0 patch includes a self-test snippet (appended near the
-end of `<body>`) that runs once on `DOMContentLoaded`:
+end of `<body>`) that runs once on `DOMContentLoaded`. The auto-retry ladder
+from §4.2 is wired in here:
 
 ```js
-window.addEventListener('DOMContentLoaded', () => {
-  const timeout = new Promise(r => setTimeout(() => r('timeout'), 2500));
-  Promise.race([document.fonts.ready, timeout]).then(result => {
-    if (result === 'timeout') {
-      document.documentElement.classList.add('font-fallback');
-      const banner = document.getElementById('degrade-banner');
-      if (banner) {
-        banner.hidden = false;
-        banner.querySelector('.degrade-reason').textContent =
-          '字体加载超时，已使用本地系统字体。';
-      }
-    }
-  });
-});
+// P0 reliability runtime - font auto-retry. See §4.1-4.3 for the policy.
+(function () {
+  var banner = document.getElementById('degrade-banner');
+  // ... banner state machine ...
+  function guardFonts() {
+    var link = document.querySelector('link[data-fonts-css]');
+    if (!link || !document.fonts) return;
+    // FONT_RETRY_DELAYS = [5000, 12000, 25000]; FONT_LOAD_TIMEOUT_MS = 4000
+    // On 2.5s timeout: setState('fallback') -> pushReason('正在重试…')
+    //   + schedule FONT_RETRY_DELAYS timers + listen for 'online'.
+    // On successful probe: setState('recovered') -> remove .font-fallback,
+    //   clear timers, show '字体已恢复加载' for 2.5s, then auto-hide.
+    // On all retries exhausted: setState('failed') -> '字体加载失败，已使用本地系统字体'.
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', guardFonts);
+  } else {
+    guardFonts();
+  }
+})();
 ```
 
 If a future template chooses to skip Google Fonts entirely (e.g. a

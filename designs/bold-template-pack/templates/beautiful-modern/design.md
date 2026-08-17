@@ -49,6 +49,24 @@ typography:
     lineHeight: 1.6
 ---
 
+## Tone Policy (Default: Dark)
+
+**Canonical tone: `dark`.** Every Beautiful Modern deck MUST default to `class="slide dark"` on every slide unless the user explicitly requests light or specifies a context where light is the established convention (e.g. healthcare education, print-first deliverables, accessibility for low-vision viewers in bright rooms).
+
+Why dark is the default:
+- The :root token set (`--slide-bg: #0f172a`, `--viewport-bg: #0f172a`, `--b-grad-dark`) is the design system's foundation; orbs, glassmorphism, and gradient text are all tuned for dark.
+- The Beautiful.ai inspiration and the spring-physics motion language both read as premium-dark.
+- Inconsistent alternation produces a deck that feels like two different decks stitched together; users almost always want one consistent mood.
+
+When light is appropriate (use sparingly, NEVER as the default):
+- The user explicitly asks for "light / clean / 学术 / 印刷风 / 医疗 / 教育".
+- The presentation will be printed in B&W or projected on a very bright screen and readability of small text on dark glass becomes a concern.
+- Light is a per-slide emphasis-divider tool, NOT a deck-wide pattern. If you do mix, treat dark as the structural canvas and use light only for short pause/divider slides (≤20% of the deck, never the cover or the closing).
+
+Reference: see `preview.md` for the canonical dark title slide; see the Beautiful Modern sections in `demo/beautiful-demo.html` for end-to-end dark-toned usage.
+
+---
+
 # Beautiful Modern Design System Specification
 
 This document defines the complete visual design recipe, CSS system tokens, animation physics, component specifications, and layout density rules for the **Beautiful Modern** style.

@@ -5,7 +5,7 @@
 ## Title Slide Structure
 
 ```html
-<div class="slide hero light active" id="s1">
+<div class="slide hero dark active" id="s1">
   <div class="cover-orb one anim-float"></div>
   <div class="cover-orb two anim-float" style="animation-delay:-2s"></div>
   <div class="cover-frame">

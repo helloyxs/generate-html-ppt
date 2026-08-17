@@ -6,7 +6,7 @@
 <title>[必填] 替换为 PPT 标题 · Deck Title</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+<link data-fonts-css="google" href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
     /* ============ 主题色(默认: 🔵 克莱因蓝 IKB) ============
@@ -1137,6 +1137,27 @@
 </style>
 </head>
 <body class="canvas-mode">
+<!-- Degrade banner: shown when fonts.ready times out, a CDN chain fails, or
+     an <img> fails to load. Hidden by default; flipped to visible by the
+     runtime near </body>. Click x to dismiss. -->
+<div id="degrade-banner" class="degrade-banner" hidden role="status" aria-live="polite">
+  <span class="degrade-icon" aria-hidden="true">!</span>
+  <span class="degrade-text">
+    <strong>部分资源未加载完成：</strong>
+    <span class="degrade-reason">已自动降级为本地系统字体与备用图表。</span>
+  </span>
+  <button type="button" class="degrade-close" aria-label="关闭提示">x</button>
+</div>
+<style>
+  .degrade-banner { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; align-items: center; gap: 12px; padding: 10px 18px; max-width: min(640px, 92vw); background: rgba(15, 23, 42, 0.92); color: #f8fafc; border: 1px solid rgba(248, 250, 252, 0.18); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.25); font: 600 14px/1.4 var(--font-body, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .degrade-banner[hidden] { display: none; }
+  .degrade-icon { font-size: 18px; font-weight: 800; }
+  .degrade-text strong { font-weight: 800; margin-right: 4px; }
+  .degrade-reason { opacity: 0.92; }
+  .degrade-close { appearance: none; background: transparent; border: 0; color: inherit; font-size: 16px; cursor: pointer; padding: 0 2px; line-height: 1; }
+  .degrade-close:hover { opacity: 0.7; }
+  .font-fallback body, .font-fallback .slide, .font-fallback .b-card, .font-fallback .card, .font-fallback p, .font-fallback h1, .font-fallback h2, .font-fallback h3 { letter-spacing: 0 !important; font-feature-settings: normal !important; font-family: var(--font-body, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif) !important; }
+</style>
 <script>
   // Windows 平台标记 — 雅黑没有 ExtraLight,需要字重补偿
   if(/Win/i.test(navigator.platform || navigator.userAgentData?.platform || '')){
@@ -2364,9 +2385,129 @@ if(motion){
       if(c.__ctx) c.__ctx.clearRect(0,0,c.__w || 0,c.__h || 0);
     });
   }
-  addEventListener('swiss-low-power-change', e=>{e.detail.on ? stop() : start();});
-  start();
+ addEventListener('swiss-low-power-change', e=>{e.detail.on ? stop() : start();});
+ start();
 })();
+</script>
+<!-- P0 reliability runtime: font auto-retry, CDN degradation, image onerror.
+     See designs/font-stack-fallback.md for the policy behind these checks. -->
+<script>
+  (function () {
+    var banner = document.getElementById('degrade-banner');
+    var reasonEl = banner && banner.querySelector('.degrade-reason');
+    var closeBtn = banner && banner.querySelector('.degrade-close');
+    var reasons = [];
+    function setReason() {
+      if (!banner || !reasonEl) return;
+      if (!reasons.length) { banner.hidden = true; return; }
+      reasonEl.textContent = reasons.join('；') + '，已自动降级为本地系统字体与备用图表。';
+      banner.hidden = false;
+    }
+    function pushReason(text) {
+      if (reasons.indexOf(text) === -1) reasons.push(text);
+      setReason();
+    }
+    if (closeBtn) closeBtn.addEventListener('click', function () { banner.hidden = true; });
+
+    function guardFonts() {
+      var link = document.querySelector('link[data-fonts-css]');
+      if (!link || !document.fonts) return;
+      var state = 'pending';
+      var retryTimers = [];
+      var FONT_RETRY_DELAYS = [5000, 12000, 25000];
+      var FONT_LOAD_TIMEOUT_MS = 4000;
+      var RETRY_REASON = '字体加载超时，正在重试…';
+      var FAILED_REASON = '字体加载失败，已使用本地系统字体';
+      var RECOVERED_REASON = '字体已恢复加载';
+      function replaceReason(oldText, newText) {
+        var i = reasons.indexOf(oldText);
+        if (i === -1) { if (newText) pushReason(newText); return; }
+        if (newText) reasons[i] = newText; else reasons.splice(i, 1);
+        setReason();
+      }
+      function setState(next) {
+        if (state === 'recovered' || state === 'failed') return;
+        state = next;
+        if (next === 'fallback') {
+          document.documentElement.classList.add('font-fallback');
+          pushReason(RETRY_REASON);
+          var pending = FONT_RETRY_DELAYS.length;
+          FONT_RETRY_DELAYS.forEach(function (delay) {
+            retryTimers.push(setTimeout(function () {
+              tryRecoverAndUpdate(function () {
+                if (state === 'fallback' && --pending <= 0) setState('failed');
+              });
+            }, delay));
+          });
+        } else if (next === 'recovered') {
+          document.documentElement.classList.remove('font-fallback');
+          retryTimers.forEach(function (t) { clearTimeout(t); });
+          retryTimers = [];
+          replaceReason(RETRY_REASON, RECOVERED_REASON);
+          setTimeout(function () { replaceReason(RECOVERED_REASON, null); }, 2500);
+        } else if (next === 'failed') {
+          retryTimers.forEach(function (t) { clearTimeout(t); });
+          retryTimers = [];
+          replaceReason(RETRY_REASON, FAILED_REASON);
+        }
+      }
+      function tryRecover() {
+        if (state !== 'fallback') return Promise.resolve(false);
+        var base = (link.getAttribute('href') || '').split('?')[0];
+        var probe = document.createElement('link');
+        probe.rel = 'stylesheet';
+        probe.href = base + '?retry=' + Date.now();
+        probe.crossOrigin = link.crossOrigin || 'anonymous';
+        probe.setAttribute('data-fonts-probe', '1');
+        document.head.appendChild(probe);
+        return Promise.race([
+          document.fonts.ready,
+          new Promise(function (r) { setTimeout(function () { r('timeout'); }, FONT_LOAD_TIMEOUT_MS); })
+        ]).then(function (r) {
+          if (r !== 'timeout') {
+            probe.setAttribute('data-fonts-probe', 'kept');
+          } else {
+            probe.remove();
+          }
+          return r !== 'timeout';
+        });
+      }
+      function tryRecoverAndUpdate(onExhausted) {
+        tryRecover().then(function (ok) {
+          if (ok) { setState('recovered'); return; }
+          if (typeof onExhausted === 'function') onExhausted();
+        });
+      }
+      var initialTimeout = new Promise(function (r) { setTimeout(function () { r('timeout'); }, 2500); });
+      Promise.race([document.fonts.ready, initialTimeout]).then(function (result) {
+        if (result === 'timeout' && state === 'pending') setState('fallback');
+      });
+      window.addEventListener('online', function () {
+        if (state === 'fallback') tryRecoverAndUpdate();
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', guardFonts);
+    } else {
+      guardFonts();
+    }
+
+    var PLACEHOLDER_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">' +
+      '<rect width="320" height="180" fill="#1e293b"/>' +
+      '<text x="160" y="92" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#94a3b8">image failed to load - check network</text>' +
+      '</svg>'
+    );
+    document.addEventListener('error', function (e) {
+      var t = e.target;
+      if (t && t.tagName === 'IMG' && t.dataset.fallbackApplied !== '1') {
+        t.dataset.fallbackApplied = '1';
+        t.src = PLACEHOLDER_SVG;
+        t.style.objectFit = 'contain';
+        pushReason('图片加载失败');
+      }
+    }, true);
+  })();
 </script>
 </body>
 </html>

@@ -1176,15 +1176,98 @@ graph TD
     }
     if (closeBtn) closeBtn.addEventListener('click', function () { banner.hidden = true; });
 
-    // 1) Font readiness timeout. 2.5s matches designs/font-stack-fallback.md §4.
+    // 1) Font readiness timeout + auto-retry. 2.5s matches
+    //    designs/font-stack-fallback.md §4; the retry ladder (5s/12s/25s +
+    //    `online` event) is the §4.5 recovery policy so a flaky network does
+    //    not lock the page into the system-font fallback forever.
     function guardFonts() {
-      var timeout = new Promise(function (r) { setTimeout(function () { r('timeout'); }, 2500); });
-      var ready = (document.fonts && document.fonts.ready) || Promise.resolve();
-      Promise.race([ready, timeout]).then(function (result) {
-        if (result === 'timeout') {
+      var link = document.querySelector('link[data-fonts-css]');
+      if (!link || !document.fonts) return; // no web fonts wired up, nothing to guard
+
+      var state = 'pending';
+      var retryTimers = [];
+      var FONT_RETRY_DELAYS = [5000, 12000, 25000]; // ms after initial timeout
+      var FONT_LOAD_TIMEOUT_MS = 4000;
+      var RETRY_REASON = '字体加载超时，正在重试…';
+      var FAILED_REASON = '字体加载失败，已使用本地系统字体';
+      var RECOVERED_REASON = '字体已恢复加载';
+
+      function replaceReason(oldText, newText) {
+        var i = reasons.indexOf(oldText);
+        if (i === -1) { if (newText) pushReason(newText); return; }
+        if (newText) reasons[i] = newText; else reasons.splice(i, 1);
+        setReason();
+      }
+
+      function setState(next) {
+        if (state === 'recovered' || state === 'failed') return;
+        state = next;
+        if (next === 'fallback') {
           document.documentElement.classList.add('font-fallback');
-          pushReason('字体加载超时');
+          pushReason(RETRY_REASON);
+          var pending = FONT_RETRY_DELAYS.length;
+          FONT_RETRY_DELAYS.forEach(function (delay) {
+            retryTimers.push(setTimeout(function () {
+              tryRecoverAndUpdate(function () {
+                if (state === 'fallback' && --pending <= 0) setState('failed');
+              });
+            }, delay));
+          });
+        } else if (next === 'recovered') {
+          document.documentElement.classList.remove('font-fallback');
+          retryTimers.forEach(function (t) { clearTimeout(t); });
+          retryTimers = [];
+          replaceReason(RETRY_REASON, RECOVERED_REASON);
+          setTimeout(function () { replaceReason(RECOVERED_REASON, null); }, 2500);
+        } else if (next === 'failed') {
+          retryTimers.forEach(function (t) { clearTimeout(t); });
+          retryTimers = [];
+          replaceReason(RETRY_REASON, FAILED_REASON);
         }
+      }
+
+      function tryRecover() {
+        if (state !== 'fallback') return Promise.resolve(false);
+        // Force a fresh fetch with a cache-buster so the browser actually retries
+        // instead of returning a cached failure.
+        var base = (link.getAttribute('href') || '').split('?')[0];
+        var probe = document.createElement('link');
+        probe.rel = 'stylesheet';
+        probe.href = base + '?retry=' + Date.now();
+        probe.crossOrigin = link.crossOrigin || 'anonymous';
+        probe.setAttribute('data-fonts-probe', '1');
+        document.head.appendChild(probe);
+        return Promise.race([
+          document.fonts.ready,
+          new Promise(function (r) { setTimeout(function () { r('timeout'); }, FONT_LOAD_TIMEOUT_MS); })
+        ]).then(function (r) {
+          // Keep the probe around so the cached font files stay hot; if we
+          // remove it, browsers will tear down the just-downloaded font.
+          if (r !== 'timeout') {
+            probe.setAttribute('data-fonts-probe', 'kept');
+          } else {
+            probe.remove();
+          }
+          return r !== 'timeout';
+        });
+      }
+
+      function tryRecoverAndUpdate(onExhausted) {
+        tryRecover().then(function (ok) {
+          if (ok) { setState('recovered'); return; }
+          if (typeof onExhausted === 'function') onExhausted();
+        });
+      }
+
+      var initialTimeout = new Promise(function (r) { setTimeout(function () { r('timeout'); }, 2500); });
+      Promise.race([document.fonts.ready, initialTimeout]).then(function (result) {
+        if (result === 'timeout' && state === 'pending') setState('fallback');
+      });
+
+      // Browser regained connectivity: kick off an immediate retry instead of
+      // waiting for the next scheduled timer.
+      window.addEventListener('online', function () {
+        if (state === 'fallback') tryRecoverAndUpdate();
       });
     }
     if (document.readyState === 'loading') {
