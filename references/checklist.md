@@ -19,8 +19,9 @@
 ### B-1. 页面必须带主题/色彩规范
 每个 `<div class="slide">` 应遵循 `design.md` 中的主题规范。Hero 页与过渡页应与正文页形成视觉对比与律动。
 
-### B-2. 主题节奏
-连续同主题不超过 3 页；8 页以上必须至少包含 1 个 `hero dark` 和 1 个 `hero light`，以及至少 1 个非 hero 的 `dark` 页。
+### B-2. 全局色彩基调统一与防频闪规范 ⭐
+- **现象**：整套 PPT 一页深色一页浅色黑白交替，导致观众眼睛在强光与暗光之间反复适应，产生强烈的频闪眩光（Visual Whiplash）与视觉疲劳。
+- **做法**：整套演示文稿必须保持全局色彩世界观的高度纯净与一致，默认采用 **100% 全套统一纯深色（Unified Dark Mode）或 100% 全套统一纯浅色（Unified Light Mode）**。严禁逐页黑白无故交替闪烁。唯一豁免：大型长篇演说中仅允许封面/封底/章节过渡大幕页采用深色反差聚焦，而正文内容页（90%+）必须保持绝对统一的底色基调。
 
 ### B-3. 动画标记
 每页至少给 kicker、主标题、lead、卡片/图表等 3 个以上元素加 `.anim` 与 `.d1`~`.d8` 延迟类。Hero 页核心块必须全部加动画。
@@ -442,21 +443,17 @@ CSS 里 `.frame-img img` 已经预设 `object-position:top`，只裁底。
 - hero 页用 `hero light` / `hero dark`,正文页用 `light` / `dark`。只写 `hero` 不带主题色是坏的
 - 一个 deck 里必须至少有一个 **非 hero 的 light 页**,确保 body 有机会加 `light-bg`
 
-### 2b-2. 整个 deck 全是 light,没有节奏
+### 2b-2. 全局色彩基调统一与防频闪规范（严禁逐页黑白乱跳）
 
-**现象**:除封面 `hero dark` 外,其余所有页面默认写 `light`——视觉平淡,没有呼吸感,白花花一片。
+**现象**: 一套演示文稿中一页白底、一页黑底黑白交替，放映时屏幕忽明忽暗，观众产生严重视觉眩光与疲劳感。
 
-**根因**:layouts.md 的骨架默认全写 `light`,如果只是粘贴骨架不调整主题,就会全亮。
+**根因**: 机械理解了"视觉节奏"，误把黑白底色交替当成节奏，破坏了整套 PPT 的色彩世界观与品牌统一性。
 
 **做法**:
-- **生成前画"主题节奏表"**:每一页写清 `hero dark` / `hero light` / `light` / `dark` 中的哪一个,对齐后再写代码
-- **硬规则**:连续 3 页以上同主题 = 不允许;8 页以上必须有 ≥1 `hero dark` + ≥1 `hero light`;不能全是 `light` 正文页——必须有 `dark` 正文页
-- **按布局选主题**(详见 layouts.md 开头"主题节奏规划"):
-  - 左文右图(Layout 4)、大引用(Layout 8)、图文混排(Layout 10)→ **`light` / `dark` 交替**
-  - 大字报、图片网格、Pipeline、对比页 → `light`(截图/数字/流程需要亮底)
-  - 封面、问题页 → `hero dark`
-  - 章节幕封 → `hero dark` 与 `hero light` 交替
-- **生成后自检**:`grep 'class="slide' index.html`,目视确认节奏有交错
+- **全套纯深色（Unified Dark Mode）** 或 **全套纯浅色（Unified Light Mode）** 二选一并贯穿全篇。
+- 视觉节奏应该通过**版式拓扑（左右分栏 vs 3卡片网格 vs Pipeline 流水线 vs 大数据指标）与字阶层级**来创造，而不是靠底色黑白乱跳。
+- **结构化例外**：仅允许封面/封底/章节过渡大幕页采用深色反差，正文内容页（90%+）必须保持绝对统一的底色基调。
+- **自检**：检查所有幻灯片背景类名与 `data-bg`，确认全局底色高度统一。
 
 ### 2c. chrome 和 kicker 不要写同一句话
 
@@ -659,10 +656,7 @@ JS 会动态算总页数并扩展底部翻页圆点，但 `.chrome` 里的 `XX /
 
 ```
 预检(生成前)
-  □ 已读过 template.html 的 <style>,确认所需类都存在
-  □ 已决定每页用哪个 Layout(1-10)
-  □ 已画出"主题节奏表":每页明确 hero dark / hero light / light / dark
-  □ 节奏表满足硬规则:无连续 3 页同主题 / 有 ≥1 hero dark + ≥1 hero light(8 页以上) / 至少有 1 个 dark 正文页
+  □ 全局色彩基调已统一: 全套保持纯深色(Dark)或纯浅色(Light),无逐页黑白交替闪烁
   □ `<title>` 已改为实际 deck 标题(grep "[必填]" 应无结果)
   □ 瑞士风:封面是 `slide accent` 满屏 IKB + `<canvas class="ascii-bg">`(不是 `slide light` 白底)
   □ 瑞士风:封底是 `slide split` + 左 `b-accent` + ASCII canvas / 右 paper 3 条 takeaway,第 03 条用 var(--accent)

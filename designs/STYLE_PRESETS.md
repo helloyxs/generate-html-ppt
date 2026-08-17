@@ -23,6 +23,9 @@ Curated visual styles for Frontend Slides. Each preset is inspired by real desig
 4. **Inline Icon, Badge & Title Standard (图片/图标/序号徽章与文字单行同行并排规范 · NON-NEGOTIABLE)**:
    - 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）等组件中，**图标、Emoji、图片或序号徽章必须与对应的标题文字处于同一行展示**（水平弹性盒 `display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故分两行上下堆叠。
    - **豁免与折行例外 (Exemption Rule)**：除非在极限窄栏或超长标题文字场景下，图片/图标与文字在一行内确实放不下导致溢出，才可酌情折行拆为两行展示。
+5. **Unified Global Color Tone Standard (全局色彩基调统一与防频闪规范 · NON-NEGOTIABLE)**:
+   - 整套演示文稿必须保持全局色彩世界观的高度纯净与一致，**默认全套采用 100% 统一纯深色（Unified Dark Mode）或 100% 统一纯浅色（Unified Light Mode）**。
+   - **严禁逐页黑白无故交替闪烁（Anti-Pattern: 严禁一页深一页浅交替）**。唯一豁免结构：长篇大型演说中允许仅对封面/封底/章节过渡大幕页采用深色聚焦，而正文内容页（90%+）必须保持绝对统一的底色基调。
 
 ---
 

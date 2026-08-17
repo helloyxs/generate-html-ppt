@@ -3,6 +3,44 @@ name: generate-html-ppt
 description: When the user asks to create an HTML PPT, presentation slides, or a deck, or convert an existing PowerPoint (.pptx) file, use this skill to generate a modern, responsive HTML presentation based on design system specifications (design.md). This includes Chinese requests such as 做PPT、幻灯片、演示文稿、网页版PPT、PPT转换.
 ---
 
+> ## ⚡ Quick Reference (速查表)
+>
+> 第一次回复就把用户意图对应到三种模式之一：
+>
+> | 用户原话 | 模式 | 跳到 | 产物 |
+> | :--- | :--- | :--- | :--- |
+> | 做PPT / 幻灯片 / 做个 deck | **A · 从零创作** | Phase 1 | 单个自包含 HTML |
+> | 把 .pptx 转 HTML | **B · PPTX 转换** | Phase 4 | 镜像源结构的 HTML |
+> | 封面 / 公众号头图 / 小红书 | **C · 封面生成** | Phase 5 | 1+ 平台尺寸图 |
+>
+> **不确定？** 默认 Mode A + Beautiful Modern，主动提议先生成 1-3 页风格预览
+> （Phase 1.3）。用户随时可改口："换 Mode B" 或 "其实我有个 .pptx" 都被尊重。
+>
+> **没想好风格？** 先读 `designs/bold-template-pack/selection-index.json` 元
+> 数据推荐 2-3 个候选，再按需读具体模板的 `design.md`。节省 token，避免误选。
+>
+> **国内网络 / 公司内网？** 生成前先读 `designs/font-stack-fallback.md`。默认
+> `template.html` 已内置 CDN 镜像链 (jsDelivr → unpkg → BootCDN → Staticfile)
+> 与字体超时降级条，页面不会白屏。
+
+## Mode Decision Tree (模式决策树)
+
+```
+用户意图
+│
+├─ "转换 / 转 / migrate .pptx" ──────> Mode B (Phase 4)
+│
+├─ "封面 / 公众号 / 小红书" ─────────> Mode C (Phase 5)
+│
+├─ "做 / 写 / 制作" + 已有主题 ────> Mode A (Phase 1)
+│   │
+│   └─ 有主题但无风格偏好 ─────────> 默认 Beautiful Modern,
+│                                    主动提议 1-3 页风格预览
+│
+└─ "帮我 / help" + 模糊需求 ───────> 问 7 问清单
+                                    (references/requirements-checklist.md)
+```
+
 # HTML PPT Generation Skill
 
 When the user requests an HTML presentation or PPT, follow these instructions to create it.
@@ -21,6 +59,7 @@ Presentations are generated using a **Design System Specification (`design.md`)*
 7. **每次生成必配底栏四件套与全景缩略图交互 (Mandatory 4-Button Toolbar & Overview Gallery · NON-NEGOTIABLE)**: 每次生成 HTML PPT 必须在底部居中配备毛玻璃控制栏，包含 **`◀ 上一页`**、**`页码/进度条`**、**`下一页 ▶`**、**`🗂 全览`** 与 **`⛶ 全屏`** 按钮，并内置基于 DOM/JS 的全景缩略图模态框与快捷键引擎（`←`/`→`/`Space` 翻页，`O` 打开全览，`F` 全屏，`Esc` 关闭全览/全屏）。
 8. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演说与移动/笔记本视口缩放下的极佳易读性。
 9. **图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**: 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）、功能列表等模块中，**图片、图标、Emoji 或序号徽章与对应的标题文字必须处于同一行展示（`display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故上下拆成两行展示**。**唯一豁免例外**：仅当图片/图标与文字极长、在一行内确实无法完整容纳导致溢出或排版坍塌时，才可酌情拆为两行展示。
+10. **全局色彩基调统一与防频闪规范 (Unified Global Color Palette & Anti-Flicker Standard · NON-NEGOTIABLE)**: 整套演示文稿必须保持全局色彩世界观的高度纯净与一致，**默认采用 100% 全套统一纯深色（Unified Dark Mode）或 100% 全套统一纯浅色（Unified Light Mode）**。**严禁逐页黑白无故交替闪烁（Anti-Pattern: 严禁一页深一页浅导致观众视觉眩光与频闪疲劳）**。唯一豁免结构：长篇大型演说中允许仅对封面/封底/章节过渡大幕页采用深色聚焦，而正文内容页（90%+）必须保持绝对统一的底色基调。
 
 ---
 
@@ -335,6 +374,9 @@ Prepare visual assets before building wireframes:
           <p>AI 帮我起草初稿与核心架构</p>
         </div>
         ```
+    - **⭐ 硬规则五：全局色彩基调统一与防频闪规范 (Unified Global Color Tone Standard · NON-NEGOTIABLE)**:
+      - **排版色彩核心原则**：生成的整套 PPT 必须保持全局统一的色彩基调（**全套 100% 纯深色 Unified Dark 或全套 100% 纯浅色 Unified Light**），视觉基底与视口无缝同步，**严禁逐页黑白无故交替导致的频闪眩光（Anti-Pattern: 严禁一页深一页浅交替）**。
+      - **结构化例外**：在 20P+ 大型长篇演说中，仅允许封面/封底/章节过渡大幕页采用深色反差，而正文内容页（90%+）必须保持绝对统一的底色基调。
     - **DO NOT fill detailed paragraphs yet.**
 
 3. **Stop & Present Wireframe for Approval (骨架确认)**
@@ -356,6 +398,7 @@ Once the wireframe is approved:
 1. **Verify Presentation Features**:
    - Fixed 16:9 stage scaling (`updateScale()` on window resize).
    - Seamless Viewport Background synchronization (`--viewport-bg`).
+   - **Unified Global Color Theme**: Verify that all slides maintain a consistent global theme (100% unified dark or 100% unified light), with zero arbitrary slide-by-slide black/white flickering.
    - **Header Area Compactness**: Verify that Badge + Title + Subtitle height is <= 22% of slide canvas, leaving generous space for cards/diagrams.
    - **Inline Icon & Badge Standard**: Verify that all card badges, icons, numbers, and titles are aligned on the same horizontal row, with zero unwanted vertical two-line stacking.
    - **Bottom Controls Bar 4 Buttons**: Verify that `上一页`, `下一页`, `全览`, `全屏` buttons exist and are fully functional.

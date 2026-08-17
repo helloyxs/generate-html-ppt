@@ -5,11 +5,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{{TITLE}}</title>
 <!-- Optional CDNs: Highlight.js, Marked, Mermaid, ECharts (gracefully degrades offline) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
+<!-- Optional CDNs: Highlight.js, Marked, Mermaid, ECharts. Loaded via the resilient
+     loader below (loadScriptWithTimeout). The loader tries each mirror in order
+     and falls back to a system font / table chart if everything is blocked.
+     See designs/font-stack-fallback.md for the font policy. -->
+<link rel="stylesheet" data-cdn-css="hljs" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script>
+  // Resilient CDN loader: tries a list of mirrors with a per-source timeout.
+  // If every mirror fails, the page still works (charts render as fallback tables,
+  // markdown stays as raw text, no syntax highlighting). See P0 module plan.
+  (function () {
+    var TIMEOUT_MS = 1500;
+    function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = src;
+        s.async = false; // preserve load order
+        s.defer = true;
+        var done = false;
+        var timer = setTimeout(function () {
+          if (done) return;
+          done = true;
+          s.onerror = s.onload = null;
+          s.remove();
+          reject(new Error('timeout: ' + src));
+        }, TIMEOUT_MS);
+        s.onload = function () { if (!done) { done = true; clearTimeout(timer); resolve(src); } };
+        s.onerror = function () { if (!done) { done = true; clearTimeout(timer); s.remove(); reject(new Error('error: ' + src)); } };
+        document.head.appendChild(s);
+      });
+    }
+    function firstAvailable(mirrors) {
+      return mirrors.reduce(function (p, src) {
+        return p.catch(function () { return loadScript(src); });
+      }, Promise.reject());
+    }
+    // Mirror order: official -> jsDelivr -> unpkg -> bootcdn -> staticfile (CN).
+    // The first one to respond within TIMEOUT_MS wins; the rest are aborted.
+    var CHAINS = {
+      echarts: [
+        'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js',
+        'https://unpkg.com/echarts@5/dist/echarts.min.js',
+        'https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js',
+        'https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js'
+      ],
+      mermaid: [
+        'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js',
+        'https://unpkg.com/mermaid@10/dist/mermaid.min.js',
+        'https://cdn.bootcdn.net/ajax/libs/mermaid/10.6.1/mermaid.min.js',
+        'https://cdn.staticfile.org/mermaid/10.6.1/mermaid.min.js'
+      ],
+      marked: [
+        'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
+        'https://unpkg.com/marked/marked.min.js',
+        'https://cdn.bootcdn.net/ajax/libs/marked/9.1.6/marked.min.js',
+        'https://cdn.staticfile.org/marked/9.1.6/marked.min.js'
+      ],
+      hljs: [
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
+        'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js',
+        'https://cdn.bootcdn.net/ajax/libs/highlight.js/11.9.0/highlight.min.js',
+        'https://cdn.staticfile.org/highlight.js/11.9.0/highlight.min.js'
+      ]
+    };
+    // Kick off the four chains in parallel. Failures are non-fatal; each chain's
+    // consumer code already checks `typeof X === 'undefined'` before using it.
+    window.__degradeReasons = window.__degradeReasons || [];
+    Object.keys(CHAINS).forEach(function (key) {
+      firstAvailable(CHAINS[key]).catch(function () {
+        window.__degradeReasons.push(key);
+        window.dispatchEvent(new CustomEvent('cdn:degraded', { detail: { lib: key } }));
+      });
+    });
+  })();
+</script>
 <style>
   :root {
     --navy: #0B1D33;
@@ -500,6 +569,45 @@
 </style>
 </head>
 <body class="theme-{{THEME}}">
+<!-- Degrade banner: shown only when fonts.ready times out, a CDN chain fails,
+     or an <img> fails to load. Hidden by default; flipped to visible by the
+     runtime at the bottom of this file. Click ✕ to dismiss permanently. -->
+<div id="degrade-banner" class="degrade-banner" hidden role="status" aria-live="polite">
+  <span class="degrade-icon" aria-hidden="true">⚠</span>
+  <span class="degrade-text">
+    <strong>部分资源未加载完成：</strong>
+    <span class="degrade-reason">已自动降级为本地系统字体与备用图表。</span>
+  </span>
+  <button type="button" class="degrade-close" aria-label="关闭提示">✕</button>
+</div>
+<style>
+  .degrade-banner {
+    position: fixed; top: 16px; left: 50%; transform: translateX(-50%);
+    z-index: 9999; display: flex; align-items: center; gap: 12px;
+    padding: 10px 18px; max-width: min(640px, 92vw);
+    background: rgba(15, 23, 42, 0.92); color: #f8fafc;
+    border: 1px solid rgba(248, 250, 252, 0.18); border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    font: 600 14px/1.4 var(--font-body, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  }
+  .degrade-banner[hidden] { display: none; }
+  .degrade-icon { font-size: 18px; }
+  .degrade-text strong { font-weight: 800; margin-right: 4px; }
+  .degrade-reason { opacity: 0.92; }
+  .degrade-close {
+    appearance: none; background: transparent; border: 0; color: inherit;
+    font-size: 16px; cursor: pointer; padding: 0 2px; line-height: 1;
+  }
+  .degrade-close:hover { opacity: 0.7; }
+  .font-fallback body, .font-fallback .slide, .font-fallback .b-card,
+  .font-fallback .card, .font-fallback p, .font-fallback h1,
+  .font-fallback h2, .font-fallback h3 {
+    letter-spacing: 0 !important;
+    font-feature-settings: normal !important;
+    font-family: var(--font-body) !important;
+  }
+</style>
 <div class="deck-viewport">
 <div class="deck" id="deck">
 
@@ -1046,6 +1154,72 @@ graph TD
     } else {
       setup();
     }
+  })();
+</script>
+<!-- P0 reliability runtime: font timeout guard, CDN degradation, image onerror.
+     See designs/font-stack-fallback.md for the policy behind these checks. -->
+<script>
+  (function () {
+    var banner = document.getElementById('degrade-banner');
+    var reasonEl = banner && banner.querySelector('.degrade-reason');
+    var closeBtn = banner && banner.querySelector('.degrade-close');
+    var reasons = [];
+    function setReason() {
+      if (!banner || !reasonEl) return;
+      if (!reasons.length) { banner.hidden = true; return; }
+      reasonEl.textContent = reasons.join('；') + '，已自动降级为本地系统字体与备用图表。';
+      banner.hidden = false;
+    }
+    function pushReason(text) {
+      if (reasons.indexOf(text) === -1) reasons.push(text);
+      setReason();
+    }
+    if (closeBtn) closeBtn.addEventListener('click', function () { banner.hidden = true; });
+
+    // 1) Font readiness timeout. 2.5s matches designs/font-stack-fallback.md §4.
+    function guardFonts() {
+      var timeout = new Promise(function (r) { setTimeout(function () { r('timeout'); }, 2500); });
+      var ready = (document.fonts && document.fonts.ready) || Promise.resolve();
+      Promise.race([ready, timeout]).then(function (result) {
+        if (result === 'timeout') {
+          document.documentElement.classList.add('font-fallback');
+          pushReason('字体加载超时');
+        }
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', guardFonts);
+    } else {
+      guardFonts();
+    }
+
+    // 2) CDN degradation events emitted by the loader above.
+    var LIB_NAMES = { echarts: 'ECharts', mermaid: 'Mermaid', marked: 'Marked', hljs: 'Highlight.js' };
+    window.addEventListener('cdn:degraded', function (e) {
+      var lib = e && e.detail && e.detail.lib;
+      pushReason((lib && LIB_NAMES[lib]) ? (LIB_NAMES[lib] + ' 库未加载') : '部分 CDN 资源未加载');
+    });
+
+    // 3) Global <img> error handler. Replace broken images with an inline SVG
+    //    placeholder so the layout does not collapse. Capture phase so it runs
+    //    even on <img> tags that have no individual onerror attribute.
+    var PLACEHOLDER_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">' +
+      '<rect width="320" height="180" fill="#1e293b"/>' +
+      '<text x="160" y="92" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" fill="#94a3b8">' +
+      '图片加载失败 · 检查网络' +
+      '</text></svg>'
+    );
+    document.addEventListener('error', function (e) {
+      var t = e.target;
+      if (t && t.tagName === 'IMG' && t.dataset.fallbackApplied !== '1') {
+        t.dataset.fallbackApplied = '1';
+        t.src = PLACEHOLDER_SVG;
+        t.alt = (t.alt || '') + ' (image failed to load)';
+        t.style.objectFit = 'contain';
+        pushReason('图片加载失败');
+      }
+    }, true);
   })();
 </script>
 </body>

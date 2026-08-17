@@ -25,7 +25,7 @@
 
  1. **12 列网格**：所有内容在 1920×1080 的 12 列网格上排布。
  2. **大量留白**：页面四周留 80px/120px 边距，内容之间用 `--space-6` 以上间距。
- 3. **主题节奏**：light / dark / hero light 交替使用，每 3-4 页至少一个 hero。
+ 3. **全局色彩基调统一**：全套 PPT 统一采用纯深色（Dark）或纯浅色（Light），严禁逐页黑白交替闪烁，保障视觉沉浸与连贯性。
  4. **动画编排**：所有需要入场动画的元素加 `.anim` 和 `.d1`~`.d8`；方向动画加 `.anim-left` / `.anim-right` / `.anim-scale`。
  5. **智能图表**：用 `.smart-chart` + `data-chart` 自动渲染，支持 bar / line / donut / pie / radar。
  6. **数字动画**：大数字加 `.count-up` + `data-value`，进入页面时自动 count-up。
