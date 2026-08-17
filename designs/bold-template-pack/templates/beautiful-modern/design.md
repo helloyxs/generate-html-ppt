@@ -178,6 +178,12 @@ html, body { width: 100%; height: 100%; margin: 0; padding: 0; overflow: hidden;
 .stat-label { font-size: 16px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-sub); margin-bottom: 8px; }
 .stat-nb { font-family: var(--font-display); font-size: 56px; font-weight: 800; background: var(--b-grad-accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1; }
 
+/* Code Box & Blueprint Tree (Engineering / Architecture Component) */
+.code-box { background: rgba(11, 17, 33, 0.88); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 20px; padding: 28px 34px; backdrop-filter: blur(20px); box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; justify-content: center; }
+.code-box-header { color: #38bdf8; font-weight: 800; font-size: 20px; font-family: var(--font-mono, monospace); margin-bottom: 16px; }
+.code-tree { margin: 0; font-family: var(--font-mono, monospace); font-size: 20px; line-height: 1.8; color: #cbd5e1; }
+.cards-column { display: flex; flex-direction: column; gap: 16px; justify-content: space-between; }
+
 /* Animations */
 @keyframes springUp { 0% { opacity: 0; transform: translateY(45px) scale(0.94); } 60% { opacity: 1; transform: translateY(-6px) scale(1.015); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes springLeft { 0% { opacity: 0; transform: translateX(-60px); } 60% { opacity: 1; transform: translateX(8px); } 100% { opacity: 1; transform: translateX(0); } }

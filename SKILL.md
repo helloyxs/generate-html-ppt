@@ -162,9 +162,9 @@ Prepare visual assets before building wireframes:
            - 主标题与副标题间距：`8px ~ 12px`
            - 副标题与下方主内容区间距：`16px ~ 24px`
          - **紧凑布局推荐形式**：
-           - *方案 A（垂直紧凑容器）*：使用 `.header-compact`，Badge + Title + Subtitle 统一以 `gap: 8px` 紧密编排。
-           - *方案 B（左右分栏 Header Split）*：使用 `.header-split`，左侧为 `Badge + 主标题`，右侧并排为 `副标题/金句`，将纵向 3 行压缩为 1 行。
-           - *方案 C（行内前缀 Badge Inline）*：直接在主标题前放置行内徽章（如 `<h2><span class="eyebrow-pill">DESIGN CANVAS</span> 主标题内容</h2>`）。
+           - *方案 A（垂直左对齐紧凑堆叠）*：使用 `.header-compact`，`Badge -> Title -> Subtitle` 统一在左侧自上而下垂直紧凑编排。
+           - *方案 B（左右分栏 Header Split）*：使用 `.header-split`，左侧为 `Badge + 主标题`，右侧并排为 `副标题/金句`。
+           - *方案 C（行内前缀 Badge Inline）*：直接在主标题内嵌入 `<span>` 徽章前缀。
          - **主内容空间保障**：确保下方 4 卡片网格、流程管线、多列对比表等核心内容区拥有 **78%~82% 的充分纵深展开空间**。
 
    - **⭐ 硬规则二：底部导航控制台四件套（上一页、下一页、全览、全屏）与全景模式 (Mandatory Toolbar & Overview Modal)**:

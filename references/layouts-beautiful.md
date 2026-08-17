@@ -292,6 +292,56 @@
  </div>
  ```
 
+## L13 架构/代码树与多卡片左右对比布局 (Directory Blueprint / Code + Cards Grid · 垂直左对齐标准版式)
+
+ ```html
+ <div class="slide dark" id="sN">
+   <div class="grid-overlay"></div>
+   <div class="orb orb-1"></div>
+   <div class="orb orb-3"></div>
+   <div class="page-num">05 / 15</div>
+   <div class="slide-content center-group">
+     <!-- 垂直左对齐经典紧凑页眉 -->
+     <div class="header-compact">
+       <div class="eyebrow anim d1"><span class="eyebrow-dot"></span> DIRECTORY BLUEPRINT</div>
+       <h1 class="hero-title anim d2">Skill 标准工程目录结构</h1>
+       <p class="hero-subtitle anim d3">遵循标准化组织规范，兼顾极简主义与扩展能力</p>
+     </div>
+     <!-- 2列网格：左侧代码树 + 右侧3卡片 -->
+     <div class="grid-2 anim d4" style="width: 100%; align-items: stretch;">
+       <div class="code-box">
+         <div class="code-box-header">📂 my-skill/ 目录树</div>
+         <pre class="code-tree">
+ <span class="kw">my-skill/</span>
+ ├── <span class="str">SKILL.md</span>               <span class="cmt"># 唯一必需（技能大脑）</span>
+ ├── <span class="prop">scripts/</span>               <span class="cmt"># 确定性可执行代码</span>
+ │   ├── <span class="fn">classify_intent.py</span> <span class="cmt"># 意图分类</span>
+ │   └── <span class="fn">generate_ticket.py</span>  <span class="cmt"># 工单生成</span>
+ ├── <span class="hl">references/</span>            <span class="cmt"># 领域参考文档</span>
+ │   ├── <span class="str">policies.md</span>        <span class="cmt"># 售后政策</span>
+ │   └── <span class="str">templates.md</span>       <span class="cmt"># 话术库</span>
+ └── <span class="prop">assets/</span>                <span class="cmt"># 输出模板素材</span>
+     └── <span class="str">report_schema.json</span></pre>
+       </div>
+       <div class="cards-column">
+         <div class="b-card accent-indigo">
+           <div class="card-title-row"><span>📑 SKILL.md</span> <span class="badge-tag badge-success">唯一必需</span></div>
+           <p class="card-text">YAML 元数据 + 核心分步工作流指令。调度 scripts 与 references，是指挥官角色。</p>
+         </div>
+         <div class="b-card accent-amber">
+           <div class="card-title-row"><span>⚙️ scripts/</span> <span class="badge-tag badge-info">确定性计算</span></div>
+           <p class="card-text">数据解析、分类算法、格式校验等确定性代码，直接由环境执行，节省 Token。</p>
+         </div>
+         <div class="b-card accent-violet">
+           <div class="card-title-row"><span>📚 references/ & assets/</span> <span class="badge-tag badge-info">知识与资产</span></div>
+           <p class="card-text">references 存行业政策、API 规范；assets 存报表样例与模板，按需引用。</p>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ ```
+
  ## 动画类速查
 
  | 类名 | 效果 |

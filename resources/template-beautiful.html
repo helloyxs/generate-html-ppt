@@ -172,9 +172,9 @@
    /* ==========================================================
       TYPOGRAPHY
       ========================================================== */
-    .slide-header, .header-compact { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; width: 100%; }
+    .slide-header, .header-compact { display: flex; flex-direction: column; align-items: flex-start; text-align: left; gap: 8px; margin-bottom: 24px; width: 100%; }
     .header-split { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: 24px; width: 100%; }
-    .kicker, .eyebrow-pill {
+    .kicker, .eyebrow, .eyebrow-pill {
       font-family: var(--font-display);
       font-size: 16px;
       font-weight: 800;
@@ -186,6 +186,16 @@
       align-items: center;
       gap: 8px;
     }
+    .eyebrow-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: currentColor; box-shadow: 0 0 8px currentColor;
+    }
+    .hero-title, .slide-title { font-family: var(--font-display); font-size: 52px; font-weight: 900; line-height: 1.15; margin: 0; }
+    .hero-subtitle, .slide-subtitle { font-family: var(--font-body); font-size: 23px; font-weight: 500; line-height: 1.4; color: var(--b-text-secondary); margin: 0; }
+    .code-box { background: rgba(11, 17, 33, 0.88); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 20px; padding: 28px 34px; backdrop-filter: blur(20px); box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6); display: flex; flex-direction: column; justify-content: center; }
+    .code-box-header { color: #38bdf8; font-weight: 800; font-size: 20px; font-family: var(--font-mono, monospace); margin-bottom: 16px; }
+    .code-tree { margin: 0; font-family: var(--font-mono, monospace); font-size: 20px; line-height: 1.8; color: #cbd5e1; }
+    .cards-column { display: flex; flex-direction: column; gap: 16px; justify-content: space-between; }
     .h-hero {
       font-family: var(--font-display);
       font-size: 78px;
