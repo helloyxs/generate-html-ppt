@@ -94,7 +94,7 @@
       "avoid_for": "Decks that need visual punch or saturated multi-color energy — the warm-paper canvas and one-yellow palette are intentionally quiet and atmospheric.",
       "preview_md": "bold-template-pack/templates/biennale-yellow/preview.md",
       "design_md": "bold-template-pack/templates/biennale-yellow/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/biennale-yellow.png"
     },
     {
       "slug": "block-frame",
@@ -119,7 +119,7 @@
       "avoid_for": "Contexts that require quiet institutional restraint or traditional weight (regulated disclosures, formal legal briefs).",
       "preview_md": "bold-template-pack/templates/block-frame/preview.md",
       "design_md": "bold-template-pack/templates/block-frame/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/block-frame.png"
     },
     {
       "slug": "blue-professional",
@@ -144,7 +144,7 @@
       "avoid_for": "Contexts where the deck should feel hot, playful, or intentionally informal — the cool electric-blue restraint will read as overly polished.",
       "preview_md": "bold-template-pack/templates/blue-professional/preview.md",
       "design_md": "bold-template-pack/templates/blue-professional/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/blue-professional.png"
     },
     {
       "slug": "bold-poster",
@@ -169,7 +169,7 @@
       "avoid_for": "Decks that need to communicate dense information per slide — the layout is built around a few large statements, not paragraphs of detail.",
       "preview_md": "bold-template-pack/templates/bold-poster/preview.md",
       "design_md": "bold-template-pack/templates/bold-poster/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/bold-poster.png"
     },
     {
       "slug": "broadside",
@@ -194,7 +194,7 @@
       "avoid_for": "Decks that need to feel quiet, warm, or institutionally traditional — the dark canvas with fire-orange accent commits to drama.",
       "preview_md": "bold-template-pack/templates/broadside/preview.md",
       "design_md": "bold-template-pack/templates/broadside/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/broadside.png"
     },
     {
       "slug": "capsule",
@@ -220,7 +220,7 @@
       "avoid_for": "Contexts that require traditional institutional weight — the capsule shapes and pastel pops actively soften authority.",
       "preview_md": "bold-template-pack/templates/capsule/preview.md",
       "design_md": "bold-template-pack/templates/capsule/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/capsule.png"
     },
     {
       "slug": "cartesian",
@@ -245,7 +245,7 @@
       "avoid_for": "Decks that need visual heat, multiple accents, or a sense of urgency — the warm-neutral palette is intentionally low-energy.",
       "preview_md": "bold-template-pack/templates/cartesian/preview.md",
       "design_md": "bold-template-pack/templates/cartesian/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/cartesian.png"
     },
     {
       "slug": "cobalt-grid",
@@ -273,7 +273,7 @@
       "avoid_for": "Decks that need warmth, multi-colour energy, or a casual / playful voice — the strict cobalt + cream + grid palette is intentionally austere.",
       "preview_md": "bold-template-pack/templates/cobalt-grid/preview.md",
       "design_md": "bold-template-pack/templates/cobalt-grid/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/cobalt-grid.png"
     },
     {
       "slug": "coral",
@@ -297,7 +297,7 @@
       "avoid_for": "Contexts that should feel quiet or institutional — the coral accent and oversized Bebas Neue commit hard to a confident magazine voice.",
       "preview_md": "bold-template-pack/templates/coral/preview.md",
       "design_md": "bold-template-pack/templates/coral/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/coral.png"
     },
     {
       "slug": "creative-mode",
@@ -321,7 +321,7 @@
       "avoid_for": "Contexts that demand institutional restraint and a quiet authority — the saturated multi-accent palette will read as expressive, not formal.",
       "preview_md": "bold-template-pack/templates/creative-mode/preview.md",
       "design_md": "bold-template-pack/templates/creative-mode/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/creative-mode.png"
     },
     {
       "slug": "daisy-days",
@@ -348,7 +348,7 @@
       "avoid_for": "Contexts where the audience explicitly expects authority and precision — the hand-drawn pastel SVG decorations are the opposite of buttoned-up.",
       "preview_md": "bold-template-pack/templates/daisy-days/preview.md",
       "design_md": "bold-template-pack/templates/daisy-days/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/daisy-days.png"
     },
     {
       "slug": "editorial-forest",
@@ -374,7 +374,7 @@
       "avoid_for": "Contexts that need to feel urgent, punchy, or sales-driven — the palette and rhythm are intentionally quiet.",
       "preview_md": "bold-template-pack/templates/editorial-forest/preview.md",
       "design_md": "bold-template-pack/templates/editorial-forest/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/editorial-forest.png"
     },
     {
       "slug": "editorial-tri-tone",
@@ -399,7 +399,7 @@
       "avoid_for": "Decks that need to read as soft or comforting — the burgundy/pink/cream tri-tone is intentionally high-contrast and styled.",
       "preview_md": "bold-template-pack/templates/editorial-tri-tone/preview.md",
       "design_md": "bold-template-pack/templates/editorial-tri-tone/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/editorial-tri-tone.png"
     },
     {
       "slug": "emerald-editorial",
@@ -450,7 +450,7 @@
       "avoid_for": "Decks that need neon energy or rapid-fire pop — the forest-green canvas and Playfair serif commit to a slow, classical voice.",
       "preview_md": "bold-template-pack/templates/grove/preview.md",
       "design_md": "bold-template-pack/templates/grove/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/grove.png"
     },
     {
       "slug": "long-table",
@@ -480,7 +480,7 @@
       "avoid_for": "Decks that need corporate polish, technical density, or a cold / minimalist register — the rust-red palette and bold serif mix are intentionally warm and people-facing.",
       "preview_md": "bold-template-pack/templates/long-table/preview.md",
       "design_md": "bold-template-pack/templates/long-table/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/long-table.png"
     },
     {
       "slug": "mat",
@@ -505,7 +505,7 @@
       "avoid_for": "Contexts that need fast tech energy or institutional restraint — the muted sage and burnt-orange palette is intentionally warm and slow.",
       "preview_md": "bold-template-pack/templates/mat/preview.md",
       "design_md": "bold-template-pack/templates/mat/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/mat.png"
     },
     {
       "slug": "monochrome",
@@ -580,7 +580,7 @@
       "avoid_for": "Contexts where institutional restraint is the actual goal — the saturated political-poster palette commits hard to expressive energy.",
       "preview_md": "bold-template-pack/templates/peoples-platform/preview.md",
       "design_md": "bold-template-pack/templates/peoples-platform/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/peoples-platform.png"
     },
     {
       "slug": "pin-and-paper",
@@ -606,7 +606,7 @@
       "avoid_for": "Decks that need to feel digital-native polished or rigorously data-driven — handwritten Caveat is intentionally informal.",
       "preview_md": "bold-template-pack/templates/pin-and-paper/preview.md",
       "design_md": "bold-template-pack/templates/pin-and-paper/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/pin-and-paper.png"
     },
     {
       "slug": "pink-script",
@@ -632,7 +632,7 @@
       "avoid_for": "Daytime corporate-professional and traditional B2B contexts where the dark canvas with hot-pink accent reads as too styled or too expressive.",
       "preview_md": "bold-template-pack/templates/pink-script/preview.md",
       "design_md": "bold-template-pack/templates/pink-script/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/pink-script.png"
     },
     {
       "slug": "playful",
@@ -656,7 +656,7 @@
       "avoid_for": "Contexts where institutional credibility matters more than warmth — the peach palette is intentionally informal.",
       "preview_md": "bold-template-pack/templates/playful/preview.md",
       "design_md": "bold-template-pack/templates/playful/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/playful.png"
     },
     {
       "slug": "raw-grid",
@@ -681,7 +681,7 @@
       "avoid_for": "Contexts that need to feel soft, warm, or intentionally quiet — the brutalist borders and offset shadows commit to a graphic voice.",
       "preview_md": "bold-template-pack/templates/raw-grid/preview.md",
       "design_md": "bold-template-pack/templates/raw-grid/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/raw-grid.png"
     },
     {
       "slug": "retro-windows",
@@ -706,7 +706,7 @@
       "avoid_for": "Decks that need to read as modern, elegant, or institutionally credible — the Win95 chrome will always read as a costume.",
       "preview_md": "bold-template-pack/templates/retro-windows/preview.md",
       "design_md": "bold-template-pack/templates/retro-windows/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/retro-windows.png"
     },
     {
       "slug": "retro-zine",
@@ -731,7 +731,7 @@
       "avoid_for": "Contexts that demand digital-native polish or fast modern-tech energy — the layered zine aesthetic intentionally feels handmade.",
       "preview_md": "bold-template-pack/templates/retro-zine/preview.md",
       "design_md": "bold-template-pack/templates/retro-zine/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/retro-zine.png"
     },
     {
       "slug": "sakura-chroma",
@@ -759,7 +759,7 @@
       "avoid_for": "Decks that need restrained, corporate, or quiet typography — the bold condensed lockups, ribbon stripes, and primary-colour palette are intentionally loud and product-page-y.",
       "preview_md": "bold-template-pack/templates/sakura-chroma/preview.md",
       "design_md": "bold-template-pack/templates/sakura-chroma/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/sakura-chroma.png"
     },
     {
       "slug": "scatterbrain",
@@ -785,7 +785,7 @@
       "avoid_for": "Contexts that demand precision and institutional weight — the post-it sticky-note aesthetic intentionally reads as warm and unfinished.",
       "preview_md": "bold-template-pack/templates/scatterbrain/preview.md",
       "design_md": "bold-template-pack/templates/scatterbrain/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/scatterbrain.png"
     },
     {
       "slug": "signal",
@@ -810,7 +810,7 @@
       "avoid_for": "Contexts that should feel hot, fast, or intentionally playful — the navy + gold restraint commits to a sober voice.",
       "preview_md": "bold-template-pack/templates/signal/preview.md",
       "design_md": "bold-template-pack/templates/signal/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/signal.png"
     },
     {
       "slug": "soft-editorial",
@@ -835,7 +835,7 @@
       "avoid_for": "Decks that need visual heat or punch — the warm-paper palette and Cormorant serif are intentionally quiet.",
       "preview_md": "bold-template-pack/templates/soft-editorial/preview.md",
       "design_md": "bold-template-pack/templates/soft-editorial/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/soft-editorial.png"
     },
     {
       "slug": "stencil-tablet",
@@ -861,7 +861,7 @@
       "avoid_for": "Contexts that demand digital-native polish or playful pop — the stencil-cut display and earth-tone palette commit to a deliberate analog feel.",
       "preview_md": "bold-template-pack/templates/stencil-tablet/preview.md",
       "design_md": "bold-template-pack/templates/stencil-tablet/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/stencil-tablet.png"
     },
     {
       "slug": "studio",
@@ -887,7 +887,7 @@
       "avoid_for": "Contexts that should feel quiet or institutional — the black-and-electric-yellow palette is the loudest in the library.",
       "preview_md": "bold-template-pack/templates/studio/preview.md",
       "design_md": "bold-template-pack/templates/studio/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/studio.png"
     },
     {
       "slug": "vellum",
@@ -913,7 +913,7 @@
       "avoid_for": "Contexts that need visual heat or pop — the navy + warm-yellow Cormorant aesthetic is intentionally low-tempo.",
       "preview_md": "bold-template-pack/templates/vellum/preview.md",
       "design_md": "bold-template-pack/templates/vellum/design.md",
-      "preview_png": null
+      "preview_png": "demo/previews/vellum.png"
     }
   ],
   "orphan_previews": {

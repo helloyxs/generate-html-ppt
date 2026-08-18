@@ -153,7 +153,7 @@ The agent extracts key takeaways and generates tailored cover designs per `refer
 
 ## 🎨 Visual Presets Overview
 
-The skill includes 35+ visual recipes covering various presentation scenarios:
+The skill includes **35+ unique design system specifications** covering tech, business, academic, fashion, and retro presentations. Here is a curated selection:
 
 | Style Preset | Visual Preview | Vibe / Mood | Best For | Signature Elements |
 | :--- | :--- | :--- | :--- | :--- |
@@ -165,7 +165,8 @@ The skill includes 35+ visual recipes covering various presentation scenarios:
 | **Neo Grid Bold** | <img src="demo/previews/neo-grid-bold.png" width="200" alt="Neo Grid Bold"> | Neubrutalism, Energetic | Youth culture, creative meetups | Thick black borders, hard offset shadows, high saturation blocks |
 | **Monochrome** | <img src="demo/previews/monochrome.png" width="200" alt="Monochrome"> | High Contrast, Hacker Aesthetic | Code walkthroughs, hackathons | Pure black & white contrast, monospace typography |
 
-*(Explore all 35+ recipes in `designs/bold-template-pack/`)*
+> 🖼️ **Explore Complete Gallery**: For all 37 style presets with 1:1 previews, full color tokens, typography pairings, and the decision matrix, see 📖 **[Full Style Presets Gallery (STYLE_GALLERY.md)](designs/STYLE_GALLERY_en.md)**.
+
 
 ---
 

@@ -85,11 +85,11 @@ Do not generate all slides in a single pass, and do not start building content b
    **CRITICAL RULE**: If the user provides a specific company or brand, extract core brand colors (HEX/RGB) and typography via search or local files, injecting them into the selected `design.md` CSS variables (e.g. `--brand-accent`).
 
 3. **Style Matching & Visual Preview Protocol (风格匹配与视觉预览协议)**
-   Read `designs/bold-template-pack/selection-index.json`. Recommend 2-3 candidate style options tailored to the topic mood and presentation scenario.
-   **Preview Coverage Check (视觉预览覆盖检查)**: Each template entry carries a `preview_png` field — either a path like `demo/previews/<slug>.png` or `null`. The agent MUST inspect this field for every shortlisted candidate and:
-   - If `preview_png` is set: reference it as the canonical visual preview for that style.
-   - If `preview_png` is `null`: the template has no static preview yet. Surface this to the user in plain language ("this style does not have a static preview yet") and bump the recommendation toward **Option B (Visual Preview / Method 1 — `style-preview.html` comparison card)** so the user gets a real rendered preview before committing to the full deck. Never silently fall through to a `null` preview and pretend it exists.
-   - If a preview PNG is mentioned in `selection-index.json`'s `orphan_previews` block, treat it as informational only (likely a legacy asset for a template slug that was renamed/removed) and do NOT bind it to a current template.
+   Read `designs/bold-template-pack/selection-index.json` and consult `designs/STYLE_GALLERY.md`. Recommend 2-3 candidate style options tailored to the topic mood and presentation scenario.
+   **Full Visual Gallery & Preview Coverage (全量视觉图鉴与预览覆盖)**: All 35+ template entries now carry dedicated 1:1 preview images under `demo/previews/<slug>.png`. The agent can directly reference `designs/STYLE_GALLERY.md` to show candidate preview images and design tokens to the user.
+   - If a candidate's `preview_png` is present: reference it as the canonical visual preview.
+   - For interactive previews: offer **Option B (Visual Preview / Method 1 — `style-preview.html` comparison card)** so the user can see rendered cards with actual topic content before committing to the full deck.
+   - If a preview PNG is mentioned in `selection-index.json`'s `orphan_previews` block, treat it as informational only (e.g. `cyberpunk-dark.png`, `swiss-international.png` core standalone styles).
    **CRITICAL REQUIREMENT (主动提示视觉预览与低成本确认)**:
    - **Proactive Prompting (主动提示)**: The AI MUST explicitly ask the user whether they want to view a visual style preview first or proceed directly. Present two clear paths:
      - **Option A (Direct Proceed / 直接生成)**: Directly proceed with the top recommended style (e.g., Beautiful Modern or Cyberpunk Dark).

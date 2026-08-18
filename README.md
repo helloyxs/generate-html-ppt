@@ -155,7 +155,7 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 
 ## 🎨 视觉风格与 Presets 一览
 
-系统内置了 35+ 种独立设计规范，覆盖各种演讲与演示场景：
+系统内置了 **35+ 种独立设计规范**，覆盖商业、技术、学术、时尚、复古等各类演讲场景。以下为部分代表性风格展示：
 
 | 风格 Preset | 视觉效果 (Preview) | 视觉基调 (Vibe) | 适合场景 | 核心设计元素 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -167,7 +167,8 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 | **Neo Grid Bold** | <img src="demo/previews/neo-grid-bold.png" width="200" alt="Neo Grid Bold"> | 粗矿新丑风 (Neubrutalism) | 潮流品牌、青年沙龙 | 粗黑边框、硬投影、高饱和度对比块 |
 | **Monochrome** | <img src="demo/previews/monochrome.png" width="200" alt="Monochrome"> | 黑白极简、黑客风格 | 代码演练、黑客松 | 纯黑纯白高对比、monospace 等宽字体 |
 
-*(更多风格请在 `designs/bold-template-pack/` 中探索)*
+> 🖼️ **查看完整风格图鉴**：全部 37 款设计风格的高清预览图、色板 Token、字体搭配与选型决策矩阵，请参阅 📖 **[全量设计风格与 Presets 图鉴 (STYLE_GALLERY.md)](designs/STYLE_GALLERY.md)**。
+
 
 ---
 
