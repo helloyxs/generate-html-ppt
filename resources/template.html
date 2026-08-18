@@ -9,17 +9,23 @@
      loader below (loadScriptWithTimeout). The loader tries each mirror in order
      and falls back to a system font / table chart if everything is blocked.
      See designs/font-stack-fallback.md for the font policy. -->
-<link rel="stylesheet" data-cdn-css="hljs" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" data-cdn-css="hljs" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" integrity="sha384-oaMLBGEzBOJx3UHwac0cVndtX5fxGQIfnAeFZ35RTgqPcYlbprH9o9PUV/F8Le07" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script>
-  // Resilient CDN loader: tries a list of mirrors with a per-source timeout.
-  // If every mirror fails, the page still works (charts render as fallback tables,
-  // markdown stays as raw text, no syntax highlighting). See P0 module plan.
+  // Resilient CDN loader with Subresource Integrity (SRI) and local vendor fallback.
+  // Pinned to exact versions from verified official CDNs (cdnjs, jsDelivr, unpkg).
+  // BootCDN and Staticfile are removed due to security threat intelligence flags.
   (function () {
-    var TIMEOUT_MS = 1500;
-    function loadScript(src) {
+    var TIMEOUT_MS = 2000;
+    function loadScript(item) {
       return new Promise(function (resolve, reject) {
         var s = document.createElement('script');
+        var src = typeof item === 'string' ? item : item.src;
+        var integrity = typeof item === 'object' ? item.integrity : null;
         s.src = src;
+        if (integrity && src.indexOf('http') === 0) {
+          s.integrity = integrity;
+          s.crossOrigin = 'anonymous';
+        }
         s.async = false; // preserve load order
         s.defer = true;
         var done = false;
@@ -35,38 +41,51 @@
         document.head.appendChild(s);
       });
     }
-    function firstAvailable(mirrors) {
+    function firstAvailable(chain) {
+      var integrity = chain.integrity;
+      var mirrors = chain.mirrors;
       return mirrors.reduce(function (p, src) {
-        return p.catch(function () { return loadScript(src); });
+        return p.catch(function () { return loadScript({ src: src, integrity: integrity }); });
       }, Promise.reject());
     }
-    // Mirror order: official -> jsDelivr -> unpkg -> bootcdn -> staticfile (CN).
-    // The first one to respond within TIMEOUT_MS wins; the rest are aborted.
+    // Trusted official CDNs and local vendor fallback with verified SRI hashes.
     var CHAINS = {
-      echarts: [
-        'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js',
-        'https://unpkg.com/echarts@5/dist/echarts.min.js',
-        'https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js',
-        'https://cdn.staticfile.org/echarts/5.4.3/echarts.min.js'
-      ],
-      mermaid: [
-        'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js',
-        'https://unpkg.com/mermaid@10/dist/mermaid.min.js',
-        'https://cdn.bootcdn.net/ajax/libs/mermaid/10.6.1/mermaid.min.js',
-        'https://cdn.staticfile.org/mermaid/10.6.1/mermaid.min.js'
-      ],
-      marked: [
-        'https://cdn.jsdelivr.net/npm/marked/marked.min.js',
-        'https://unpkg.com/marked/marked.min.js',
-        'https://cdn.bootcdn.net/ajax/libs/marked/9.1.6/marked.min.js',
-        'https://cdn.staticfile.org/marked/9.1.6/marked.min.js'
-      ],
-      hljs: [
-        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
-        'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js',
-        'https://cdn.bootcdn.net/ajax/libs/highlight.js/11.9.0/highlight.min.js',
-        'https://cdn.staticfile.org/highlight.js/11.9.0/highlight.min.js'
-      ]
+      echarts: {
+        integrity: 'sha384-o5uz97et3bErHvpKfD4Jz4n0JfhJDWABFuF4NP+iEEDxE1VwMWJ19QGR0lqFZnr6',
+        mirrors: [
+          './vendor/echarts.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js',
+          'https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js',
+          'https://unpkg.com/echarts@5.5.0/dist/echarts.min.js'
+        ]
+      },
+      mermaid: {
+        integrity: 'sha384-WmdflGW9aGfoBdHc4rRyWzYuAjEmDwMdGdiPNacbwfGKxBW/SO6guzuQ76qjnSlr',
+        mirrors: [
+          './vendor/mermaid.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js',
+          'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js',
+          'https://unpkg.com/mermaid@10.9.1/dist/mermaid.min.js'
+        ]
+      },
+      marked: {
+        integrity: 'sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi',
+        mirrors: [
+          './vendor/marked.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js',
+          'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js',
+          'https://unpkg.com/marked@12.0.2/marked.min.js'
+        ]
+      },
+      hljs: {
+        integrity: 'sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp',
+        mirrors: [
+          './vendor/highlight.min.js',
+          'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js',
+          'https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js',
+          'https://unpkg.com/@highlightjs/cdn-assets@11.9.0/highlight.min.js'
+        ]
+      }
     };
     // Kick off the four chains in parallel. Failures are non-fatal; each chain's
     // consumer code already checks `typeof X === 'undefined'` before using it.
@@ -689,7 +708,6 @@ graph TD
   <button class="ctrl-btn" onclick="go(1)" title="下一页 (→ / Space / PageDown)">下一页 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
   <button class="ctrl-btn" onclick="toggleOverview()" title="全览缩略图 (O / Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 全览</button>
   <button class="ctrl-btn" onclick="toggleFs()" title="全屏演示 (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> 全屏</button>
-  <button class="ctrl-btn" onclick="openSpeakerView()" title="演讲者视图 (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
 </div>
 
 <!-- Overview Modal -->
@@ -729,114 +747,7 @@ graph TD
     d.onclick = () => jump(i);
     nav.appendChild(d);
   }
-  let speakerChannel = null;
-  if (typeof BroadcastChannel !== 'undefined') {
-    speakerChannel = new BroadcastChannel('deck-speaker-sync');
-    speakerChannel.onmessage = (e) => {
-      if (e.data && e.data.action === 'go') {
-        go(e.data.dir);
-      }
-    };
-  }
 
-  function broadcastSpeakerState() {
-    if (!speakerChannel) return;
-    const curSlide = slides[cur];
-    const nextIdx = (cur + 1) % N;
-    const nextSlide = slides[nextIdx];
-    const notesEl = curSlide ? curSlide.querySelector('.notes') : null;
-    
-    const getTitle = (s) => s ? (s.querySelector('.slide-title')?.innerText || s.querySelector('.cover-title')?.innerText || '未命名') : '';
-    
-    speakerChannel.postMessage({
-      slideIndex: cur + 1,
-      totalSlides: N,
-      notes: notesEl ? notesEl.innerHTML : '<em>暂无讲稿备注</em>',
-      currentTitle: getTitle(curSlide),
-      nextTitle: nextIdx === 0 ? '结束 (返回封面)' : getTitle(nextSlide),
-      nextSlideId: nextSlide ? nextSlide.id : ''
-    });
-  }
-
-  function openSpeakerView() {
-    const win = window.open('', '_blank', 'width=900,height=600');
-    if (!win) return alert('请允许弹出窗口以开启演讲者视图！');
-    const deckUrl = window.location.href.split('#')[0];
-    win.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>演讲者视图 (Speaker View)</title>
-        <style>
-          body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100vh; box-sizing: border-box; }
-          .panel { background: #1e293b; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
-          .timer { font-size: 32px; font-weight: 800; color: #38bdf8; font-mono: true; margin-bottom: 12px; }
-          .title { font-size: 14px; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px; margin-bottom: 8px; }
-          .slide-name { font-size: 20px; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-          .notes-box { font-size: 18px; line-height: 1.6; color: #e2e8f0; background: #090d16; padding: 16px; border-radius: 8px; flex: 1; overflow-y: auto; border: 1px solid #334155; }
-        </style>
-      </head>
-      <body>
-        <div class="panel">
-          <div class="timer" id="timer">00:00:00</div>
-          <div class="title">当前页 (<span id="pageNum">1/1</span>)</div>
-          <div class="slide-name" id="curTitle">-</div>
-          <div class="title">讲稿备注</div>
-          <div class="notes-box" id="notes">加载中...</div>
-        </div>
-        <div class="panel">
-          <div class="title">下一页预览: <span id="nextTitle" style="color:#f1f5f9; font-weight:700; text-transform:none;">-</span></div>
-          <div style="flex:1; position:relative; overflow:hidden; border-radius:8px; border:1px solid #334155; background:#000; margin-top:8px;" id="previewWrapper">
-            <iframe id="nextPreview" src="" style="position:absolute; left:0; top:0; width:1920px; height:1080px; transform-origin:0 0; border:none; pointer-events:none;"></iframe>
-          </div>
-        </div>
-        <script>
-          let seconds = 0;
-          setInterval(() => {
-            seconds++;
-            const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-            const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-            const s = String(seconds % 60).padStart(2, '0');
-            document.getElementById('timer').textContent = h + ':' + m + ':' + s;
-          }, 1000);
-          
-          const iframe = document.getElementById('nextPreview');
-          const wrapper = document.getElementById('previewWrapper');
-          function resizePreview() {
-            const f = Math.min(wrapper.clientWidth / 1920, wrapper.clientHeight / 1080);
-            iframe.style.transform = 'scale(' + f + ')';
-          }
-          window.addEventListener('resize', resizePreview);
-          setTimeout(resizePreview, 100);
-
-          const deckUrl = "${deckUrl}";
-          const bc = new BroadcastChannel('deck-speaker-sync');
-          bc.onmessage = (e) => {
-            const d = e.data;
-            if (d.action === 'go') return;
-            document.getElementById('pageNum').textContent = d.slideIndex + '/' + d.totalSlides;
-            document.getElementById('curTitle').textContent = d.currentTitle;
-            document.getElementById('nextTitle').textContent = d.nextTitle;
-            document.getElementById('notes').innerHTML = d.notes;
-            
-            const targetUrl = deckUrl + '#' + d.nextSlideId;
-            if (!iframe.src || iframe.src === window.location.href) {
-              iframe.src = targetUrl;
-            } else if (iframe.contentWindow) {
-              iframe.contentWindow.location.replace(targetUrl);
-            }
-          };
-          
-          document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); bc.postMessage({action: 'go', dir: 1}); }
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); bc.postMessage({action: 'go', dir: -1}); }
-          });
-        <\/script>
-      </body>
-      </html>
-    `);
-    setTimeout(broadcastSpeakerState, 300);
-  }
 
   function jump(i) {
     if(N === 0) return;
@@ -909,7 +820,6 @@ graph TD
     }
     if (e.key === 'o' || e.key === 'O') { toggleOverview(); return; }
     if (e.key === 'f' || e.key === 'F') { if (!e.metaKey && !e.ctrlKey) toggleFs(); return; }
-    if (e.key === 's' || e.key === 'S') { openSpeakerView(); return; }
     if (isOverviewActive) return;
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(-1); }

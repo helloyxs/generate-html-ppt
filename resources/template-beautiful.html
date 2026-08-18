@@ -7,11 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link data-fonts-css="google" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700;900&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
- <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
- <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js" defer></script>
- <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js" defer></script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" integrity="sha384-oaMLBGEzBOJx3UHwac0cVndtX5fxGQIfnAeFZ35RTgqPcYlbprH9o9PUV/F8Le07" crossorigin="anonymous" referrerpolicy="no-referrer" />
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous" defer></script>
+ <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js" integrity="sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi" crossorigin="anonymous" defer></script>
+ <script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js" integrity="sha384-WmdflGW9aGfoBdHc4rRyWzYuAjEmDwMdGdiPNacbwfGKxBW/SO6guzuQ76qjnSlr" crossorigin="anonymous" defer></script>
+ <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js" integrity="sha384-o5uz97et3bErHvpKfD4Jz4n0JfhJDWABFuF4NP+iEEDxE1VwMWJ19QGR0lqFZnr6" crossorigin="anonymous" defer></script>
  <style>
    /* ==========================================================
       Beautiful.ai-inspired Template
@@ -1685,7 +1685,6 @@
     <button class="ctrl-btn" onclick="go(1)" title="下一页 (→ / Space / PageDown)">下一页 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
     <button class="ctrl-btn" onclick="toggleOverview()" title="全览缩略图 (O / Esc)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> 全览</button>
     <button class="ctrl-btn" onclick="toggleFs()" title="全屏演示 (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> 全屏</button>
-    <button class="ctrl-btn" onclick="openSpeakerView()" title="演讲者视图 (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h20v14H2z"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></button>
   </div>
 
   <!-- Overview Modal -->
@@ -1731,119 +1730,17 @@
    const N = slides.length;
    let cur = 0;
    let isAnimating = false;
-   const nav = document.getElementById('nav');
 
    for (let i = 0; i < N; i++) {
      const d = document.createElement('button');
      d.className = 'dot' + (i === 0 ? ' on' : '');
      d.setAttribute('aria-label', 'Go to slide ' + (i + 1));
      d.onclick = () => jump(i);
-     nav.appendChild(d);
-   }
-
-   let speakerChannel = null;
-   if (typeof BroadcastChannel !== 'undefined') {
-     speakerChannel = new BroadcastChannel('deck-speaker-sync');
-     speakerChannel.onmessage = (e) => {
-       if (e.data && e.data.action === 'go') go(e.data.dir);
-     };
    }
 
    function getSlideTitle(s) {
      if (!s) return '';
      return s.querySelector('.h-xl, .h-lg, .h-hero, .cover-title, .slide-title')?.innerText || '';
-   }
-
-   function broadcastSpeakerState() {
-     if (!speakerChannel) return;
-     const curSlide = slides[cur];
-     const nextIdx = (cur + 1) % N;
-     const nextSlide = slides[nextIdx];
-     const notesEl = curSlide ? curSlide.querySelector('.notes') : null;
-     speakerChannel.postMessage({
-       slideIndex: cur + 1,
-       totalSlides: N,
-       notes: notesEl ? notesEl.innerHTML : '<em>暂无讲稿备注</em>',
-       currentTitle: getSlideTitle(curSlide),
-       nextTitle: nextIdx === 0 ? '结束 (返回封面)' : getSlideTitle(nextSlide),
-       nextSlideId: nextSlide ? nextSlide.id : ''
-     });
-   }
-
-   function openSpeakerView() {
-     const win = window.open('', '_blank', 'width=900,height=600');
-     if (!win) return alert('请允许弹出窗口以开启演讲者视图！');
-     const deckUrl = window.location.href.split('#')[0];
-     win.document.write(`
-       <!DOCTYPE html>
-       <html>
-       <head>
-         <title>演讲者视图 (Speaker View)</title>
-         <style>
-           body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; height: 100vh; box-sizing: border-box; }
-           .panel { background: #1e293b; border-radius: 16px; padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
-           .timer { font-size: 32px; font-weight: 800; color: #818cf8; font-family: monospace; margin-bottom: 12px; }
-           .title { font-size: 13px; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px; margin-bottom: 8px; font-weight: 700; }
-           .slide-name { font-size: 20px; font-weight: 700; color: #f1f5f9; margin-bottom: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-           .notes-box { font-size: 18px; line-height: 1.6; color: #e2e8f0; background: #090d16; padding: 16px; border-radius: 12px; flex: 1; overflow-y: auto; border: 1px solid #334155; }
-         </style>
-       </head>
-       <body>
-         <div class="panel">
-           <div class="timer" id="timer">00:00:00</div>
-           <div class="title">当前页 (<span id="pageNum">1/1</span>)</div>
-           <div class="slide-name" id="curTitle">-</div>
-           <div class="title">讲稿备注</div>
-           <div class="notes-box" id="notes">加载中...</div>
-         </div>
-         <div class="panel">
-           <div class="title">下一页预览: <span id="nextTitle" style="color:#f1f5f9; font-weight:700; text-transform:none;">-</span></div>
-           <div style="flex:1; position:relative; overflow:hidden; border-radius:12px; border:1px solid #334155; background:#000; margin-top:8px;" id="previewWrapper">
-             <iframe id="nextPreview" src="" style="position:absolute; left:0; top:0; width:1920px; height:1080px; transform-origin:0 0; border:none; pointer-events:none;"></iframe>
-           </div>
-         </div>
-         <script>
-           let seconds = 0;
-           setInterval(() => {
-             seconds++;
-             const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-             const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-             const s = String(seconds % 60).padStart(2, '0');
-             document.getElementById('timer').textContent = h + ':' + m + ':' + s;
-           }, 1000);
-           const iframe = document.getElementById('nextPreview');
-           const wrapper = document.getElementById('previewWrapper');
-           function resizePreview() {
-             const f = Math.min(wrapper.clientWidth / 1920, wrapper.clientHeight / 1080);
-             iframe.style.transform = 'scale(' + f + ')';
-           }
-           window.addEventListener('resize', resizePreview);
-           setTimeout(resizePreview, 100);
-           const deckUrl = "${deckUrl}";
-           const bc = new BroadcastChannel('deck-speaker-sync');
-           bc.onmessage = (e) => {
-             const d = e.data;
-             if (d.action === 'go') return;
-             document.getElementById('pageNum').textContent = d.slideIndex + '/' + d.totalSlides;
-             document.getElementById('curTitle').textContent = d.currentTitle;
-             document.getElementById('nextTitle').textContent = d.nextTitle;
-             document.getElementById('notes').innerHTML = d.notes;
-             const targetUrl = deckUrl + '#' + d.nextSlideId;
-             if (!iframe.src || iframe.src === window.location.href) {
-               iframe.src = targetUrl;
-             } else if (iframe.contentWindow) {
-               iframe.contentWindow.location.replace(targetUrl);
-             }
-           };
-           document.addEventListener('keydown', e => {
-             if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); bc.postMessage({action: 'go', dir: 1}); }
-             if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); bc.postMessage({action: 'go', dir: -1}); }
-           });
-         <\/script>
-       </body>
-       </html>
-     `);
-     setTimeout(broadcastSpeakerState, 300);
    }
 
    function updateViewportBg() {
@@ -1948,7 +1845,6 @@
      }
      if (e.key === 'o' || e.key === 'O') { toggleOverview(); return; }
      if (e.key === 'f' || e.key === 'F') { if (!e.metaKey && !e.ctrlKey) toggleFs(); return; }
-     if (e.key === 's' || e.key === 'S') { openSpeakerView(); return; }
      if (isOverviewActive) return;
      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); go(1); }
      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); go(-1); }

@@ -32,25 +32,22 @@
 * **Mode B: PPTX 文件一键转换** — 内置 Python 解析脚本（`extract-pptx.py`），自动提取 PowerPoint 中的文本、图片、矢量形状与演讲者备注（Speaker Notes），轻松将传统 PPT 升级为网页版。
 * **Mode C: 多平台自媒体封面设计** — 自动提炼 PPT/文章核心要点，根据内置排版规范生成微信公众号 (21:9)、小红书 (3:4)、X/Twitter 等社交平台的封面 Prompt 及视觉产出。
 
-### 5. 🎙️ 双屏同步演讲者视图 (Synced Speaker View)
-* 播放时按 **`S`** 键可一键唤起独立控制台。基于 `BroadcastChannel` 毫秒级无缝同步，提供总计时器、下一页 Slide 实时预览以及支持 Markdown 渲染的可滚动演讲提词器。
-
-### 6. 🚀 零依赖与单文件交付 (Zero Dependencies)
+### 5. 🚀 零依赖与单文件交付 (Zero Dependencies)
 * 输出单个自包含 HTML 文件，内联全量 CSS 与 JS 逻辑（包含 CDN 备用链接）。无需 Node.js 运行时、npm 依赖或复杂的打包构建流程，支持离线即开即用，长久保存不出错。
 
-### 7. 📊 富交互组件与数据可视化 (Rich UI Component Kit)
+### 6. 📊 富交互组件与数据可视化 (Rich UI Component Kit)
 * 原生内置 **ECharts 交互图表**、**Mermaid.js 矢量流程图**、**代码高亮**、**数字递增动画 (`.count-up`)** 以及 **弹簧物理入场动画 (`.anim`)**。
 
-### 8. 🎛️ 底部交互控制台四件套与全景缩略图 (4-Button Controls & Overview Mode)
+### 7. 🎛️ 底部交互控制台与全景缩略图 (Controls Bar & Overview Gallery)
 * 每次生成均自动内置底部毛玻璃悬浮控制栏，标配 **`◀ 上一页`**、**`01 / 15 进度条`**、**`下一页 ▶`**、**`🗂 全览`** 与 **`⛶ 全屏`** 交互按钮；支持一键开启全景卡片网格直达跳转（`O` 键全览、`F` 键全屏、`Esc` 退出），配合**双轨间距规范**（首页开阔大气呼吸感 ↔ 正文页眉三要素紧凑压缩），将 78%+ 黄金纵向空间留给核心内容。
 
-### 9. 🔤 主要内容大字号高可读性标准 (High-Legibility Large Font Standard)
+### 8. 🔤 主要内容大字号高可读性标准 (High-Legibility Large Font Standard)
 * 杜绝传统 12px~14px 细碎小字感。在 1920×1080 舞台下，所有文字阶梯经过专门的演说可读性校准：正文 `20px~22px`、副标题 `22px~26px`、卡片标题 `26px~28px`、分类徽章 `16px~18px`、数据大数字 `56px~72px`、表格与代码 `19px~21px`，无论在投影大屏还是笔记本缩放视口中均能清晰秒读。
 
-### 10. 🔍 默认支持鼠标双击图片放大 (Default Double-Click Image Zoom & Lightbox)
+### 9. 🔍 默认支持鼠标双击图片放大 (Default Double-Click Image Zoom & Lightbox)
 * 原生标配图片全屏 Lightbox 交互：幻灯片中的任何图片**默认支持鼠标双击（dblclick）居中全屏放大**，再次双击、点击背景或按 `Esc` 退出；同页多张图片支持键盘 `←` / `→` 键与左右箭头流畅翻页浏览。
 
-### 11. 🏷️ 图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard)
+### 10. 🏷️ 图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard)
 * 在卡片、流水线步骤、架构层级等组件中，图标、Emoji、图片或序号徽章与对应的标题文字默认保持在同一行水平并排展示，杜绝无故分两行上下堆叠带来的空间浪费与视觉松散；仅在极限窄栏或超长文字放不下时才酌情折行。
 
 ---
@@ -179,8 +176,8 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 * **下一页**：`右方向键 (→)`、`下方向键 (↓)`、`空格键 (Space)`、`PageDown`，或移动端向左轻扫。
 * **上一页**：`左方向键 (←)`、`上方向键 (↑)`、`PageUp`，或移动端向右轻扫。
 * **跳转首页 / 末页**：`Home` / `End` 键。
+* **全览视图 (Overview)**：`O` 键。
 * **全屏模式**：`F` 键。
-* **演讲者视图 (Speaker Mode)**：`S` 键（唤起双屏同步提词控制台）。
 * **页面锚点定位**：支持 URL Hash 实时同步（如直接访问 `#s3` 跳转第 3 页）。
 
 ---
@@ -190,6 +187,33 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 1. **零依赖长寿生命周期 (Zero-Dependency Lifespan)**：生成的 HTML 文件不依赖任何外部后端或构建系统，在任何设备随时运行，且在 20 年后依然能够被浏览器完美打开。
 2. **排版稳定性 (Layout Stability)**：固定 16:9 舞台结合 CSS transform 等比缩放，彻底解决屏幕比例变动导致“格式错乱”的行业难题。
 3. **AI 原生工作流 (AI-Native Workflow)**：将复杂的代码调试转化为给 AI 的逻辑指令。借助 `design.md` 规则约束与校验脚本，大幅降低大模型的幻觉概率。
+
+---
+
+## 🔒 安全策略与远程资源披露 (Security & Subresource Integrity)
+
+为了保障演示文稿在任何网络与企业环境下的**供应链安全**与**防篡改完整性**，本项目实施了严格的第三方静态资源治理策略：
+
+### 1. 供应链安全基线
+* **彻底排除风险镜像**：已全面移除被威胁情报标记的第三方镜像源（如 `cdn.bootcdn.net` 和 `cdn.staticfile.org`），杜绝供应链投毒与中间人劫持风险。
+* **官方/高信誉 CDN 托管**：仅采用官方制品库与高信誉公共 CDN 源（`cdnjs.cloudflare.com`、`cdn.jsdelivr.net`、`unpkg.com`）。
+* **版本完全固化**：所有外部资源严格锁定精确语义版本号，严禁使用 `@latest`、`@5`、`@10` 等不可控的浮动版本。
+* **强制 SRI 完整性校验**：所有 `<script>`、`<link>` 标签以及动态异步加载引擎均注入 **SHA-384 Subresource Integrity (SRI)** 指纹及 `crossorigin="anonymous"`，任何未经授权的文件篡改均会被现代浏览器直接阻断执行。
+
+### 2. 生成文件引用的远程资源与 SRI 指纹清单
+
+| 依赖库 (Package) | 固化版本 (Version) | 受信官方源 (Verified CDN Mirrors) | SRI 完整性哈希 (SHA-384 Hash) |
+| :--- | :--- | :--- | :--- |
+| **ECharts** (图表引擎) | `5.5.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-o5uz97et3bErHvpKfD4Jz4n0JfhJDWABFuF4NP+iEEDxE1VwMWJ19QGR0lqFZnr6` |
+| **Mermaid** (矢量图引擎) | `10.9.1` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-WmdflGW9aGfoBdHc4rRyWzYuAjEmDwMdGdiPNacbwfGKxBW/SO6guzuQ76qjnSlr` |
+| **Marked** (Markdown 渲染) | `12.0.2` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi` |
+| **Highlight.js** (代码高亮 JS) | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp` |
+| **Highlight.js** (暗色主题 CSS) | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-oaMLBGEzBOJx3UHwac0cVndtX5fxGQIfnAeFZ35RTgqPcYlbprH9o9PUV/F8Le07` |
+| **Lucide Icons** (图标库) | `0.344.0` | `jsdelivr` / `unpkg` | `sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq` |
+| **Motion** (动效引擎) | `11.11.17` | 本地 `./assets/` / `jsdelivr` | (ES Module 动态引入 + 异常降级) |
+
+### 3. 企业专有云 / 纯内网 / 离线部署 (Local Vendor Fallback)
+在无法访问外网的物理隔离网络或严苛企业合规环境中，只需在 HTML 文件同级目录下创建 `vendor/` 文件夹，并将上述对应版本的 `.min.js` 文件放入即可。`template.html` 内置的异步加载链会**优先检测本地 `./vendor/` 资源**，实现 100% 离线零外网依赖运行。
 
 ---
 

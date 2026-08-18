@@ -33,10 +33,11 @@ so the chart div stayed empty.
 **Fix**:
 - Open DevTools Console. If you see `cdn:degraded` events or the yellow
   "ECharts 库未加载" banner, the loader gave up.
-- The default `template.html` already tries jsDelivr → unpkg → BootCDN →
-  Staticfile. If your network blocks all four, copy the lib into a local
-  `vendor/` folder and update the loader's `CHAINS` map (line 41 in
-  `template.html`).
+- The default `template.html` tries local `./vendor/` → cdnjs → jsDelivr →
+  unpkg with Subresource Integrity (SRI) verification. Untrusted mirrors
+  (BootCDN, Staticfile) have been completely removed. For air-gapped offline
+  networks, place the `.min.js` files into a local `vendor/` folder next to your
+  HTML presentation.
 - For Mermaid, the first `mermaid.initialize()` call has a `startOnLoad: true`
   flag — if Mermaid loaded but did not render, the source likely had a syntax
   error. Check the browser console for "Syntax error in graph definition".

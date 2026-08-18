@@ -19,9 +19,9 @@ description: When the user asks to create an HTML PPT, presentation slides, or a
 > **没想好风格？** 先读 `designs/bold-template-pack/selection-index.json` 元
 > 数据推荐 2-3 个候选，再按需读具体模板的 `design.md`。节省 token，避免误选。
 >
-> **国内网络 / 公司内网？** 生成前先读 `designs/font-stack-fallback.md`。默认
-> `template.html` 已内置 CDN 镜像链 (jsDelivr → unpkg → BootCDN → Staticfile)
-> 与字体超时降级条，页面不会白屏。
+> **国内网络 / 公司内网 / 离线？** 生成前先读 `designs/font-stack-fallback.md`。默认
+> `template.html` 已内置本地与官方 CDN 镜像链 (vendor → cdnjs → jsDelivr → unpkg)
+> 全量配置 SRI 完整性校验与字体超时降级条，绝不引入未受信镜像，页面安全且不白屏。
 
 ## Mode Decision Tree (模式决策树)
 

@@ -30,25 +30,22 @@ An AI Coding-Agent Skill for creating stunning, interactive HTML presentations �
 * **Mode B: PowerPoint Conversion** — Includes a Python parser (`extract-pptx.py`) that extracts slide text, shapes, high-resolution images, and speaker notes from `.pptx` files, converting legacy decks to the web effortlessly.
 * **Mode C: Multi-Platform Cover Generation** — Extracts core slide takeaways and generates social media cover prompts/visuals for WeChat (21:9), Xiaohongshu (3:4), X/Twitter, or newsletters.
 
-### 5. 🎙️ Synced Dual-Window Speaker View
-* Press **`S`** to launch a presenter console synced in real-time via `BroadcastChannel`. Features an elapsed presentation timer, live next-slide preview panel, and scrollable Markdown speaker notes.
-
-### 6. 🚀 Zero Dependencies & Single-File Output
+### 5. 🚀 Zero Dependencies & Single-File Output
 * Generates a single, self-contained HTML file with inline CSS and JavaScript logic (plus CDN fallbacks). No Node.js runtime, npm dependencies, or build step required. Works instantly offline and stays readable for decades.
 
-### 7. 📊 Rich UI Component Kit & Data Visualization
+### 6. 📊 Rich UI Component Kit & Data Visualization
 * Built-in support for interactive **ECharts charts**, **Mermaid.js vector diagrams**, **syntax highlighting**, **number count-up animations (`.count-up`)**, and **spring physics entry animations (`.anim`)**.
 
-### 8. 🎛️ 4-Button Bottom Controls & Overview Gallery Mode
+### 7. 🎛️ Bottom Controls & Overview Gallery Mode
 * Every presentation automatically comes equipped with a floating glassmorphism bottom bar containing **`◀ Previous`**, **`Slide Counter & Progress`**, **`Next ▶`**, **`🗂 Overview`**, and **`⛶ Fullscreen`** buttons. Includes instant slide thumbnail grid navigation (`O` for Overview, `F` for Fullscreen, `Esc` to close) paired with **Dual-Track Spacing Standards** (spacious breathing room on Cover Slides ↔ compact header compression on Content Slides) yielding 78%+ vertical canvas space for main content.
 
-### 9. 🔤 High-Legibility Large Font Standard
+### 8. 🔤 High-Legibility Large Font Standard
 * Eliminates tiny, illegible 12px~14px text. Under the 1920×1080 canvas stage, all typography is tuned for speech presentation clarity: Body Paragraphs `20px~22px`, Subtitles `22px~26px`, Card Titles `26px~28px`, Badges `16px~18px`, Big Stats `56px~72px`, Tables & Code `19px~21px` — ensuring effortless reading across both large projection screens and scaled laptop viewports.
 
-### 10. 🔍 Default Double-Click Image Zoom & Lightbox
+### 9. 🔍 Default Double-Click Image Zoom & Lightbox
 * Built-in interactive fullscreen image lightbox: Any image across the presentation **supports double-clicking (`dblclick`) to zoom and enlarge into a backdrop-blurred lightbox overlay**. Double-click again, click anywhere, or press `Esc` to close; multi-image slides support fluid keyboard `←` / `→` arrow navigation.
 
-### 11. 🏷️ Inline Icon, Badge & Title Standard
+### 10. 🏷️ Inline Icon, Badge & Title Standard
 * In cards, pipeline steps, architecture layers, and feature grids, icons, emojis, images, or numerical badges stay horizontally aligned on the same row with their paired title text by default, eliminating unnecessary two-line vertical stacking and wasted canvas height. Graceful two-line wrapping is reserved exclusively for narrow columns or exceptionally long text.
 
 ---
@@ -177,8 +174,8 @@ When viewing the generated HTML presentation in a browser:
 * **Next Slide**: `ArrowRight (→)`, `ArrowDown (↓)`, `Space`, `PageDown`, or swipe left on mobile.
 * **Previous Slide**: `ArrowLeft (←)`, `ArrowUp (↑)`, `PageUp`, or swipe right on mobile.
 * **Jump to Start / End**: `Home` / `End`.
+* **Overview Gallery**: `O` key.
 * **Fullscreen**: `F` key.
-* **Speaker View**: `S` key (opens dual-window presenter mode).
 * **Direct Slide Hash**: URL hash updates automatically (e.g., `#s3` directly links to slide 3).
 
 ---
@@ -188,6 +185,33 @@ When viewing the generated HTML presentation in a browser:
 1. **Zero-Dependency Lifespan**: Single-file HTML output runs everywhere without external server or build dependencies, ensuring the deck opens perfectly even 20 years later.
 2. **Layout Stability**: Fixed 16:9 canvas with dynamic CSS scale transform eliminates layout reflow and text wrapping bugs across different screens.
 3. **AI-Native Workflow**: Replaces fragile CSS tweaking with structured AI directives. Strict `design.md` schemas and validation scripts eliminate AI UI hallucinations.
+
+---
+
+## 🔒 Security & Subresource Integrity (SRI) Policy
+
+To guarantee **supply-chain safety**, **integrity**, and **tamper resistance** in enterprise and production environments, this project follows strict third-party static asset security standards:
+
+### 1. Supply Chain Security Baseline
+* **Removal of Flagged Mirrors**: Untrusted third-party mirrors (such as `cdn.bootcdn.net` and `cdn.staticfile.org`) flagged by threat intelligence have been completely eliminated.
+* **Verified Official CDNs**: Only official and highly trusted public CDN networks are used (`cdnjs.cloudflare.com`, `cdn.jsdelivr.net`, `unpkg.com`).
+* **Strict Version Pinning**: All external dependencies are pinned to exact semantic versions. Floating versions like `@latest`, `@5`, `@10` are strictly forbidden.
+* **Mandatory Subresource Integrity (SRI)**: All `<script>` and `<link>` tags and dynamic script loaders enforce **SHA-384 SRI hashes** and `crossorigin="anonymous"`. Modern browsers will automatically block any tampered scripts.
+
+### 2. External Dependencies & SRI Inventory
+
+| Package | Pinned Version | Verified CDN Mirrors | SRI Hash (SHA-384) |
+| :--- | :--- | :--- | :--- |
+| **ECharts** (Charts) | `5.5.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-o5uz97et3bErHvpKfD4Jz4n0JfhJDWABFuF4NP+iEEDxE1VwMWJ19QGR0lqFZnr6` |
+| **Mermaid** (Diagrams) | `10.9.1` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-WmdflGW9aGfoBdHc4rRyWzYuAjEmDwMdGdiPNacbwfGKxBW/SO6guzuQ76qjnSlr` |
+| **Marked** (Markdown) | `12.0.2` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-/TQbtLCAerC3jgaim+N78RZSDYV7ryeoBCVqTuzRrFec2akfBkHS7ACQ3PQhvMVi` |
+| **Highlight.js (JS)** | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp` |
+| **Highlight.js (CSS)** | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-oaMLBGEzBOJx3UHwac0cVndtX5fxGQIfnAeFZ35RTgqPcYlbprH9o9PUV/F8Le07` |
+| **Lucide Icons** | `0.344.0` | `jsdelivr` / `unpkg` | `sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq` |
+| **Motion** (Animations) | `11.11.17` | Local `./assets/` / `jsdelivr` | (ES Module Dynamic Import + Fallback) |
+
+### 3. Fully Offline / Air-Gapped Intranet Deployment
+For air-gapped internal enterprise networks with no internet access, create a `vendor/` directory in the same folder as your generated HTML presentation and place the corresponding `.min.js` files inside. The built-in loader automatically prioritizes local `./vendor/` files before attempting CDN fallback.
 
 ---
 
