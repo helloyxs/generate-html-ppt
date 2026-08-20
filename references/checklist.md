@@ -691,7 +691,7 @@ JS 会动态算总页数并扩展底部翻页圆点，但 `.chrome` 里的 `XX /
   □ B 键触发静态/低功耗模式,右下角提示在 `B 静态` / `B 动态` 之间切换
 
 动效
-  □ `assets/motion.min.js` 存在(本地兜底)
+  □ 如使用 Motion 动效，`assets/motion.min.js` 已随演示文稿审核发布；缺失时所有动画元素仍保持可见
   □ 低功耗模式下 WebGL/ASCII canvas 不再挂 RAF 循环,当前页内容仍全部可见
   □ 翻页时内容逐个淡入,不是"啪"一下全出
   □ 大引用页 `<section>` 带 `data-animate="quote"`,每行 `<span data-anim="line">`

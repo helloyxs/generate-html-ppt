@@ -22,8 +22,13 @@
         var src = typeof item === 'string' ? item : item.src;
         var integrity = typeof item === 'object' ? item.integrity : null;
         s.src = src;
-        if (integrity && src.indexOf('http') === 0) {
+        // Apply the pinned digest to both vendored and CDN files. A local
+        // `vendor/` directory is a trust boundary too: a modified fallback
+        // must fail closed instead of being silently executed.
+        if (integrity) {
           s.integrity = integrity;
+        }
+        if (src.indexOf('http') === 0) {
           s.crossOrigin = 'anonymous';
         }
         s.async = false; // preserve load order

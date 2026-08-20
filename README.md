@@ -93,7 +93,7 @@ generate-html-ppt/
 向您的 AI 编程助手（如 Claude Code, Antigravity, Gemini CLI, Codex 等）发送以下指令：
 
 ```text
-请帮我将 https://github.com/helloyxs/generate-html-ppt.git 克隆并安装为你的本地技能，同时安装所需的 python-pptx 依赖。
+请将 `helloyxs/generate-html-ppt` 的指定发布版本或已审核 commit 安装为本地技能；安装前核对仓库地址、commit SHA 与本说明，再按需安装 `python-pptx`（仅 Mode B 需要）。
 ```
 
 ### 2. 在 Claude Code 中手动安装
@@ -101,6 +101,7 @@ generate-html-ppt/
 ```bash
 # 1. 克隆仓库到本地技能目录
 git clone https://github.com/helloyxs/generate-html-ppt.git ~/.claude/skills/generate-html-ppt
+git -C ~/.claude/skills/generate-html-ppt checkout --detach 3167cd6a3cd2e9901e113c6e3ae728385e92f36d
 
 # 2. 安装 Python 依赖（用于解析 .pptx，仅在使用 Mode B 时需要）
 pip install python-pptx
@@ -111,6 +112,7 @@ pip install python-pptx
 ```bash
 # 1. 克隆仓库到对应的技能目录
 git clone https://github.com/helloyxs/generate-html-ppt.git ~/.codex/skills/generate-html-ppt
+git -C ~/.codex/skills/generate-html-ppt checkout --detach 3167cd6a3cd2e9901e113c6e3ae728385e92f36d
 
 # 2. 安装 Python 依赖
 pip install python-pptx
@@ -198,7 +200,7 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 * **彻底排除风险镜像**：已全面移除被威胁情报标记的第三方镜像源（如 `cdn.bootcdn.net` 和 `cdn.staticfile.org`），杜绝供应链投毒与中间人劫持风险。
 * **官方/高信誉 CDN 托管**：仅采用官方制品库与高信誉公共 CDN 源（`cdnjs.cloudflare.com`、`cdn.jsdelivr.net`、`unpkg.com`）。
 * **版本完全固化**：所有外部资源严格锁定精确语义版本号，严禁使用 `@latest`、`@5`、`@10` 等不可控的浮动版本。
-* **强制 SRI 完整性校验**：所有 `<script>`、`<link>` 标签以及动态异步加载引擎均注入 **SHA-384 Subresource Integrity (SRI)** 指纹及 `crossorigin="anonymous"`，任何未经授权的文件篡改均会被现代浏览器直接阻断执行。
+* **脚本完整性校验**：`template.html` 的可选脚本加载器对 CDN 和 `vendor/` 本地回退均使用固定 SHA-384 SRI 指纹；无法校验的字体和可选样式资源不作 SRI 覆盖，按浏览器的同源/CSP 策略处理。
 
 ### 2. 生成文件引用的远程资源与 SRI 指纹清单
 
@@ -210,10 +212,10 @@ AI 将依据 `references/covers.md` 规范生成适配不同社交平台的视�
 | **Highlight.js** (代码高亮 JS) | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp` |
 | **Highlight.js** (暗色主题 CSS) | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-oaMLBGEzBOJx3UHwac0cVndtX5fxGQIfnAeFZ35RTgqPcYlbprH9o9PUV/F8Le07` |
 | **Lucide Icons** (图标库) | `0.344.0` | `jsdelivr` / `unpkg` | `sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq` |
-| **Motion** (动效引擎) | `11.11.17` | 本地 `./assets/` / `jsdelivr` | (ES Module 动态引入 + 异常降级) |
+| **Motion** (动效引擎) | `11.11.17` | 可选的、审核后的本地 `./assets/` 副本 | 缺失时禁用可选动效 |
 
 ### 3. 企业专有云 / 纯内网 / 离线部署 (Local Vendor Fallback)
-在无法访问外网的物理隔离网络或严苛企业合规环境中，只需在 HTML 文件同级目录下创建 `vendor/` 文件夹，并将上述对应版本的 `.min.js` 文件放入即可。`template.html` 内置的异步加载链会**优先检测本地 `./vendor/` 资源**，实现 100% 离线零外网依赖运行。
+在无法访问外网的物理隔离网络或严苛企业合规环境中，可在 HTML 文件同级目录下创建 `vendor/` 文件夹，并放入上表对应版本的 `.min.js` 文件。`template.html` 会优先加载这些本地文件，并以固定 SRI 哈希校验；校验失败时不会执行。Swiss 模板不会从 CDN 动态导入 Motion；只有在生成/分发时显式随演示文稿提供审核后的 `assets/motion.min.js` 才启用该可选动效，缺失时安全降级为无动效。
 
 ---
 

@@ -1569,18 +1569,14 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0);
 <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" integrity="sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq" crossorigin="anonymous"></script>
 <script>lucide.createIcons();</script>
 
-<!-- Motion One 动效引擎 (与原模板一致) -->
+<!-- Motion One 动效引擎：仅加载随演示文稿一同审核和发布的本地副本。 -->
 <script type="module">
 let motion;
 try {
   motion = await import('./assets/motion.min.js');
-} catch(e1) {
-  try {
-    motion = await import('https://cdn.jsdelivr.net/npm/motion@11.11.17/+esm');
-  } catch(e2) {
-    console.warn('[motion] local + CDN both failed, disabling animations', e1, e2);
-    document.querySelectorAll('[data-anim]').forEach(el=>{el.style.opacity='1';el.style.transform='none'});
-  }
+} catch(e) {
+  console.warn('[motion] vetted local copy unavailable; disabling optional animations', e);
+  document.querySelectorAll('[data-anim]').forEach(el=>{el.style.opacity='1';el.style.transform='none'});
 }
 
 if(motion){

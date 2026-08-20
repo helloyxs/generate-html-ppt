@@ -91,7 +91,7 @@ generate-html-ppt/
 Ask your AI coding assistant (Claude Code, Antigravity, Gemini CLI, Codex, etc.) to install the skill automatically:
 
 ```text
-Please clone and install https://github.com/helloyxs/generate-html-ppt.git as your local skill, and install the required python-pptx dependency.
+Install a specific release or reviewed commit of `helloyxs/generate-html-ppt` as a local skill. Verify the repository URL and commit SHA against this guide first, then install `python-pptx` only if Mode B is needed.
 ```
 
 ### Manual Install for Claude Code
@@ -99,6 +99,7 @@ Please clone and install https://github.com/helloyxs/generate-html-ppt.git as yo
 ```bash
 # 1. Clone repository to your Claude skills directory
 git clone https://github.com/helloyxs/generate-html-ppt.git ~/.claude/skills/generate-html-ppt
+git -C ~/.claude/skills/generate-html-ppt checkout --detach 3167cd6a3cd2e9901e113c6e3ae728385e92f36d
 
 # 2. Install Python dependency (required for PPTX conversion in Mode B)
 pip install python-pptx
@@ -109,6 +110,7 @@ pip install python-pptx
 ```bash
 # 1. Clone repository to your agent's skills directory
 git clone https://github.com/helloyxs/generate-html-ppt.git ~/.codex/skills/generate-html-ppt
+git -C ~/.codex/skills/generate-html-ppt checkout --detach 3167cd6a3cd2e9901e113c6e3ae728385e92f36d
 
 # 2. Install Python dependency
 pip install python-pptx
@@ -196,7 +198,7 @@ To guarantee **supply-chain safety**, **integrity**, and **tamper resistance** i
 * **Removal of Flagged Mirrors**: Untrusted third-party mirrors (such as `cdn.bootcdn.net` and `cdn.staticfile.org`) flagged by threat intelligence have been completely eliminated.
 * **Verified Official CDNs**: Only official and highly trusted public CDN networks are used (`cdnjs.cloudflare.com`, `cdn.jsdelivr.net`, `unpkg.com`).
 * **Strict Version Pinning**: All external dependencies are pinned to exact semantic versions. Floating versions like `@latest`, `@5`, `@10` are strictly forbidden.
-* **Mandatory Subresource Integrity (SRI)**: All `<script>` and `<link>` tags and dynamic script loaders enforce **SHA-384 SRI hashes** and `crossorigin="anonymous"`. Modern browsers will automatically block any tampered scripts.
+* **Script integrity verification**: The optional-script loader in `template.html` applies fixed SHA-384 SRI hashes to both CDN and local `vendor/` fallbacks. Fonts and optional style resources that cannot use SRI are not covered by this claim and remain subject to the browser's origin/CSP policy.
 
 ### 2. External Dependencies & SRI Inventory
 
@@ -208,10 +210,10 @@ To guarantee **supply-chain safety**, **integrity**, and **tamper resistance** i
 | **Highlight.js (JS)** | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp` |
 | **Highlight.js (CSS)** | `11.9.0` | `cdnjs` / `jsdelivr` / `unpkg` | `sha384-oaMLBGEzBOJx3UHwac0cVndtX5fxGQIfnAeFZ35RTgqPcYlbprH9o9PUV/F8Le07` |
 | **Lucide Icons** | `0.344.0` | `jsdelivr` / `unpkg` | `sha384-tTkFttkBclaU1cloKwOi9xk3pbao3VZxTjLNBt8iFABWDBQibbAbWpVmO28zMuxq` |
-| **Motion** (Animations) | `11.11.17` | Local `./assets/` / `jsdelivr` | (ES Module Dynamic Import + Fallback) |
+| **Motion** (Animations) | `11.11.17` | Optional reviewed local copy in `./assets/` | Optional animations are disabled if absent |
 
 ### 3. Fully Offline / Air-Gapped Intranet Deployment
-For air-gapped internal enterprise networks with no internet access, create a `vendor/` directory in the same folder as your generated HTML presentation and place the corresponding `.min.js` files inside. The built-in loader automatically prioritizes local `./vendor/` files before attempting CDN fallback.
+For air-gapped internal enterprise networks, create a `vendor/` directory beside the generated HTML and place the corresponding pinned `.min.js` files inside. The loader prioritizes those local files and verifies them with the fixed SRI hash before execution. The Swiss template never dynamically imports Motion from a CDN; its optional animations are enabled only when a reviewed `assets/motion.min.js` is explicitly shipped with the presentation, otherwise they safely disable.
 
 ---
 
