@@ -1,0 +1,4 @@
+.DS_Store
+.vscode/
+scripts/__pycache__/
+dist/

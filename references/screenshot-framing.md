@@ -65,7 +65,7 @@ ratio:跟随槽位, background:plain, padding:standard, inset:subtle, shadow:non
 - 背景: `paper` / `blurred` / 低饱和 `gradient`
 - 质感:纸张、墨水、胶片颗粒、暖白、低对比
 - 截图:**无圆角无阴影**,完全靠浅色色阶分层;不要像 SaaS 营销卡片
-- 背景资产:优先使用 `resources/screenshot-backgrounds/style-a/` 下对应主题的 16:9 crop-safe WebP,截图合成时按槽位裁切
+- 背景:优先用 CSS 生成 `paper` / `blurred` / 低饱和渐变；若完整源码中的可选背景资产已安装，也可按槽位裁切复用。
 - 推荐语义:
 
 ```text
@@ -77,7 +77,7 @@ ratio:16:10, background:paper, padding:standard, inset:subtle, shadow:none, corn
 - 背景: `plain` / `grid` / `dot-matrix`
 - 色彩:只允许当前锚点色作为极低占比强调;不要大面积亮色块
 - 截图:直角、无阴影、无圆角、少量 hairline 或顶部 accent 线
-- 背景资产:优先使用 `resources/screenshot-backgrounds/style-b/` 下对应主题色的 16:9 crop-safe WebP,只用当前 accent,不要混色
+- 背景:优先用 CSS 生成网格或点阵；若完整源码中的可选背景资产已安装，也可按槽位裁切复用，但只用当前 accent,不要混色。
 - 推荐语义:
 
 ```text
@@ -94,9 +94,9 @@ ratio:21:9, background:grid, padding:standard, inset:subtle, shadow:none, corner
 - 背景不能有文字、logo、图标、人物、设备、边框、明显主体或方向性构图。
 - 背景必须 crop-safe:裁成 `21:9`、`16:10`、`4:3`、`1:1` 都不能暴露“被裁掉”的痕迹。
 
-## 内置主题背景资产
+## 可选主题背景资产（源码图库）
 
-本 Skill 已经内置一组 GPT-M 2.0 预生成背景。处理截图时**优先使用这些资产**,不要实时调用 GPT-M 2.0 重新生成背景。只有用户明确要求新风格、现有主题缺失,或背景与内容明显不匹配时,才生成新的背景。
+完整源码仓库包含一组预生成背景，但为兼容仅允许文本文件的技能仓库，它们不属于核心安装包。处理截图时优先用 CSS 的渐变、纸张纹理、网格或点阵实现相同语义；仅当完整源码中的资产已安装时再复用它们。
 
 背景图之后由程序复用到每张截图中。不要把背景当作单张 slide 来画,背景图内部不能有标题、页脚、边框、logo、人物或明显主体。
 
@@ -119,7 +119,7 @@ ratio:21:9, background:grid, padding:standard, inset:subtle, shadow:none, corner
 | 柠檬绿 | `resources/screenshot-backgrounds/style-b/lemon-green-dot-shadow.webp` | 点阵 + 阴影场,绿色只做轻微光感 |
 | 安全橙 | `resources/screenshot-backgrounds/style-b/safety-orange-halftone.webp` | 模块化半调点阵 + 暗部阴影,橙色低占比 |
 
-内置背景都是 1920×1080 级别的 16:9 WebP。程序化合成时,先把背景 cover 到目标画布,再裁成 `21:9` / `16:10` / `4:3` / `1:1` 等截图槽位。背景必须四角安静,因为截图可能居中、左上、右下或被裁成不同尺寸。
+可选背景都是 1920×1080 级别的 16:9 WebP。若它们已安装，程序化合成时先把背景 cover 到目标画布，再裁成 `21:9` / `16:10` / `4:3` / `1:1` 等截图槽位；否则按同一构图规则用 CSS 背景实现。背景必须四角安静，因为截图可能居中、左上、右下或被裁成不同尺寸。
 
 ## 截图类型决策
 

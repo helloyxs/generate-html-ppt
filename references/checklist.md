@@ -293,7 +293,7 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 - 老 `.frame-img` 仍可作 fallback,但**不要再**给它加 `border-radius` / `box-shadow`(默认已是 `0 / none`)
 - UI / 信息图 / 流程图若是用户原始截图或文字密集图,使用 `.t-inset` + `.fit-contain`(T3 Inset);若已按槽位重生成,必须用对应比例类铺满容器,例如 `.t-inset.r-21x9` 或 `.t-float.r-16x10`,不能再用固定短高度把图片缩小
 - 多图同组必须统一槽位、比例、高度,不要混用
-- 用户原始截图要先读 `references/screenshot-framing.md`:优先用 `assets/screenshot-backgrounds/` 内置主题背景 + 程序化缩放/留边/对齐,不要为了比例统一就重画截图内容
+- 用户原始截图要先读 `references/screenshot-framing.md`:优先用 CSS 主题背景 + 程序化缩放/留边/对齐；如完整源码的可选背景已安装才复用，避免为了比例统一重画截图内容
 - 截图背景必须跟随当前主题色,且可裁成 `21:9` / `16:10` / `4:3` / `1:1`;背景里不能有标题、页脚、边框、logo、人物或明显主体
 - GPT-M 2.0 提示词必须写明:Swiss Style、单一 accent、直角、无渐变/阴影/圆角、无页眉页脚标题角标
 

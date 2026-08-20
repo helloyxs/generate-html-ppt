@@ -86,8 +86,8 @@ Do not generate all slides in a single pass, and do not start building content b
 
 3. **Style Matching & Visual Preview Protocol (风格匹配与视觉预览协议)**
    Read `designs/bold-template-pack/selection-index.json` and consult `designs/STYLE_GALLERY.md`. Recommend 2-3 candidate style options tailored to the topic mood and presentation scenario.
-   **Full Visual Gallery & Preview Coverage (全量视觉图鉴与预览覆盖)**: All 35+ template entries now carry dedicated 1:1 preview images under `demo/previews/<slug>.png`. The agent can directly reference `designs/STYLE_GALLERY.md` to show candidate preview images and design tokens to the user.
-   - If a candidate's `preview_png` is present: reference it as the canonical visual preview.
+   **Visual Gallery & Preview Coverage (视觉图鉴与预览覆盖)**: Use `designs/STYLE_GALLERY.md` and the selected template's design tokens as the canonical source for style comparison. The optional source-repository gallery under `demo/previews/` is not required by the installed skill.
+   - Do not depend on a local `preview_png`. If a visual confirmation is useful, generate a small, topic-specific HTML preview or mockup image instead.
    - For interactive previews: offer **Option B (Visual Preview / Method 1 — `style-preview.html` comparison card)** so the user can see rendered cards with actual topic content before committing to the full deck.
    - If a preview PNG is mentioned in `selection-index.json`'s `orphan_previews` block, treat it as informational only (e.g. `cyberpunk-dark.png`, `swiss-international.png` core standalone styles).
    **CRITICAL REQUIREMENT (主动提示视觉预览与低成本确认)**:
@@ -415,7 +415,7 @@ Once the wireframe is approved:
 
 All relative paths from skill root:
 
- - `designs/bold-template-pack/selection-index.json` — Compact metadata index of 35 bold design templates. Each entry carries `preview_png` (path or `null`) and the index also lists `orphan_previews` for legacy PNGs that do not map to a current slug.
+ - `designs/bold-template-pack/selection-index.json` — Compact metadata index of 35 bold design templates. `preview_png` and `orphan_previews` fields are optional source-gallery metadata; do not require their files to be installed.
 - `designs/bold-template-pack/templates/*/design.md` — Detailed Design System recipes (read only the selected one).
 - `designs/viewport-base.css` — Mandatory 16:9 stage scaling and seamless viewport CSS base.
 - `designs/STYLE_PRESETS.md` — Core safe preset recipes (Beautiful Modern, Swiss Style, Cyberpunk Dark).
