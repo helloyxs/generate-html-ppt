@@ -18,6 +18,32 @@ Use this reference when generating presentations. Match animations to the intend
 | **Calm / Minimal** | Very slow subtle motion, gentle fades | High whitespace, muted palette, serif typography, generous padding |
 | **Editorial / Magazine** | Staggered text reveals, image-text interplay | Strong type hierarchy, pull quotes, grid-breaking layouts, serif headlines + sans body |
 
+## Presenter-paced builds (逐步呈现)
+
+Use a presenter-paced build only when the audience should focus on one argument, card,
+or diagram node at a time. It is opt-in: ordinary slides must not be marked and keep
+their normal page-to-page navigation.
+
+`deck-stage.js` owns the interaction. It reveals each `[data-fragment]` in DOM order;
+use `data-fragment-order` only to override that order. `Space`, `→`, PageDown, the next
+button, and the mobile forward zone reveal the next item before advancing the page. `←`,
+PageUp, and the previous button undo a shown item before returning to the prior page.
+
+```html
+<section data-label="Three levers">
+  <h1>聚焦一个决策，再给出一个依据</h1>
+  <article class="card" data-fragment data-fragment-effect="fade-up">先说明问题</article>
+  <article class="card" data-fragment data-fragment-effect="scale">再对比选择</article>
+  <article class="card" data-fragment data-fragment-effect="wipe">最后给出结论</article>
+</section>
+```
+
+Supported effects are `fade` (default), `fade-up`, `scale`, and `wipe`. Fragments retain
+their layout space while hidden so a reveal does not make the slide jump. With reduced
+motion enabled, the item still appears step-by-step without movement. When a slide is
+entered normally it starts with no fragments shown; returning with `←` lands on the
+previous slide with its completed build, matching presenter expectations.
+
 ## Entrance Animations (`.anim*` + `.d1`–`.d8`)
 
 The entrance vocabulary is a single base class plus four directional variants, paired with

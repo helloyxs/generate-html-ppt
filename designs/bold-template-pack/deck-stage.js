@@ -5,6 +5,8 @@
  *  (a) speaker notes — reads <script type="application/json" id="speaker-notes">
  *      and posts {slideIndexChanged: N} to the parent window on nav.
  *  (b) keyboard navigation — ←/→, PgUp/PgDn, Space, Home/End, number keys.
+ *      Elements marked with data-fragment are revealed one at a time before
+ *      advancing to the next slide, like a native presentation clicker.
  *  (c) press R to reset to slide 0 (with a tasteful keyboard hint).
  *  (d) bottom-center overlay showing slide count + hints, fades out on idle.
  *  (e) auto-scaling — inner canvas is a fixed design size (default 1920×1080)
@@ -67,6 +69,8 @@
   const pad2 = (n) => String(n).padStart(2, '0');
 
   const SPEAKER_CHANNEL_NAME = 'deck-speaker-sync';
+  const FRAGMENT_HIDDEN_ATTR = 'data-deck-fragment-hidden';
+  const FRAGMENT_ENTER_ATTR = 'data-deck-fragment-enter';
 
   const stylesheet = `
     :host {
@@ -285,6 +289,7 @@
       this._index = 0;
       this._slides = [];
       this._notes = [];
+      this._fragmentSteps = new WeakMap();
       this._hideTimer = null;
       this._mouseIdleTimer = null;
 
@@ -305,6 +310,7 @@
 
     connectedCallback() {
       this._render();
+      this._ensureFragmentStyles();
       this._loadNotes();
       this._syncPrintPageRule();
       this._initImageLightbox();
@@ -379,6 +385,7 @@
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
         </button>
         <span class="count" aria-live="polite"><span class="current">1</span><span class="sep">/</span><span class="total">1</span></span>
+        <span class="fragment-count" aria-live="polite" hidden></span>
         <button class="btn next" type="button" aria-label="Next slide" title="Next (→)">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
         </button>
@@ -393,8 +400,8 @@
         <button class="btn reset" type="button" aria-label="Reset to first slide" title="Reset (R)">Reset<span class="kbd">R</span></button>
       `;
 
-      overlay.querySelector('.prev').addEventListener('click', () => this._go(this._index - 1, 'click'));
-      overlay.querySelector('.next').addEventListener('click', () => this._go(this._index + 1, 'click'));
+      overlay.querySelector('.prev').addEventListener('click', () => this._retreat('click'));
+      overlay.querySelector('.next').addEventListener('click', () => this._advance('click'));
       overlay.querySelector('.overview').addEventListener('click', () => this._toggleOverview());
       overlay.querySelector('.fs').addEventListener('click', () => this._toggleFs());
       overlay.querySelector('.reset').addEventListener('click', () => this._go(0, 'click'));
@@ -405,6 +412,42 @@
       this._overlay = overlay;
       this._countEl = overlay.querySelector('.current');
       this._totalEl = overlay.querySelector('.total');
+      this._fragmentCountEl = overlay.querySelector('.fragment-count');
+    }
+
+    _ensureFragmentStyles() {
+      const id = 'deck-stage-fragment-styles';
+      if (document.getElementById(id)) return;
+      const tag = document.createElement('style');
+      tag.id = id;
+      tag.textContent = `
+        [${FRAGMENT_HIDDEN_ATTR}] { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+        [${FRAGMENT_ENTER_ATTR}] { animation: deck-stage-fragment-fade .32s ease-out both; }
+        [${FRAGMENT_ENTER_ATTR}][data-fragment-effect="fade-up"] { animation-name: deck-stage-fragment-fade-up; }
+        [${FRAGMENT_ENTER_ATTR}][data-fragment-effect="scale"] { animation-name: deck-stage-fragment-scale; }
+        [${FRAGMENT_ENTER_ATTR}][data-fragment-effect="wipe"] { animation-name: deck-stage-fragment-wipe; transform-origin: left center; }
+        @keyframes deck-stage-fragment-fade { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes deck-stage-fragment-fade-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes deck-stage-fragment-scale { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: scale(1); } }
+        @keyframes deck-stage-fragment-wipe { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+        @media (prefers-reduced-motion: reduce) { [${FRAGMENT_ENTER_ATTR}] { animation: none !important; } }
+        .deck-overview { position: fixed; inset: 0; z-index: 2147483000; display: none; flex-direction: column; gap: 28px; padding: clamp(28px, 5vw, 76px); overflow: auto; color: #eef4ff; background: rgba(4, 10, 24, .96); font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; backdrop-filter: blur(24px); }
+        .deck-overview.active { display: flex; }
+        .overview-header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-bottom: 22px; border-bottom: 1px solid rgba(174, 198, 255, .2); }
+        .overview-title { display: flex; align-items: baseline; gap: 18px; font-size: clamp(23px, 2vw, 34px); font-weight: 800; letter-spacing: -.03em; }
+        .overview-hint { color: #9fb1d7; font-size: 14px; font-weight: 600; letter-spacing: 0; }
+        .overview-close-btn { padding: 11px 16px; border: 1px solid rgba(174, 198, 255, .3); border-radius: 10px; color: #eef4ff; background: rgba(104, 129, 194, .16); cursor: pointer; font: inherit; font-size: 15px; font-weight: 700; }
+        .overview-close-btn:hover, .overview-close-btn:focus-visible { background: rgba(104, 129, 194, .34); outline: 2px solid #76d9ff; outline-offset: 2px; }
+        .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)); gap: 18px; align-content: start; }
+        .overview-card { position: relative; min-height: 170px; padding: 27px 24px 22px; overflow: hidden; border: 1px solid rgba(174, 198, 255, .2); border-radius: 18px; color: #eff5ff; background: linear-gradient(145deg, rgba(38, 59, 112, .58), rgba(13, 23, 49, .9)); cursor: pointer; box-shadow: inset 0 1px rgba(255,255,255,.08); transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+        .overview-card::after { content: ""; position: absolute; width: 170px; height: 170px; right: -70px; bottom: -92px; border-radius: 50%; background: radial-gradient(circle, rgba(82, 221, 255, .2), transparent 66%); pointer-events: none; }
+        .overview-card:hover, .overview-card:focus-visible, .overview-card.current { transform: translateY(-4px); border-color: #61dfff; background: linear-gradient(145deg, rgba(50, 83, 148, .8), rgba(15, 29, 65, .96)); outline: none; }
+        .overview-card-badge { display: inline-grid; place-items: center; width: 34px; height: 26px; margin-bottom: 20px; border-radius: 7px; color: #071222; background: #61dfff; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 900; }
+        .overview-card-title { position: relative; z-index: 1; font-size: 22px; font-weight: 800; line-height: 1.22; letter-spacing: -.025em; }
+        .overview-card-desc { position: relative; z-index: 1; margin-top: 10px; color: #acbddf; font-size: 14px; line-height: 1.5; }
+        @media (max-width: 640px) { .deck-overview { padding: 22px; } .overview-header { align-items: flex-start; } .overview-title { flex-direction: column; gap: 6px; } .overview-grid { grid-template-columns: 1fr; } }
+      `;
+      document.head.appendChild(tag);
     }
 
     /** @page must live in the document stylesheet — it's a no-op inside
@@ -465,6 +508,8 @@
         }
 
         slide.setAttribute('data-deck-slide', String(i));
+        this._fragmentSteps.set(slide, 0);
+        this._applyFragmentState(slide, 0);
       });
 
       if (this._totalEl) this._totalEl.textContent = String(this._slides.length || 1);
@@ -507,6 +552,8 @@
         else s.removeAttribute('data-deck-active');
       });
       if (this._countEl) this._countEl.textContent = String(curr + 1);
+      this._applyFragmentState(this._slides[curr], 0);
+      this._updateFragmentCount(this._slides[curr]);
 
       if (broadcast) {
         // (1) Legacy: host-window postMessage for speaker-notes renderers.
@@ -569,12 +616,12 @@
 
     _onTapBack(e) {
       e.preventDefault();
-      this._go(this._index - 1, 'tap');
+      this._retreat('tap');
     }
 
     _onTapForward(e) {
       e.preventDefault();
-      this._go(this._index + 1, 'tap');
+      this._advance('tap');
     }
 
     _onKey(e) {
@@ -587,15 +634,15 @@
       let handled = true;
 
       if (key === 'ArrowRight' || key === 'PageDown' || key === ' ' || key === 'Spacebar') {
-        this._go(this._index + 1, 'keyboard');
+        this._advance('keyboard');
       } else if (key === 'ArrowLeft' || key === 'PageUp') {
-        this._go(this._index - 1, 'keyboard');
+        this._retreat('keyboard');
       } else if (key === 'Home') {
         this._go(0, 'keyboard');
       } else if (key === 'End') {
         this._go(this._slides.length - 1, 'keyboard');
       } else if (key === 'r' || key === 'R') {
-        this._go(0, 'keyboard');
+        this.reset();
       } else if (key === 'o' || key === 'O') {
         this._toggleOverview();
       } else if (key === 'f' || key === 'F') {
@@ -687,6 +734,77 @@
       this._applyIndex({ showOverlay: true, broadcast: true, reason });
     }
 
+    _fragments(slide) {
+      if (!slide) return [];
+      return [...slide.querySelectorAll('[data-fragment]')]
+        .map((el, index) => ({ el, index, order: Number(el.getAttribute('data-fragment-order')) }))
+        .sort((a, b) => {
+          const aOrder = Number.isFinite(a.order) ? a.order : a.index;
+          const bOrder = Number.isFinite(b.order) ? b.order : b.index;
+          return aOrder - bOrder || a.index - b.index;
+        })
+        .map(({ el }) => el);
+    }
+
+    _applyFragmentState(slide, step, { animate = false } = {}) {
+      const fragments = this._fragments(slide);
+      const clamped = Math.max(0, Math.min(fragments.length, step));
+      this._fragmentSteps.set(slide, clamped);
+      fragments.forEach((el, index) => {
+        const shown = index < clamped;
+        const wasHidden = el.hasAttribute(FRAGMENT_HIDDEN_ATTR);
+        if (shown) {
+          el.removeAttribute(FRAGMENT_HIDDEN_ATTR);
+          if (animate && wasHidden) {
+            el.setAttribute(FRAGMENT_ENTER_ATTR, '');
+            el.addEventListener('animationend', () => el.removeAttribute(FRAGMENT_ENTER_ATTR), { once: true });
+          } else {
+            el.removeAttribute(FRAGMENT_ENTER_ATTR);
+          }
+        } else {
+          el.removeAttribute(FRAGMENT_ENTER_ATTR);
+          el.setAttribute(FRAGMENT_HIDDEN_ATTR, '');
+        }
+      });
+    }
+
+    _updateFragmentCount(slide) {
+      if (!this._fragmentCountEl) return;
+      const total = this._fragments(slide).length;
+      const step = this._fragmentSteps.get(slide) || 0;
+      this._fragmentCountEl.hidden = total === 0;
+      this._fragmentCountEl.textContent = total ? `· ${step} / ${total}` : '';
+    }
+
+    _advance(reason = 'api') {
+      const slide = this._slides[this._index];
+      const total = this._fragments(slide).length;
+      const step = this._fragmentSteps.get(slide) || 0;
+      if (step < total) {
+        this._applyFragmentState(slide, step + 1, { animate: true });
+        this._updateFragmentCount(slide);
+        this._flashOverlay();
+        return;
+      }
+      this._go(this._index + 1, reason);
+    }
+
+    _retreat(reason = 'api') {
+      const slide = this._slides[this._index];
+      const step = this._fragmentSteps.get(slide) || 0;
+      if (step > 0) {
+        this._applyFragmentState(slide, step - 1);
+        this._updateFragmentCount(slide);
+        this._flashOverlay();
+        return;
+      }
+      if (this._index <= 0) return;
+      this._go(this._index - 1, reason);
+      const previous = this._slides[this._index];
+      this._applyFragmentState(previous, this._fragments(previous).length);
+      this._updateFragmentCount(previous);
+    }
+
     // Public API ------------------------------------------------------------
 
     /** Current slide index (0-based). */
@@ -695,9 +813,12 @@
     get length() { return this._slides.length; }
     /** Programmatically navigate. */
     goTo(i) { this._go(i, 'api'); }
-    next() { this._go(this._index + 1, 'api'); }
-    prev() { this._go(this._index - 1, 'api'); }
-    reset() { this._go(0, 'api'); }
+    next() { this._advance('api'); }
+    prev() { this._retreat('api'); }
+    reset() {
+      this._index = 0;
+      this._applyIndex({ showOverlay: true, broadcast: true, reason: 'api' });
+    }
     toggleFullscreen() { this._toggleFs(); }
     toggleOverview() { this._toggleOverview(); }
 

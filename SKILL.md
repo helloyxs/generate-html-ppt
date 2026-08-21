@@ -65,9 +65,10 @@ Presentations are generated using a **Design System Specification (`design.md`)*
 5. **Text-First Workflow**: Preserves the signature 3-stage user workflow: **Text-based requirement alignment ➔ Design-guided wireframing (灰度骨架确认) ➔ Guided batch content filling ➔ Verification**.
 6. **页眉三要素紧凑压缩与空间让渡规范 (Header Area Compression Rule · NON-NEGOTIABLE)**: 正文页（Content Slides）的 Badge/分类标签、主标题、副标题/金句引导语在纵向空间的占用必须保持扁平紧凑，**页眉总高度严格控制在画布的 18%~22% 以内（<= 200px~220px on 1080p）**，杜绝多层大外边距堆叠，将 78%~82% 黄金垂直空间完整让渡给核心内容区。**注意**：首页 PPT（Cover Slide / 封面页）作为整套演示门面与视觉焦点，豁免紧凑压缩，采用开阔舒展的专属宽纵向间距。
 7. **每次生成必配底栏四件套与全景缩略图交互 (Mandatory 4-Button Toolbar & Overview Gallery · NON-NEGOTIABLE)**: 每次生成 HTML PPT 必须在底部居中配备毛玻璃控制栏，包含 **`◀ 上一页`**、**`页码/进度条`**、**`下一页 ▶`**、**`🗂 全览`** 与 **`⛶ 全屏`** 按钮，并内置基于 DOM/JS 的全景缩略图模态框与快捷键引擎（`←`/`→`/`Space` 翻页，`O` 打开全览，`F` 全屏，`Esc` 关闭全览/全屏）。
-8. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演说与移动/笔记本视口缩放下的极佳易读性。
-9. **图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**: 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）、功能列表等模块中，**图片、图标、Emoji 或序号徽章与对应的标题文字必须处于同一行展示（`display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故上下拆成两行展示**。**唯一豁免例外**：仅当图片/图标与文字极长、在一行内确实无法完整容纳导致溢出或排版坍塌时，才可酌情拆为两行展示。
-10. **全局色彩基调统一与防频闪规范 (Unified Global Color Palette & Anti-Flicker Standard · NON-NEGOTIABLE)**: 整套演示文稿必须保持全局色彩世界观的高度纯净与一致，**默认采用 100% 全套统一纯深色（Unified Dark Mode）或 100% 全套统一纯浅色（Unified Light Mode）**。**严禁逐页黑白无故交替闪烁（Anti-Pattern: 严禁一页深一页浅导致观众视觉眩光与频闪疲劳）**。唯一豁免结构：长篇大型演说中允许仅对封面/封底/章节过渡大幕页采用深色聚焦，而正文内容页（90%+）必须保持绝对统一的底色基调。
+8. **逐步呈现 (Progressive Reveal)**: 当表达逻辑需要分段讲解时，使用 `data-fragment` 标记同页元素；`Space` / `→` 先显示当前页下一项，再翻到下一页，`←` 先撤回当前项。必须采用 `deck-stage.js` 的内置机制，详情见 `designs/animation-patterns.md`；未标记页面保持整页翻页。
+9. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演说与移动/笔记本视口缩放下的极佳易读性。
+10. **图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**: 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）、功能列表等模块中，**图片、图标、Emoji 或序号徽章与对应的标题文字必须处于同一行展示（`display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故上下拆成两行展示**。**唯一豁免例外**：仅当图片/图标与文字极长、在一行内确实无法完整容纳导致溢出或排版坍塌时，才可酌情拆为两行展示。
+11. **全局色彩基调统一与防频闪规范 (Unified Global Color Palette & Anti-Flicker Standard · NON-NEGOTIABLE)**: 整套演示文稿必须保持全局色彩世界观的高度纯净与一致，**默认采用 100% 全套统一纯深色（Unified Dark Mode）或 100% 全套统一纯浅色（Unified Light Mode）**。**严禁逐页黑白无故交替闪烁（Anti-Pattern: 严禁一页深一页浅导致观众视觉眩光与频闪疲劳）**。唯一豁免结构：长篇大型演说中允许仅对封面/封底/章节过渡大幕页采用深色聚焦，而正文内容页（90%+）必须保持绝对统一的底色基调。
 
 ---
 
@@ -149,9 +150,10 @@ Prepare visual assets before building wireframes:
    Generate the single-file HTML presentation structure:
    - Embed full contents of `designs/viewport-base.css` in the `<style>` block.
    - Include the extracted `design.md` CSS design system tokens and classes.
-   - Set up the 1920×1080 `.deck-stage` canvas and scaling script (`updateScale()`, `updateViewportBg()`).
+   - Set up the 1920×1080 `.deck-stage` canvas and scaling script (`updateScale()`, `updateViewportBg()`). If the user asks for clicker-like step-by-step presentation, use the bundled `<deck-stage>` web component and inline its current `designs/bold-template-pack/deck-stage.js` contents in the final self-contained HTML instead of creating a second navigation engine.
    - Create slide containers (`<div class="slide" id="s{N}">...</div>`).
    - Include slide titles, structural grid/card layout classes, and placeholder text/images.
+   - For presenter-paced disclosure, use the bundled `<deck-stage>` engine and mark only the intended elements with `data-fragment`; use `data-fragment-order="1"` when DOM order is not the reveal order, and `data-fragment-effect="fade-up|scale|wipe"` when a non-default entrance is helpful. Do not use fragments for every decorative element.
    
    - **⭐ 硬规则一：页眉三要素紧凑压缩与空间让渡 (Header Compression & Space Yielding)**:
      - **适用场景与双轨规范 (Dual-Track Spacing Standard)**:
@@ -398,12 +400,18 @@ Once the wireframe is approved:
 1. Batch-fill complete copy, data tables, code snippets, and visual assets into each slide structure.
 2. Adhere to the selected density mode (Low density vs. High density).
 3. Ensure no text or cards overflow their slide boundaries at 1920×1080 resolution.
+4. **Density gate before handoff (MANDATORY)**: treat a body slide as incomplete when its visible, meaningful content occupies only the upper portion of the 16:9 stage. Do not compensate by stretching empty cards or adding decorative boxes. Add a real diagram, image, chart, comparison, example, or a denser composition—or intentionally use a compact composition that is vertically grouped.
 
 ---
 
 ## Phase 3: Verify and Open
 
 1. **Verify Presentation Features**:
+   - **Render every slide at 1920×1080 after animations settle; this is a release gate, not a suggestion.** For Beautiful Modern / Cyberpunk or another fluid `<div class="slide">` deck, run `node <SKILL_ROOT>/scripts/validate-fluid-deck.mjs path/to/deck.html`. For Swiss decks, run `node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/deck.html`. Resolve every error and every density warning before saying the deck is verified.
+   - **Meaningful-content occupancy (NON-NEGOTIABLE)**: on each normal body slide, the meaningful content group (head, diagrams, images, tables, cards, labels—not the page background, stage border, or navigation) must reach at least **72% of usable stage height**, or end no more than **170px** above the navigation safe line at 1080p. A compact, deliberately centered composition is permitted only when it has no disconnected empty panel and its surrounding whitespace is visually balanced.
+   - **No fake fill**: an empty card, an oversized container, a blank device frame, a decorative gradient, or a duplicated label does not count as content occupancy. If a panel is taller than its meaningful children by more than 40%, either fill it with real information or reduce/remove the panel.
+   - **Explicit exceptions only**: a cover, closing slide, or a one-statement chapter divider may use intentional negative space. Mark it with `data-density-exempt="cover|closing|divider"` and keep the composition visibly intentional. Data, workflow, comparison, capability, and product slides are never exempt.
+   - **Visual review evidence**: inspect a stable rendered frame of every slide (wait for entry animation first). Check for large disconnected lower blank regions, empty panels, accidental card stretching, overflow, overlap, and navigation collisions. If automated rendering is unavailable, obtain a browser screenshot/visual review instead; do not report the deck as fully verified from HTML/CSS source alone.
    - Fixed 16:9 stage scaling (`updateScale()` on window resize).
    - Seamless Viewport Background synchronization (`--viewport-bg`).
    - **Unified Global Color Theme**: Verify that all slides maintain a consistent global theme (100% unified dark or 100% unified light), with zero arbitrary slide-by-slide black/white flickering.
@@ -412,6 +420,7 @@ Once the wireframe is approved:
    - **Bottom Controls Bar 4 Buttons**: Verify that `上一页`, `下一页`, `全览`, `全屏` buttons exist and are fully functional.
    - **Overview Gallery**: Test opening via `🗂 全览` button or `O` key, clicking a card jumps to that slide, and `Esc` closes overview.
    - **Fullscreen Mode**: Test toggle via `⛶ 全屏` button or `F` key.
+   - **Progressive Reveal**: On a slide with fragments, test `Space`/`→` reveals one item at a time before changing slides; test `←` retracts one item, and ensure a slide without fragments still changes pages immediately.
    - All `.anim` elements trigger entry animations correctly.
    - Zero text clipping, zero vertical scrolling inside slides, zero panel overlap.
 2. **Open in Browser**:

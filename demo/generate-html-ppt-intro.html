@@ -1,0 +1,509 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>generate-html-ppt · 网页演示文稿引擎</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;800&display=swap" rel="stylesheet"><style>
+:root{--ink:#f7f9ff;--muted:#aab8d3;--line:rgba(255,255,255,.14);--glass:rgba(22,32,65,.67);--cyan:#27d9f5;--violet:#8b8cff;--green:#44d7ae;--rose:#ff7896;--amber:#ffc76a;--grad:linear-gradient(130deg,var(--violet),var(--cyan));--ease:cubic-bezier(.175,.885,.32,1.275);--viewport-bg:#0c132b}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--viewport-bg);color:var(--ink);font-family:'Noto Sans SC',sans-serif}.view{position:fixed;inset:0;overflow:hidden}.stage{position:absolute;width:1920px;height:1080px;transform-origin:0 0;overflow:hidden}.slide{position:absolute;inset:0;padding:70px 110px 110px;opacity:0;visibility:hidden;pointer-events:none;overflow:hidden;background:radial-gradient(ellipse at 13% 4%,rgba(91,98,255,.29),transparent 45%),radial-gradient(ellipse at 92% 92%,rgba(24,211,241,.17),transparent 48%),linear-gradient(135deg,#0f1735,#0a1125);transition:.35s}.slide.active{opacity:1;visibility:visible;pointer-events:auto}.gridbg{position:absolute;inset:0;opacity:.55;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:48px 48px}.orb{position:absolute;border-radius:50%;filter:blur(75px);opacity:.55}.o1{width:500px;height:500px;left:-160px;top:-170px;background:#5755ff}.o2{width:430px;height:430px;right:-120px;bottom:-160px;background:#0bd7ef}.o3{width:250px;height:250px;right:19%;top:23%;background:#9a5cff;opacity:.3}.frame{height:100%;position:relative;z-index:2;display:flex;flex-direction:column;gap:22px}.head{display:flex;align-items:end;justify-content:space-between;gap:40px;min-height:145px}.eyebrow{display:inline-flex;align-items:center;gap:9px;width:max-content;padding:7px 15px;border:1px solid rgba(80,216,255,.38);border-radius:999px;color:var(--cyan);background:rgba(39,217,245,.08);font:800 16px Outfit;letter-spacing:.12em}.eyebrow:before{content:'';width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 13px currentColor}.head h2{margin:8px 0 0;font:800 52px/1.08 Outfit;letter-spacing:-.035em}.head p{max-width:570px;margin:0 0 5px;color:var(--muted);font-size:21px;line-height:1.55;text-align:right}.hero{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:45px;height:100%}.hero h1{margin:15px 0 22px;font:800 88px/.98 Outfit;letter-spacing:-.06em}.grad{background:var(--grad);-webkit-background-clip:text;color:transparent}.lead{margin:0;color:var(--muted);font-size:25px;line-height:1.65}.chips{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.chip{padding:10px 16px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.055);font-size:18px;font-weight:700}.art{position:relative;overflow:hidden;border:1px solid var(--line);background:#0a122a}.hero-art{height:590px;border-radius:34px;box-shadow:0 25px 65px rgba(0,0,0,.35)}.art img{width:100%;height:100%;object-fit:cover}.zoom{cursor:zoom-in}.cards{display:grid;gap:18px}.c2{grid-template-columns:repeat(2,1fr)}.c3{grid-template-columns:repeat(3,1fr)}.c4{grid-template-columns:repeat(4,1fr)}.card{min-height:170px;padding:22px 24px;border:1px solid var(--line);border-left:5px solid var(--violet);border-radius:22px;background:var(--glass);box-shadow:inset 0 1px rgba(255,255,255,.08),0 16px 38px rgba(0,0,0,.13);backdrop-filter:blur(16px)}.cyan{border-left-color:var(--cyan)}.green{border-left-color:var(--green)}.rose{border-left-color:var(--rose)}.amber{border-left-color:var(--amber)}.card h3{margin:0 0 10px;font:800 25px Outfit}.card p{margin:0;color:var(--muted);font-size:18px;line-height:1.55}.metric{font:800 58px/.95 Outfit;background:var(--grad);-webkit-background-clip:text;color:transparent}.compare{display:grid;grid-template-columns:1fr 100px 1fr;gap:24px;align-items:center;flex:1}.compare .card{height:390px;padding:34px}.compare ul{padding-left:24px;color:var(--muted);font-size:20px;line-height:2}.arrow{display:grid;place-items:center;width:76px;height:76px;border-radius:50%;background:var(--grad);font:800 37px Outfit;box-shadow:0 0 40px rgba(39,217,245,.3)}.gallery{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;flex:1;align-content:center}.gallery figure{margin:0;height:142px;border:1px solid rgba(255,255,255,.14);overflow:hidden;background:#0c132b}.gallery img{width:100%;height:100%;object-fit:cover}.gallery figure:nth-child(4n){transform:translateY(18px)}.split{display:grid;grid-template-columns:1.12fr .88fr;gap:28px;flex:1;min-height:0}.code{height:100%;padding:26px 30px;border:1px solid rgba(39,217,245,.28);border-radius:22px;background:rgba(3,9,25,.78);color:#dbe8ff;font:600 19px/1.75 ui-monospace,monospace;white-space:pre-line}.code b{color:var(--cyan)}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:17px;flex:1}.step{position:relative;padding:22px;border:1px solid var(--line);border-radius:20px;background:var(--glass)}.step:not(:last-child):after{content:'›';position:absolute;right:-15px;top:39%;z-index:3;color:var(--cyan);font-size:34px}.num{display:grid;place-items:center;width:38px;height:38px;margin-bottom:15px;border-radius:50%;background:var(--grad);font:800 17px Outfit}.step h3{margin:0 0 9px;font:800 23px Outfit}.step p{margin:0;color:var(--muted);font-size:17px;line-height:1.5}.modes{display:grid;grid-template-columns:1fr 1fr;gap:24px;flex:1}.mode{padding:25px;border:1px solid var(--line);border-radius:24px;background:var(--glass)}.mode h3{margin:0 0 15px;font:800 30px Outfit}.mode ol{margin:0;padding-left:24px;color:var(--muted);font-size:18px;line-height:1.85}.mini-art{height:185px;margin-top:18px;border:1px solid var(--line);overflow:hidden}.mini-art img{width:100%;height:100%;object-fit:cover}.stage-map{position:relative;height:100%;border:1px solid var(--line);border-radius:24px;background:linear-gradient(135deg,rgba(61,57,172,.38),rgba(7,15,37,.7));overflow:hidden}.stage-map:before{content:'1920 × 1080';position:absolute;top:22px;left:26px;color:#c9eefe;font:800 16px Outfit;letter-spacing:.13em}.stage-map:after{content:'';position:absolute;inset:84px 100px;border:2px solid var(--cyan);box-shadow:0 0 0 28px rgba(39,217,245,.055),0 0 60px rgba(39,217,245,.17)}.list{display:grid;gap:14px}.check{padding:17px 20px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.05);font-size:19px;font-weight:700}.check:before{content:'✓';margin-right:12px;color:var(--cyan);font-size:23px}.chart{position:relative;height:208px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent)}.bars{position:absolute;inset:32px;display:flex;align-items:end;gap:22px;border-bottom:2px solid rgba(255,255,255,.18)}.bars i{display:block;flex:1;background:var(--grad);border-radius:8px 8px 0 0}.bars i:nth-child(1){height:35%}.bars i:nth-child(2){height:58%}.bars i:nth-child(3){height:76%}.bars i:nth-child(4){height:93%}.final{align-items:center;justify-content:center;text-align:center}.final h2{max-width:1300px;margin:12px 0;font:800 88px/.98 Outfit;letter-spacing:-.06em}.final .lead{max-width:880px}.cta{margin-top:18px;padding:16px 28px;border:0;border-radius:999px;background:var(--grad);color:#071326;font:800 19px Outfit}.anim{opacity:0}.slide.active .anim{animation:up .82s var(--ease) forwards;animation-delay:var(--d,0s)}.right{animation-name:right!important}.float{animation:float 4s ease-in-out infinite!important;opacity:1!important}@keyframes up{0%{opacity:0;transform:translateY(44px) scale(.95)}60%{opacity:1;transform:translateY(-6px) scale(1.015)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes right{0%{opacity:0;transform:translateX(54px)}60%{opacity:1;transform:translateX(-6px)}100%{opacity:1;transform:translateX(0)}}@keyframes float{50%{transform:translateY(-14px)}}[data-fragment].hide{opacity:0;transform:translateY(26px) scale(.97);pointer-events:none}.frag-in{animation:up .58s var(--ease) both}.controls{position:fixed;z-index:20;bottom:22px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;padding:8px 15px;border:1px solid var(--line);border-radius:999px;background:rgba(8,15,35,.88);backdrop-filter:blur(18px)}button{font:700 15px 'Noto Sans SC';cursor:pointer}.ctrl{padding:8px 13px;border:0;border-radius:999px;background:transparent;color:#dce8fb}.ctrl:hover{background:rgba(255,255,255,.1)}.counter{min-width:73px;color:#dce8fb;font:800 15px Outfit;text-align:center}.prog{width:65px;height:4px;border-radius:5px;background:#34405d;overflow:hidden}.prog i{display:block;width:8.3%;height:100%;background:var(--grad);transition:.25s}.overview,.lightbox{position:fixed;z-index:19;inset:0;padding:70px 9vw;background:rgba(3,8,22,.88);backdrop-filter:blur(16px);opacity:0;visibility:hidden;transition:.25s}.overview.open,.lightbox.open{opacity:1;visibility:visible}.overview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.overview h3{margin:0;font:800 34px Outfit}.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.thumb{min-height:135px;padding:17px;border:1px solid var(--line);border-radius:15px;background:linear-gradient(135deg,#1d1b50,#0c142b);color:#fff;text-align:left}.thumb b{color:var(--cyan);font:800 14px Outfit}.thumb span{display:block;margin-top:16px;font-size:18px}.lightbox{display:grid;place-items:center;padding:40px}.lightbox img{max-width:90vw;max-height:86vh;box-shadow:0 25px 80px #000}.lightbox button{position:fixed;right:28px;top:24px}
+/* Targeted density repairs */
+[data-fragment].hide{opacity:0!important;transform:translateY(26px) scale(.97)!important;pointer-events:none!important;animation:none!important}.overview-bridge{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;min-height:315px}.overview-bridge .art{border-radius:22px}.overview-bridge .card{min-height:0;display:flex;flex-direction:column;justify-content:center}.stage-hero{position:absolute;inset:70px 70px 58px;display:flex;align-items:center;justify-content:center;gap:20px}.stage-device{position:relative;width:62%;height:78%;border:2px solid var(--cyan);border-radius:18px;background:linear-gradient(135deg,rgba(117,109,255,.35),rgba(5,16,44,.5));box-shadow:0 0 0 20px rgba(39,217,245,.05),0 0 60px rgba(39,217,245,.18)}.stage-device:before{content:'固定舞台';position:absolute;left:28px;top:24px;color:#d3f9ff;font:800 22px Outfit}.stage-device:after{content:'';position:absolute;left:12%;right:12%;bottom:15%;height:12px;border-radius:10px;background:var(--grad);box-shadow:0 0 20px var(--cyan)}.device-tag{padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:rgba(8,16,40,.84);color:#d9ebff;font-weight:800;font-size:18px}.modea-layout{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;flex:1;min-height:0}.modea-layout .art{border-radius:24px}.modea-layout .steps{grid-template-columns:repeat(2,1fr);height:100%}.modea-layout .step{min-height:0}.modea-layout .step:after{display:none}.modea-layout .step p{font-size:18px}.modea-layout .num{margin-bottom:10px}
+</style></head><body><main class="view"><div class="stage" id="stage">
+<section class="slide active" data-title="让 AI 做出顶级网页演示"><i class="orb o1 float"></i><i class="orb o2 float" style="animation-delay:1s"></i><i class="orb o3 float" style="animation-delay:2s"></i><div class="gridbg"></div><div class="frame"><div class="hero"><div><div class="eyebrow anim" style="--d:.08s">WEB PRESENTATION SKILL</div><h1 class="anim" style="--d:.18s">让 AI 摆脱<br><span class="grad">简陋模板与 CSS/JS 瓶颈</span></h1><p class="lead anim" style="--d:.3s">无需手动拼接复杂前端代码，在浏览器中直接输出具备顶级设计质感、响应式缩放与富交互的网页版演示文稿。</p><div class="chips anim" style="--d:.42s"><span class="chip">35+ Design Recipes</span><span class="chip">1920 × 1080 舞台</span><span class="chip">单 HTML 交付</span></div></div><figure class="art hero-art anim right zoom" style="--d:.26s"><img src="assets/generate-html-ppt-intro/cover-stage.png" alt="漂浮的网页演示舞台" data-zoom></figure></div></div></section>
+<section class="slide" data-title="能力总览"><i class="orb o1"></i><i class="orb o3"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">AT A GLANCE</div><h2>不是一个模板，<br>是一套演示生产系统。</h2></div><p>从设计选择到最终交付，把 AI 的创作能力装进有边界、有审美、可验证的工作流。</p></div><div class="cards c4"><article class="card cyan anim" style="--d:.2s"><div class="metric">35+</div><h3>设计配方</h3><p>字体、颜色、阴影、排版和微动效彼此一致。</p></article><article class="card green anim" style="--d:.3s"><div class="metric">3</div><h3>创作模式</h3><p>从零创作、PPTX 转换、多平台封面同步覆盖。</p></article><article class="card amber anim" style="--d:.4s"><div class="metric">1</div><h3>单文件交付</h3><p>内联 CSS 与 JS，长期保存，打开即可演示。</p></article><article class="card rose anim" style="--d:.5s"><div class="metric">∞</div><h3>交互空间</h3><p>图表、代码、全览、全屏、图片放大与逐步呈现。</p></article></div><div class="cards c2 anim" style="--d:.58s"><article class="card"><h3>先选设计，再写内容</h3><p>避免模型默认落到泛滥的蓝紫渐变与通用系统字体。</p></article><article class="card cyan"><h3>先搭骨架，再填细节</h3><p>每张幻灯片都服务于演示叙事，而不只是堆叠段落。</p></article></div></div></section>
+<section class="slide" data-title="35+ 视觉设计系统"><i class="orb o2"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">DESIGN RECIPE PACK</div><h2>35+ 套设计语言，<br>不是一种 AI 脸。</h2></div><p>每一套都由独立 design.md 约束字体栈、颜色 Token、阴影阶梯、排版比例与微动效。</p></div><div class="gallery anim" id="gallery" style="--d:.2s"></div><div class="cards c3 anim" style="--d:.46s"><article class="card"><h3>Beautiful Modern</h3><p>玻璃质感、弹簧物理、现代科技叙事。</p></article><article class="card cyan"><h3>Swiss / Editorial / Zine</h3><p>网格、纸感、海报与编辑型信息层级。</p></article><article class="card green"><h3>Neo / Orbit / Monochrome</h3><p>霓虹、像素、极简等不同的视觉性格。</p></article></div></div></section>
+<section class="slide" data-title="固定舞台与无缝视口"><i class="orb o1"></i><i class="orb o2"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">FIXED STAGE</div><h2>不随屏幕坍塌，<br>只做等比缩放。</h2></div><p>以 1920 × 1080 为唯一设计画布，用 updateScale() 保留完整比例，用视口背景同步消除硬切黑边。</p></div><div class="split"><div class="stage-map anim" style="--d:.2s"></div><div class="list anim" style="--d:.34s"><div class="check">手机、平板、4K 投影同一排版比例</div><div class="check">不让响应式折行破坏视觉重心</div><div class="check">--viewport-bg 自动同步当前页背景</div><div class="check">舞台外围与幻灯片切面无缝融合</div></div></div></div></section>
+<section class="slide" data-title="渐进式上下文加载"><i class="orb o3"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">PROGRESSIVE DISCLOSURE</div><h2>先读索引，<br>只在需要时读细节。</h2></div><p>不让模型一次吞下数百 K 模板代码；以轻量元数据做风格匹配，再单点读取最终规则。</p></div><div class="split"><figure class="art anim zoom" style="--d:.2s"><img src="assets/generate-html-ppt-intro/progressive-flow.png" alt="渐进式内容加载流程" data-zoom></figure><div class="code anim" style="--d:.34s"><b>01  selection-index.json</b>
+读取主题、情绪、密度、适用场景
+
+<b>02  templates/&lt;slug&gt;/design.md</b>
+只读取用户选中的一套设计规范
+
+<b>03  final self-contained HTML</b>
+注入字体、Token、布局、交互与验证规则
+
+→ 更快响应 · 更少 Token · 更一致的输出</div></div></div></section>
+<section class="slide" data-title="Mode A：从零创作"><i class="orb o1"></i><i class="orb o3"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">MODE A · CREATE</div><h2>从一个主题，<br>走到可演示的完整叙事。</h2></div><p>先确定观众、场景和视觉，再用灰度骨架锁住结构；内容与资产只在结构确认后批量填充。</p></div><div class="steps"><article class="step anim" data-fragment style="--d:.2s"><i class="num">01</i><h3>需求对齐</h3><p>7 个问题锁定场景、篇幅、密度、素材与约束。</p></article><article class="step anim" data-fragment style="--d:.3s"><i class="num">02</i><h3>视觉预览</h3><p>用主题内容比较候选风格，而非凭名称猜。</p></article><article class="step anim" data-fragment style="--d:.4s"><i class="num">03</i><h3>品牌嗅探</h3><p>提取品牌色和字体，注入设计 Token。</p></article><article class="step anim" data-fragment style="--d:.5s"><i class="num">04</i><h3>骨架与填充</h3><p>先确认布局，再批量写入内容、图表和素材。</p></article></div><div class="card cyan anim" style="--d:.62s;min-height:0"><p><strong style="color:#c8f5ff">Narrative Arc：</strong>Hook → Context → Core → Shift → Takeaway，让页面不是“内容堆”，而是一场能讲下去的演示。</p></div></div></section>
+<section class="slide" data-title="Mode B / C：转换与封面"><i class="orb o2"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">MODE B / C</div><h2>传统 PPT 和长文章，<br>都能重新成为视觉资产。</h2></div><p>保留内容价值，但让交付形态适配浏览器演示与多平台传播。</p></div><div class="modes"><article class="mode anim" style="--d:.2s"><h3 class="grad">Mode B · PPTX 转换</h3><ol><li>extract-pptx.py 提取文本、图片、矢量形状与演讲者备注</li><li>镜像原有结构，再注入网页舞台与交互</li><li>把传统页升级为可导航、可全屏的 HTML</li></ol><div class="mini-art"><img src="assets/generate-html-ppt-intro/design-recipes.png" alt="设计方向视觉" data-zoom class="zoom"></div></article><article class="mode anim" style="--d:.34s"><h3 class="grad">Mode C · 多平台封面</h3><ol><li>提炼 PPT / 文章的一句话核心价值</li><li>按公众号 21:9、小红书 3:4、X/Twitter 生成视觉 Prompt</li><li>输出统一品牌感的封面视觉资产</li></ol><div class="cards c3" style="margin-top:18px"><div class="card cyan" style="min-height:105px;padding:15px"><h3>21:9</h3><p>公众号头图</p></div><div class="card green" style="min-height:105px;padding:15px"><h3>3:4</h3><p>小红书</p></div><div class="card amber" style="min-height:105px;padding:15px"><h3>16:9</h3><p>社媒分享</p></div></div></article></div></div></section>
+<section class="slide" data-title="零依赖与单文件交付"><i class="orb o1"></i><i class="orb o2"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">ZERO DEPENDENCIES</div><h2>最后交给你的，<br>是一份能长期保存的 HTML。</h2></div><p>不要求 Node.js、npm 或构建链；打包完成后浏览器打开即可演示，离线也不会丢失核心能力。</p></div><div class="split"><div class="code anim" style="--d:.2s"><b>generate-html-ppt-intro.html</b>
+├── HTML content & semantic structure
+├── design tokens & component CSS
+├── scale / navigation / overview JS
+├── CDN fallbacks for optional libraries
+└── local visual assets
+
+<b>Open → Present → Save → Share</b></div><div class="cards c2 anim" style="--d:.34s"><article class="card cyan"><h3>无构建步骤</h3><p>把复杂工程过程留在生成阶段，交付端只需要浏览器。</p></article><article class="card green"><h3>可长期归档</h3><p>单个入口文件结构清晰，适合存档、复用与再编辑。</p></article><article class="card amber"><h3>安全备用</h3><p>外部资源具有受信 CDN 备用与字体降级策略。</p></article><article class="card rose"><h3>即开即讲</h3><p>链接、文件、演讲现场都能直接开始。</p></article></div></div></div></section>
+<section class="slide" data-title="富交互组件与数据可视化"><i class="orb o3"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">RICH UI KIT</div><h2>把信息做成可读、<br>可探索、可记住的画面。</h2></div><p>图表、流程、代码和数字都可以成为叙事的一部分，而不是附在页面底部的截图。</p></div><div class="cards c3"><article class="card cyan anim" style="--d:.2s"><div class="chart"><div class="bars"><i></i><i></i><i></i><i></i></div></div><h3 style="margin-top:16px">ECharts 数据图表</h3><p>原生交互与动态图形，适合数据讲解。</p></article><article class="card green anim" style="--d:.34s"><div class="code" style="height:208px;padding:18px;font-size:16px"><b>flowchart LR</b>
+idea --> structure
+structure --> story
+story --> presentation</div><h3 style="margin-top:16px">Mermaid 流程图</h3><p>把逻辑关系变成可维护的矢量图。</p></article><article class="card amber anim" style="--d:.48s"><div class="metric" style="margin-top:38px">82%</div><p style="margin-top:18px">数字递增、代码高亮与弹簧物理入场，让重点在正确的时刻出现。</p></article></div></div></section>
+<section class="slide" data-title="控制台与全景缩略图"><i class="orb o2"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">PRESENTER CONSOLE</div><h2>演讲时，<br>把节奏握在自己手里。</h2></div><p>每一份成品都带底部毛玻璃控制台、全景缩略图与完整键盘导航，而不只是一串静态页面。</p></div><div class="split"><figure class="art anim zoom" style="--d:.2s"><img src="assets/generate-html-ppt-intro/presenter-control.png" alt="演讲者控制演示节奏" data-zoom></figure><div class="list anim" style="--d:.34s"><div class="check">◀ / ▶、Space、PageUp / PageDown 翻页</div><div class="check">O 打开全览缩略图，直达任意页面</div><div class="check">F 进入全屏，Esc 退出界面状态</div><div class="check">按需 data-fragment 逐项呈现重点</div><div class="check">封面开阔呼吸，正文紧凑让位给核心内容</div></div></div></div></section>
+<section class="slide" data-title="大字号与图文规范"><i class="orb o1"></i><i class="orb o3"></i><div class="gridbg"></div><div class="frame"><div class="head anim" style="--d:.08s"><div><div class="eyebrow">READABILITY & MEDIA</div><h2>大屏一眼读懂，<br>图文各自发挥作用。</h2></div><p>不是把网页字号缩小塞进舞台；每一个层级都为投影、笔记本与演讲节奏重新校准。</p></div><div class="cards c4"><article class="card cyan anim" style="--d:.2s"><div class="metric">20–22</div><h3>正文</h3><p>避免 12–14px 的细碎小字。</p></article><article class="card green anim" style="--d:.3s"><div class="metric">26–28</div><h3>卡片标题</h3><p>图标、徽章与标题默认同一行。</p></article><article class="card amber anim" style="--d:.4s"><div class="metric">56–72</div><h3>数据大字</h3><p>让数字成为页面的视觉锚点。</p></article><article class="card rose anim" style="--d:.5s"><div class="metric">2×</div><h3>图片 Lightbox</h3><p>双击放大，再次双击、点击背景或 Esc 退出。</p></article></div><div class="card anim" style="--d:.62s;min-height:0"><h3>图片处理不再一刀切</h3><p>T1 出血主视觉、T2 自由留白、T3 UI 截图嵌入、T6 多图安静框架；不写“原始截图”这类没有信息价值的图注，也不裁掉界面两侧的重要内容。</p></div></div></section>
+<section class="slide" data-title="从一个主题开始"><i class="orb o1 float"></i><i class="orb o2 float" style="animation-delay:1s"></i><div class="gridbg"></div><div class="frame final"><div class="eyebrow anim" style="--d:.08s">READY TO CREATE</div><h2 class="anim" style="--d:.2s">输入一个主题，<br><span class="grad">交付一场可展示的演示。</span></h2><p class="lead anim" style="--d:.34s">告诉 AI：讲给谁听、在哪讲、观众要记住什么。generate-html-ppt 会把内容、设计、交互与验证连成一条可复用的路径。</p><button class="cta anim" style="--d:.48s" onclick="show(0)">回到第一页 · 再看一次</button></div></section>
+</div></main><nav class="controls"><button class="ctrl" onclick="prev()">◀ 上一页</button><span class="counter" id="count">01 / 11</span><span class="prog"><i id="bar"></i></span><button class="ctrl" onclick="next()">下一页 ▶</button><button class="ctrl" onclick="toggleOverview()">▦ 全览</button><button class="ctrl" onclick="full()">⛶ 全屏</button></nav><aside class="overview" id="overview"><div class="overview-head"><h3>🗂 幻灯片全览</h3><button class="ctrl" onclick="toggleOverview()">✕ 关闭</button></div><div class="thumbs" id="thumbs"></div></aside><aside class="lightbox" id="lightbox"><button class="ctrl" onclick="closeLightbox()">✕ 关闭</button><img id="lightimg" alt="放大查看"></aside><script>
+const slides=[...document.querySelectorAll('.slide')],gallery=document.querySelector('#gallery'),names=['beautiful-modern','8-bit-orbit','blue-professional','bold-poster','broadside','capsule','cobalt-grid','coral','creative-mode','daisy-days','editorial-tri-tone','grove','long-table','monochrome','neo-grid-bold','peoples-platform','pink-script','playful','raw-grid','retro-windows','retro-zine','sakura-chroma','scatterbrain','signal','soft-editorial','stencil-tablet','studio','vellum','block-frame','biennale-yellow','cartesian','mat','pin-and-paper','bold-poster','editorial-forest'];names.forEach(n=>{let f=document.createElement('figure'),im=document.createElement('img');im.src='previews/'+n+'.png';im.alt=n;im.dataset.zoom='';f.append(im);gallery.append(f)});let cur=0;function frags(){return [...slides[cur].querySelectorAll('[data-fragment]')]}function show(n){cur=Math.max(0,Math.min(slides.length-1,n));slides.forEach((s,i)=>s.classList.toggle('active',i===cur));frags().forEach(x=>x.classList.add('hide'));count.textContent=String(cur+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');bar.style.width=((cur+1)/slides.length*100)+'%'}function next(){let x=frags().find(x=>x.classList.contains('hide'));if(x){x.classList.remove('hide','frag-in');void x.offsetWidth;x.classList.add('frag-in')}else show(cur+1)}function prev(){let a=frags().filter(x=>!x.classList.contains('hide'));if(a.length)a.at(-1).classList.add('hide');else show(cur-1)}function toggleOverview(){overview.classList.toggle('open')}function full(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen().catch(()=>{})}slides.forEach((s,i)=>{let b=document.createElement('button');b.className='thumb';b.innerHTML='<b>'+String(i+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0')+'</b><span>'+s.dataset.title+'</span>';b.onclick=()=>{show(i);toggleOverview()};thumbs.append(b)});document.addEventListener('dblclick',e=>{let im=e.target.closest('[data-zoom]');if(im){lightimg.src=im.src;lightbox.classList.add('open')}});function closeLightbox(){lightbox.classList.remove('open')}lightbox.addEventListener('click',e=>{if(e.target===lightbox)closeLightbox()});addEventListener('keydown',e=>{if(e.key==='Escape'){if(lightbox.classList.contains('open'))return closeLightbox();if(overview.classList.contains('open'))return toggleOverview()}if(e.key==='o'||e.key==='O')return toggleOverview();if(e.key==='f'||e.key==='F')return full();if(overview.classList.contains('open'))return;if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();next()}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}});addEventListener('resize',()=>{let k=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`translate(${(innerWidth-1920*k)/2}px,${(innerHeight-1080*k)/2}px) scale(${k})`});dispatchEvent(new Event('resize'));show(0);
+</script><script>
+/* Density repairs are assembled after the shared deck engine so they stay readable. */
+(()=>{
+  const overview=slides[1], lower=overview.querySelector('.cards.c2');
+  lower.className='overview-bridge anim'; lower.style.setProperty('--d','.56s');
+  lower.innerHTML='<figure class="art zoom"><img src="assets/generate-html-ppt-intro/design-recipes.png" alt="设计配方视觉墙" data-zoom></figure><article class="card cyan"><div class="metric">设计先行</div><h3>先选设计，再写内容</h3><p>候选风格先用真实主题内容比较，再把选定设计规范注入每张页面；不靠空白和大卡片制造“高级感”。</p></article>';
+  const fixed=slides[3].querySelector('.stage-map');
+  fixed.innerHTML='<div class="stage-hero"><div class="stage-device"></div><div><div class="device-tag">1920 × 1080<br>唯一画布</div><div class="device-tag" style="margin-top:14px">等比缩放<br>不重排</div><div class="device-tag" style="margin-top:14px">背景同步<br>无硬边</div></div></div>';
+  const mode=slides[5], steps=mode.querySelector('.steps'), note=mode.querySelector('.card.cyan');
+  const layout=document.createElement('div'); layout.className='modea-layout anim'; layout.style.setProperty('--d','.2s');
+  const figure=document.createElement('figure'); figure.className='art zoom'; figure.innerHTML='<img src="assets/generate-html-ppt-intro/mode-a-workflow.png" alt="从需求到演示的四步创作流程" data-zoom>';
+  steps.parentNode.insertBefore(layout,steps); layout.append(figure,steps); note.style.marginTop='0';
+})();
+</script>
+<style>
+/* Release-density layout: body regions have a declared height, never an empty natural height. */
+.slide .frame{height:900px;gap:18px}.slide .head{height:165px;min-height:165px;flex:0 0 165px}.slide .head h2{font-size:52px;line-height:1.08}.slide .head>p{font-size:23px;line-height:1.48;max-width:630px}.slide .card,.slide .mode,.slide .step{box-sizing:border-box}.slide:nth-of-type(2) .cards.c4{height:260px;grid-auto-rows:260px}.slide:nth-of-type(2) .overview-bridge{height:405px}.slide:nth-of-type(3) .gallery{height:280px}.slide:nth-of-type(3) .cards.c3{height:305px;grid-auto-rows:305px}.slide:nth-of-type(4) .split,.slide:nth-of-type(5) .split,.slide:nth-of-type(8) .split,.slide:nth-of-type(10) .split{height:690px;min-height:690px}.slide:nth-of-type(6) .modea-layout,.slide:nth-of-type(6) .steps,.slide:nth-of-type(6) .steps .step{height:500px}.slide:nth-of-type(6) .card.cyan{height:175px}.slide:nth-of-type(7) .modes,.slide:nth-of-type(7) .mode{height:690px}.slide:nth-of-type(11) .cards.c4{height:285px;grid-auto-rows:285px}.slide:nth-of-type(11) .card.anim{height:330px}.slide:nth-of-type(12) .final{height:900px}.list .check{min-height:128px;display:flex;align-items:center}.modes .mini-art{height:260px;overflow:hidden}.modes .mini-art img{height:100%;width:100%;object-fit:cover}
+.rich-grid{height:690px;display:grid;grid-template-columns:1.08fr 1.08fr .84fr;gap:20px}.rich-card{height:690px;min-height:690px;padding:26px 28px;display:flex;flex-direction:column;overflow:hidden}.rich-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.rich-top h3{margin:0;font-size:28px}.live{font-size:15px;letter-spacing:.08em;color:#72f5ff;border:1px solid rgba(69,224,255,.42);padding:7px 10px;border-radius:999px}.live i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#35e6ff;box-shadow:0 0 16px #35e6ff;margin-right:6px}.rich-chart{height:320px;flex:0 0 320px;border:1px solid rgba(81,219,255,.24);background:rgba(4,12,36,.45);border-radius:18px}.legend{display:flex;gap:16px;font-size:17px;color:#b4c2e4;margin:14px 0}.legend i{display:inline-block;width:18px;height:3px;border-radius:4px;background:#34dcff;vertical-align:middle;margin-right:5px}.legend i.v{background:#8984ff}.insight{margin-top:auto;background:rgba(65,92,213,.16);border-left:4px solid #39d9ff;padding:15px 17px;font-size:20px;line-height:1.45;color:#e4ecff}.mermaid-canvas{height:342px;flex:0 0 342px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(93,232,191,.22);border-radius:18px;background:linear-gradient(135deg,rgba(7,20,38,.88),rgba(35,22,79,.6));overflow:hidden}.mermaid-canvas svg{width:100%!important;height:100%!important}.flow-notes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.flow-notes div{height:98px;padding:14px;border-radius:14px;background:rgba(55,75,132,.26);font-size:18px;line-height:1.35}.side-lab{display:grid;grid-template-rows:270px 1fr;gap:18px;height:100%}.metric-lab{border-radius:18px;background:linear-gradient(145deg,rgba(255,184,77,.18),rgba(85,93,255,.18));border:1px solid rgba(255,193,94,.38);padding:22px}.metric-kicker{font-size:16px;letter-spacing:.12em;color:#ffca70}.count-up{font:800 76px/1 Outfit,sans-serif;letter-spacing:-.06em;margin:16px 0 10px;background:linear-gradient(135deg,#fff2c9,#70e8ff);-webkit-background-clip:text;color:transparent}.metric-lab p{font-size:19px;line-height:1.45;margin:0;color:#d8e2ff}.code-lab{border-radius:18px;background:#080d20;border:1px solid rgba(95,180,255,.32);padding:20px 22px;overflow:hidden}.code-tabs{display:flex;gap:8px;margin-bottom:16px}.code-tabs span{font:700 14px/1.2 ui-monospace,monospace;color:#8ea2ce;padding:7px 9px;border-radius:7px;background:#142047}.code-tabs span:first-child{background:#273f8a;color:#dff9ff}.code-lab pre{font:17px/1.68 ui-monospace,monospace;margin:0;white-space:pre-wrap;color:#d9e4ff}.tok-key{color:#ff90d2}.tok-fn{color:#5ee9ff}.tok-str{color:#9af3b5}.tok-num{color:#ffd685}.code-caption,.fragment-note{color:#a8badf;font-size:17px;margin-top:10px}
+</style>
+<style>
+/* Stable 1920x1080 composition: every body region fits the 717px content band. */
+.slide .frame{height:900px;gap:18px}
+.slide .head{height:165px;min-height:165px;flex:0 0 165px}
+.slide .cards{align-items:start}
+.slide .card{min-height:0;height:auto}
+
+/* Slide 2: compact metrics plus a visual bridge; no stretched empty cards. */
+.slide:nth-of-type(2) .cards.c4{height:218px;grid-auto-rows:auto}
+.slide:nth-of-type(2) .cards.c4 .card{height:218px}
+.slide:nth-of-type(2) .overview-bridge{height:481px;min-height:0}
+.slide:nth-of-type(2) .overview-bridge .card{height:fit-content;align-self:center}
+
+/* Slide 3: 35 previews fit into four bounded rows instead of overflowing in five. */
+.slide:nth-of-type(3) .gallery{height:492px;flex:none;grid-template-columns:repeat(10,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr));align-content:stretch}
+.slide:nth-of-type(3) .gallery figure{height:auto;min-height:0;transform:none}
+.slide:nth-of-type(3) .cards.c3{height:207px;grid-auto-rows:auto}
+.slide:nth-of-type(3) .cards.c3 .card{height:auto;align-self:start}
+
+/* Shared content slides: exactly one bounded body band below the compact header. */
+.slide:nth-of-type(4) .split,.slide:nth-of-type(5) .split,.slide:nth-of-type(8) .split,.slide:nth-of-type(10) .split{height:717px;min-height:0;flex:none}
+
+/* Slide 6: the 2x2 step grid owns 548px total, not 500px per card. */
+.slide:nth-of-type(6) .modea-layout{height:548px;min-height:0;flex:none}
+.slide:nth-of-type(6) .modea-layout .steps{height:548px;min-height:0;grid-template-rows:none;grid-auto-rows:auto;align-content:center}
+.slide:nth-of-type(6) .modea-layout .steps .step{height:auto;min-height:0;padding:20px 22px}
+.slide:nth-of-type(6) .modea-layout .step .num{display:inline-grid;margin:0 10px 10px 0;vertical-align:middle}
+.slide:nth-of-type(6) .modea-layout .step h3{display:inline-block;vertical-align:middle;margin:0 0 10px}
+.slide:nth-of-type(6) .frame>.card.cyan{height:auto;min-height:0;padding:20px 24px}
+
+/* Slides 7, 9 and 11: remove inherited forced card heights. */
+.slide:nth-of-type(7) .modes{height:717px;min-height:0;flex:none}
+.slide:nth-of-type(7) .modes .mode{height:717px;min-height:0}
+.slide:nth-of-type(9) .rich-grid{height:717px;min-height:0}
+.slide:nth-of-type(9) .rich-card{height:717px;min-height:0}
+.slide:nth-of-type(11) .cards.c4{height:280px;grid-auto-rows:auto}
+.slide:nth-of-type(11) .cards.c4 .card{height:280px}
+.slide:nth-of-type(11) .frame>.card{height:auto;min-height:0;padding:22px 24px}
+
+/* The gallery and overlays must never extend beneath the viewport. */
+.overview{overflow:auto;padding:54px 7vw 92px}
+.overview-head{position:sticky;top:-54px;z-index:2;padding:18px 0;background:rgba(3,8,22,.94)}
+.thumbs{grid-template-columns:repeat(4,minmax(0,1fr));padding-bottom:24px}
+.thumb{min-height:118px}
+@media(max-width:900px){.thumbs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+(()=>{
+ const rich=slides[8];
+ rich.querySelector('.frame').innerHTML='<div class="head anim" style="--d:.06s"><div><div class="eyebrow">RICH UI KIT</div><h2>把信息做成可读、<br>可探索、可记住的画面。</h2></div><p>不是把静态截图贴进页面：图表能响应、流程能追踪、数字能建立节奏，代码也成为演示的一部分。</p></div><div class="rich-grid"><article class="card rich-card cyan anim" style="--d:.16s"><div class="rich-top"><h3>↗ ECharts · 节奏曲线</h3><span class="live"><i></i>LIVE</span></div><div id="storyChart" class="rich-chart"></div><div class="legend"><span><i></i>理解度</span><span><i class="v"></i>记忆锚点</span></div><div class="insight">每 2.8 秒更新一次数据：用图形把“讲到哪里”变成观众一眼能读到的节奏。</div></article><article class="card rich-card green anim" style="--d:.28s"><div class="rich-top"><h3>⌘ Mermaid · 叙事流</h3><span class="live">SVG FLOW</span></div><div id="mermaidCanvas" class="mermaid-canvas">主题 → 风格 → 骨架 → 演示</div><div class="flow-notes"><div><b>01 选择</b><br>主题 → 风格索引</div><div><b>02 组织</b><br>叙事 → 灰度骨架</div><div><b>03 演示</b><br>内容 → 交互验证</div><div><b>04 交付</b><br>单 HTML → 保存分享</div></div></article><aside class="side-lab anim" style="--d:.4s"><div class="metric-lab"><div class="metric-kicker">ATTENTION RETENTION</div><div class="count-up" data-value="82">0%</div><p>数字递增为关键结论建立清晰的视觉落点。</p><div class="fragment-note" data-fragment>Space / →：先亮出数字，再解释原因。</div></div><div class="code-lab"><div class="code-tabs"><span>deck.js</span><span>motion</span><span>verified</span></div><pre><span class="tok-key">const</span> story = <span class="tok-fn">compose</span>({<br> topic: <span class="tok-str">\'你的主题\'</span>,<br> stage: <span class="tok-num">\'1920×1080\'</span>,<br> reveal: <span class="tok-str">\'spring\'</span><br>});<br><span class="tok-fn">present</span>(story);</pre><div class="code-caption">语义高亮 + 弹簧入场，让代码也有“读图顺序”。</div></div></aside></div>';
+ let chart,done=false,counted=false;
+ const option=d=>({animationDuration:750,grid:{left:42,right:22,top:36,bottom:34},xAxis:{type:'category',data:['开场','问题','证据','方案','收束'],axisLine:{lineStyle:{color:'rgba(190,210,255,.25)'}},axisLabel:{color:'#b8c9ec'}},yAxis:{type:'value',min:0,max:100,axisLabel:{color:'#8da1c8'},splitLine:{lineStyle:{color:'rgba(190,210,255,.1)'}}},series:[{type:'line',smooth:true,symbolSize:9,data:[38+d,52,66+d,83,92-d],lineStyle:{width:4,color:'#34dcff'},itemStyle:{color:'#dffcff'},areaStyle:{color:'rgba(52,220,255,.2)'}},{type:'bar',barWidth:18,data:[22,35+d,48,70+d,86],itemStyle:{borderRadius:[8,8,0,0],color:'#8984ff'}}]});
+ async function mer(){if(done||!window.mermaid)return;done=true;mermaid.initialize({startOnLoad:false,theme:'dark',themeVariables:{primaryColor:'#263c93',primaryTextColor:'#eff7ff',primaryBorderColor:'#4ce7c0',lineColor:'#54dcff',secondaryColor:'#132348',tertiaryColor:'#16214b'}});try{const r=await mermaid.render('rich-flow','flowchart LR\\nA[主题与受众] --> B{选择设计}\\nB --> C[叙事骨架]\\nC --> D[图表与交互]\\nD --> E[舞台验证]\\nE --> F[HTML 交付]');rich.querySelector('#mermaidCanvas').innerHTML=r.svg}catch(e){}}
+ function render(){if(!rich.classList.contains('active'))return;if(window.echarts){const el=rich.querySelector('#storyChart');if(el&&!chart){chart=echarts.init(el);let d=0;chart.setOption(option(d));setInterval(()=>{d=d?0:7;chart.setOption(option(d),true)},2800)}chart&&chart.resize()}mer();if(!counted){counted=true;const el=rich.querySelector('.count-up'),end=82,t=performance.now();requestAnimationFrame(function f(now){let v=Math.min(end,Math.round((now-t)/1200*end));el.textContent=v+'%';if(v<end)requestAnimationFrame(f)})}}
+ const oldShow=show;show=function(n){oldShow(n);render()};render();
+})();
+</script>
+<script>
+/* Deep links make review and hand-off reproducible: ?slide=6 and ?overview=1. */
+slides.forEach((slide,index)=>{slide.id=`s${index+1}`;slide.classList.add('dark')});
+const reviewParams=new URLSearchParams(location.search);
+const requestedSlide=Number.parseInt(reviewParams.get('slide')||'1',10);
+if(Number.isFinite(requestedSlide))show(requestedSlide-1);
+if(reviewParams.get('reveal')==='all')frags().forEach(fragment=>fragment.classList.remove('hide'));
+if(reviewParams.get('overview')==='1')toggleOverview();
+</script>
+<style>
+/* Revision 2: 20–22px body copy, denser presenter cards and two focused data pages. */
+.slide .card p,.slide .step p,.slide .mode li,.slide .check,.slide .body-copy,.slide .merge-list li,.slide .presenter-card p,.slide .chart-note,.slide .mermaid-note{font-size:21px;line-height:1.55}
+.slide .code{font-size:20px}
+.progressive-visual{min-width:0;background:transparent;border:0;border-radius:0;box-shadow:none;display:flex;align-items:center;justify-content:center;padding:8px;overflow:hidden}
+.progressive-visual img{display:block;width:100%;height:100%;max-width:100%;object-fit:contain}
+.merge-delivery{height:717px;display:grid;grid-template-columns:1.05fr 86px .95fr;gap:22px;align-items:stretch}
+.merge-panel{border:1px solid var(--line);border-radius:22px;background:var(--glass);padding:26px 28px;overflow:hidden}
+.merge-panel h3{margin:0 0 14px;font:800 29px Outfit}
+.merge-list{margin:0;padding-left:25px;color:var(--muted)}
+.merge-list li{margin:9px 0}
+.merge-visual{height:390px;margin-top:20px;overflow:hidden}
+.merge-visual img{width:100%;height:100%;object-fit:cover}
+.merge-arrow{display:grid;place-items:center}
+.merge-arrow i{display:grid;place-items:center;width:72px;height:72px;border-radius:50%;background:var(--grad);font:800 36px Outfit;color:#071326;box-shadow:0 0 42px rgba(39,217,245,.35)}
+.delivery-stack{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-content:center}
+.delivery-card{min-height:190px;padding:22px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.055)}
+.delivery-card b{display:block;margin-bottom:10px;font:800 26px Outfit;color:#eaf5ff}
+.delivery-card p{margin:0;color:var(--muted);font-size:21px;line-height:1.5}
+.delivery-card.wide{grid-column:1/-1;min-height:150px;border-left:5px solid var(--cyan)}
+.chart-stage{height:717px;display:grid;grid-template-columns:1.65fr .85fr;gap:20px}
+.chart-main,.chart-mini{border:1px solid var(--line);border-radius:22px;background:rgba(10,18,48,.72);overflow:hidden}
+.chart-main{padding:24px;display:flex;flex-direction:column}
+.chart-title-row{display:flex;justify-content:space-between;align-items:center;gap:18px}
+.chart-title-row h3,.chart-mini h3{margin:0;font:800 27px Outfit}
+.chart-note{margin:5px 0 14px;color:var(--muted)}
+.chart-live{padding:7px 11px;border:1px solid rgba(39,217,245,.45);border-radius:999px;color:var(--cyan);font:800 15px Outfit;letter-spacing:.08em}
+#echartsMain{height:550px;min-height:550px}
+.chart-side{display:grid;grid-template-rows:repeat(3,1fr);gap:16px}
+.chart-mini{display:grid;grid-template-columns:148px 1fr;align-items:center;padding:16px 18px}
+.chart-mini>div{width:148px;height:178px}
+.chart-mini p{margin:8px 0 0;color:var(--muted);font-size:20px;line-height:1.45}
+.mermaid-stage{height:717px;display:grid;grid-template-columns:1.45fr .55fr;gap:20px}
+.mermaid-shell{position:relative;border:1px solid rgba(68,215,174,.35);border-radius:24px;background:radial-gradient(circle at 50% 48%,rgba(90,82,255,.22),transparent 55%),rgba(5,12,34,.82);overflow:hidden;padding:22px}
+.mermaid-shell:before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:34px 34px;pointer-events:none}
+.mermaid-viz{position:relative;z-index:1;width:100%;height:100%;display:grid;place-items:center}
+.mermaid-viz svg{width:100%!important;height:100%!important;filter:drop-shadow(0 0 16px rgba(54,224,255,.24))}
+.mermaid-side{display:grid;align-content:center;gap:16px}
+.mermaid-card{padding:22px;border:1px solid var(--line);border-radius:18px;background:var(--glass)}
+.mermaid-card b{display:block;margin-bottom:8px;font:800 25px Outfit;color:#e9faff}
+.mermaid-card p{margin:0;color:var(--muted);font-size:21px;line-height:1.5}
+.presenter-layout{height:717px;display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:center}
+.key-console{height:570px;padding:30px;border:1px solid rgba(39,217,245,.35);border-radius:24px;background:linear-gradient(145deg,rgba(12,25,65,.95),rgba(7,13,34,.9));display:flex;flex-direction:column;justify-content:center}
+.key-console h3{margin:0 0 24px;font:800 31px Outfit}
+.key-row{display:flex;gap:14px;flex-wrap:wrap}
+.key{min-width:78px;padding:18px 20px;border:1px solid rgba(255,255,255,.2);border-bottom-width:5px;border-radius:14px;background:rgba(255,255,255,.07);font:800 22px Outfit;text-align:center}
+.key.wide{min-width:170px}
+.key-console p{margin:28px 0 0;color:var(--muted);font-size:22px;line-height:1.55}
+.presenter-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-content:center}
+.presenter-card{padding:22px 24px;border:1px solid var(--line);border-left:5px solid var(--violet);border-radius:18px;background:var(--glass)}
+.presenter-card:nth-child(2){border-left-color:var(--cyan)}.presenter-card:nth-child(3){border-left-color:var(--green)}.presenter-card:nth-child(4){border-left-color:var(--amber)}
+.presenter-card h3{margin:0 0 8px;font:800 27px Outfit}
+.presenter-card p{margin:0;color:var(--muted)}
+</style>
+<script>
+(()=>{
+  const progressive=slides[4];
+  const progressiveFigure=progressive.querySelector('.split figure');
+  progressiveFigure.className='progressive-visual anim zoom';
+  progressiveFigure.dataset.treatment='t-float';
+  progressiveFigure.innerHTML='<img src="assets/generate-html-ppt-intro/progressive-iteration-v2.png" alt="从轻量索引到验证交付的渐进式迭代流程" data-treatment="t-float" data-zoom>';
+
+  const merged=slides[6];
+  merged.dataset.title='转换、重构与单文件交付';
+  merged.querySelector('.frame').innerHTML='<div class="head anim" style="--d:.06s"><div><div class="eyebrow">MODE B / C · DELIVERY</div><h2>传统 PPT 和长文章，<br>都能重新成为视觉资产。</h2></div><p>保留原内容价值，重构为适合浏览器演示、跨平台传播并能长期保存的单 HTML 资产。</p></div><div class="merge-delivery"><article class="merge-panel anim" style="--d:.16s"><h3>从旧内容中提取真正有用的部分</h3><ul class="merge-list"><li>PPTX：提取文字、图片、结构与演讲备注</li><li>长文章：压缩为可讲述的叙事弧与视觉章节</li><li>封面：同步适配公众号、小红书与社媒比例</li></ul><div class="merge-visual"><img src="assets/generate-html-ppt-intro/design-recipes.png" alt="多种视觉资产形态" data-treatment="t-inset" data-zoom></div></article><div class="merge-arrow anim" style="--d:.26s"><i>→</i></div><div class="delivery-stack anim" style="--d:.34s"><article class="delivery-card"><b>单 HTML</b><p>结构、样式和交互集中交付，打开即可演示。</p></article><article class="delivery-card"><b>无需构建</b><p>观看端不依赖 Node.js、npm 或复杂工程环境。</p></article><article class="delivery-card"><b>可继续编辑</b><p>保留清晰语义与组件结构，便于长期复用。</p></article><article class="delivery-card"><b>离线可靠</b><p>核心能力和本地资产不因网络波动而丢失。</p></article><article class="delivery-card wide"><b>Open → Present → Save → Share</b><p>最终产物既是演示文稿，也是可归档、可传播、可再次创作的视觉资产。</p></article></div></div>';
+
+  const echartsSlide=slides[7];
+  echartsSlide.dataset.title='ECharts：让数据自己讲重点';
+  echartsSlide.querySelector('.frame').innerHTML='<div class="head anim" style="--d:.06s"><div><div class="eyebrow">ECHARTS · LIVE DATA</div><h2>让数据自己讲重点，<br>而不是贴一张静态截图。</h2></div><p>一个页面同时展示趋势、结构、进度与构成；动画只服务于读图顺序，不制造无意义噪音。</p></div><div class="chart-stage"><article class="chart-main anim" style="--d:.16s"><div class="chart-title-row"><h3>演示节奏 × 观众理解度</h3><span class="chart-live">LIVE UPDATE</span></div><p class="chart-note">柱形呈现信息密度，曲线呈现理解度与记忆锚点。</p><div id="echartsMain"></div></article><aside class="chart-side anim" style="--d:.3s"><article class="chart-mini"><div id="echartsGauge"></div><section><h3>完成度</h3><p>环形仪表把关键进度变成视觉锚点。</p></section></article><article class="chart-mini"><div id="echartsRadar"></div><section><h3>六维质量</h3><p>结构、视觉、叙事与交付同时可见。</p></section></article><article class="chart-mini"><div id="echartsDonut"></div><section><h3>内容构成</h3><p>让观众快速理解时间与注意力分配。</p></section></article></aside></div>';
+
+  const mermaidSlide=slides[8];
+  mermaidSlide.dataset.title='Mermaid：把系统关系讲清楚';
+  mermaidSlide.querySelector('.frame').innerHTML='<div class="head anim" style="--d:.06s"><div><div class="eyebrow">MERMAID · SYSTEM FLOW</div><h2>复杂系统，也可以一眼看懂。</h2></div><p>不是简单串起六个方框；用分组、分支、反馈回路和状态颜色呈现真正的系统关系。</p></div><div class="mermaid-stage"><article class="mermaid-shell anim" style="--d:.16s"><div id="mermaidHub" class="mermaid-viz">主题 → 设计 → 骨架 → 内容 → 验证 → 交付</div></article><aside class="mermaid-side anim" style="--d:.3s"><article class="mermaid-card"><b>分区</b><p>把输入、创作、验证与交付拆成独立责任域。</p></article><article class="mermaid-card"><b>分支</b><p>图片、图表和交互并行生成，再汇入统一舞台。</p></article><article class="mermaid-card"><b>反馈</b><p>验证结果回流到骨架与内容，形成可控迭代。</p></article></aside></div>';
+
+  const presenter=slides[9];
+  presenter.dataset.title='演讲时，把节奏握在自己手里';
+  presenter.querySelector('.frame').innerHTML='<div class="head anim" style="--d:.06s"><div><div class="eyebrow">PRESENTER CONSOLE</div><h2>演讲时，<br>把节奏握在自己手里。</h2></div><p>翻页、逐项呈现、全览跳转和图片放大都服务于现场节奏；核心正文统一提升到 20–22px。</p></div><div class="presenter-layout"><article class="key-console anim" style="--d:.16s"><h3>一套不需要低头寻找的控制方式</h3><div class="key-row"><span class="key">←</span><span class="key">→</span><span class="key wide">SPACE</span><span class="key">O</span><span class="key">F</span><span class="key">ESC</span></div><p>方向键与 Space 控制叙事推进；O 打开全览；F 进入全屏；Esc 退出当前界面状态。</p></article><section class="presenter-grid anim" style="--d:.3s"><article class="presenter-card"><h3>逐项呈现</h3><p>先给结论，再按节奏补充证据，避免观众提前阅读下一层信息。</p></article><article class="presenter-card"><h3>全览跳转</h3><p>11 页内容可通过全览直接定位，临场问答不必连续翻页寻找内容。</p></article><article class="presenter-card"><h3>图片聚焦</h3><p>双击图片进入纯净大图查看，点击背景或按 Esc 立即返回演示。</p></article><article class="presenter-card"><h3>稳定画布</h3><p>1920×1080 舞台始终等比缩放，投影、笔记本和全屏保持同一版式。</p></article></section></div>';
+
+  const removed=slides[10];
+  removed.remove();
+  const activeSlides=slides.filter(slide=>slide!==removed);
+  activeSlides.forEach((slide,index)=>{slide.id='s'+(index+1);slide.classList.add('dark')});
+  thumbs.innerHTML='';
+  activeSlides.forEach((slide,index)=>{
+    const button=document.createElement('button');
+    button.className='thumb';
+    button.innerHTML='<b>'+String(index+1).padStart(2,'0')+' / '+String(activeSlides.length).padStart(2,'0')+'</b><span>'+slide.dataset.title+'</span>';
+    button.onclick=()=>{show(index);toggleOverview()};
+    thumbs.append(button);
+  });
+
+  let dataCharts=[],mermaidDone=false;
+  function renderEcharts(){
+    if(!window.echarts||dataCharts.length)return;
+    const text='#b9c9ea',grid='rgba(190,210,255,.1)';
+    const main=echarts.init(document.getElementById('echartsMain'));
+    main.setOption({animationDuration:900,tooltip:{trigger:'axis'},legend:{right:14,top:4,textStyle:{color:text,fontSize:16},data:['信息密度','理解度','记忆锚点']},grid:{left:52,right:28,top:56,bottom:42},xAxis:{type:'category',data:['开场','问题','证据','方案','演示','收束'],axisLabel:{color:text,fontSize:16},axisLine:{lineStyle:{color:grid}}},yAxis:{type:'value',max:100,axisLabel:{color:text,fontSize:15},splitLine:{lineStyle:{color:grid}}},series:[{name:'信息密度',type:'bar',barWidth:30,data:[28,48,66,78,70,44],itemStyle:{borderRadius:[9,9,0,0],color:new echarts.graphic.LinearGradient(0,0,0,1,[{offset:0,color:'#8b8cff'},{offset:1,color:'#344dcc'}])}},{name:'理解度',type:'line',smooth:true,symbolSize:10,data:[42,51,67,81,91,94],lineStyle:{width:5,color:'#27d9f5'},itemStyle:{color:'#e7fdff'},areaStyle:{color:'rgba(39,217,245,.16)'}},{name:'记忆锚点',type:'line',smooth:true,symbol:'diamond',symbolSize:11,data:[22,35,55,69,88,90],lineStyle:{width:4,color:'#44d7ae'},itemStyle:{color:'#9affdf'}}]});
+    const gauge=echarts.init(document.getElementById('echartsGauge'));
+    gauge.setOption({series:[{type:'gauge',startAngle:210,endAngle:-30,min:0,max:100,progress:{show:true,width:14,itemStyle:{color:'#27d9f5'}},axisLine:{lineStyle:{width:14,color:[[1,'#263354']]}},axisTick:{show:false},splitLine:{show:false},axisLabel:{show:false},pointer:{show:false},anchor:{show:false},title:{show:false},detail:{valueAnimation:true,formatter:'{value}%',color:'#f7f9ff',fontSize:30,offsetCenter:[0,'8%']},data:[{value:86}]}]});
+    const radar=echarts.init(document.getElementById('echartsRadar'));
+    radar.setOption({radar:{radius:'65%',indicator:[{name:'结构',max:100},{name:'视觉',max:100},{name:'叙事',max:100},{name:'交互',max:100},{name:'交付',max:100}],axisName:{color:text,fontSize:12},splitLine:{lineStyle:{color:grid}},splitArea:{areaStyle:{color:['rgba(139,140,255,.03)','rgba(39,217,245,.02)']}},axisLine:{lineStyle:{color:grid}}},series:[{type:'radar',data:[{value:[92,88,84,90,95],areaStyle:{color:'rgba(68,215,174,.28)'},lineStyle:{color:'#44d7ae',width:3},itemStyle:{color:'#baffea'}}]}]});
+    const donut=echarts.init(document.getElementById('echartsDonut'));
+    donut.setOption({series:[{type:'pie',radius:['48%','72%'],center:['50%','50%'],label:{show:false},itemStyle:{borderColor:'#101938',borderWidth:4},data:[{value:38,name:'视觉',itemStyle:{color:'#8b8cff'}},{value:34,name:'内容',itemStyle:{color:'#27d9f5'}},{value:18,name:'交互',itemStyle:{color:'#44d7ae'}},{value:10,name:'验证',itemStyle:{color:'#ffc76a'}}]}]});
+    dataCharts=[main,gauge,radar,donut];
+  }
+  async function renderMermaid(){
+    if(mermaidDone||!window.mermaid)return;
+    mermaidDone=true;
+    mermaid.initialize({startOnLoad:false,theme:'base',securityLevel:'loose',flowchart:{curve:'basis',nodeSpacing:42,rankSpacing:58},themeVariables:{background:'transparent',primaryColor:'#273c8d',primaryTextColor:'#f3f8ff',primaryBorderColor:'#54e9ff',lineColor:'#57dcff',secondaryColor:'#173052',tertiaryColor:'#182449',clusterBkg:'rgba(19,32,77,.72)',clusterBorder:'#485fae',fontFamily:'Noto Sans SC',fontSize:'18px'}});
+    const graph='flowchart LR\nsubgraph I[输入]\nA([主题与受众]) --> B{风格选择}\nend\nsubgraph C[创作]\nB --> D[叙事骨架]\nD --> E[图片资产]\nD --> F[图表与流程]\nD --> G[交互组件]\nend\nsubgraph V[验证]\nE --> H{舞台检查}\nF --> H\nG --> H\nH -->|通过| J([单 HTML 交付])\nH -->|需调整| D\nend\nclassDef start fill:#1d3d78,stroke:#65efff,stroke-width:3px,color:#fff\nclassDef work fill:#29266e,stroke:#918cff,stroke-width:2px,color:#fff\nclassDef asset fill:#123d4d,stroke:#44d7ae,stroke-width:2px,color:#fff\nclassDef gate fill:#4a2d67,stroke:#ff91d0,stroke-width:3px,color:#fff\nclass A,J start\nclass D work\nclass E,F,G asset\nclass B,H gate';
+    try{const rendered=await mermaid.render('mermaid-system-v2',graph);document.getElementById('mermaidHub').innerHTML=rendered.svg}catch(error){document.getElementById('mermaidHub').textContent='主题 → 风格 → 骨架 → 资产 → 验证 → 交付 → 迭代'}
+  }
+
+  frags=function(){return [...activeSlides[cur].querySelectorAll('[data-fragment]')]};
+  show=function(index){
+    cur=Math.max(0,Math.min(activeSlides.length-1,index));
+    activeSlides.forEach((slide,i)=>slide.classList.toggle('active',i===cur));
+    frags().forEach(fragment=>fragment.classList.add('hide'));
+    count.textContent=String(cur+1).padStart(2,'0')+' / '+String(activeSlides.length).padStart(2,'0');
+    bar.style.width=((cur+1)/activeSlides.length*100)+'%';
+    if(activeSlides[cur]===echartsSlide)requestAnimationFrame(renderEcharts);
+    if(activeSlides[cur]===mermaidSlide)requestAnimationFrame(renderMermaid);
+    requestAnimationFrame(()=>dataCharts.forEach(chart=>chart.resize()));
+  };
+  next=function(){const fragment=frags().find(item=>item.classList.contains('hide'));if(fragment){fragment.classList.remove('hide','frag-in');void fragment.offsetWidth;fragment.classList.add('frag-in')}else show(cur+1)};
+  prev=function(){const visible=frags().filter(item=>!item.classList.contains('hide'));if(visible.length)visible.at(-1).classList.add('hide');else show(cur-1)};
+  const finalParams=new URLSearchParams(location.search);
+  const finalSlide=Number.parseInt(finalParams.get('slide')||'1',10);
+  show(Number.isFinite(finalSlide)?finalSlide-1:0);
+  if(finalParams.get('reveal')==='all')frags().forEach(fragment=>fragment.classList.remove('hide'));
+})();
+</script>
+<style>
+/* Revision 3: overview storytelling, 9-up gallery, vertical Mode A and live charts. */
+.overview-v3{height:481px;display:grid;grid-template-columns:.82fr 3.18fr;gap:28px;align-items:center}
+.overview-copy{align-self:stretch;display:flex;flex-direction:column;justify-content:center;padding:18px 10px 18px 4px}
+.overview-copy .metric{font-size:54px;margin-bottom:8px}
+.overview-copy h3{margin:0 0 12px;font:800 28px Outfit}
+.overview-copy p{margin:0;color:var(--muted);font-size:21px;line-height:1.58}
+.overview-art-v3{height:455px;min-width:0;margin:0;overflow:hidden;background:transparent}
+.overview-art-v3 img{display:block;width:100%;height:100%;object-fit:contain;cursor:zoom-in}
+.gallery-v3{height:492px!important;grid-template-columns:repeat(9,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;gap:12px!important;align-content:stretch!important}
+.gallery-v3 figure{height:auto!important;min-height:0;transform:none!important;cursor:zoom-in}
+.gallery-v3 img{display:block;width:100%;height:100%;object-fit:cover}
+.modea-v3 .steps{grid-template-columns:1fr!important;grid-template-rows:repeat(4,auto)!important;grid-auto-rows:auto!important;align-content:center!important;gap:13px!important}
+.modea-v3 .step{height:auto!important;min-height:0!important;padding:15px 20px!important}
+.modea-v3 .step .num{width:36px;height:36px;margin:0 10px 0 0!important}
+.modea-v3 .step h3{margin:0!important}
+.modea-v3 .step p{margin:7px 0 0 46px!important;line-height:1.4!important}
+.chart-live:before{content:'';display:inline-block;width:8px;height:8px;margin-right:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan);animation:livePulse 1.2s ease-in-out infinite}
+@keyframes livePulse{50%{opacity:.35;transform:scale(.7)}}
+</style>
+<script>
+(()=>{
+  const overviewSlide=slides[1];
+  const overviewLower=overviewSlide.querySelector('.overview-bridge');
+  overviewLower.className='overview-v3 anim';
+  overviewLower.innerHTML='<section class="overview-copy"><div class="metric">设计先行</div><h3>先选设计，再写内容</h3><p>候选风格先用真实主题内容比较，再把选定设计规范注入每张页面；不靠空白和大卡片制造“高级感”。</p></section><figure class="overview-art-v3 zoom" data-treatment="t-float"><img src="assets/generate-html-ppt-intro/mode-a-four-stage-overview-v3.png" alt="需求对齐、视觉资产、灰度骨架与内容交付四阶段流程" data-treatment="t-float" data-zoom></figure>';
+
+  const gallerySlide=slides[2];
+  gallery.classList.add('gallery-v3');
+  gallery.querySelectorAll('img').forEach(image=>{image.dataset.zoomable='';image.setAttribute('tabindex','0')});
+  function openGalleryImage(image){lightimg.src=image.src;lightbox.classList.add('open')}
+  gallery.addEventListener('click',event=>{const image=event.target.closest('img');if(image)openGalleryImage(image)});
+  gallery.addEventListener('keydown',event=>{if((event.key==='Enter'||event.key===' ')&&event.target.matches('img')){event.preventDefault();openGalleryImage(event.target)}});
+
+  const modeASlide=slides[5];
+  modeASlide.classList.add('modea-v3');
+  modeASlide.querySelectorAll('.step').forEach(step=>{step.removeAttribute('data-fragment');step.classList.remove('hide','frag-in')});
+
+  const fixedStage=slides[3];
+  const previousActive=[...document.querySelectorAll('.slide')];
+  const oldShowV2=show;
+  fixedStage.remove();
+  const activeSlidesV3=previousActive.filter(slide=>slide!==fixedStage);
+  activeSlidesV3.forEach((slide,index)=>{slide.id='s'+(index+1);slide.classList.add('dark')});
+
+  thumbs.innerHTML='';
+  activeSlidesV3.forEach((slide,index)=>{
+    const button=document.createElement('button');
+    button.className='thumb';
+    button.innerHTML='<b>'+String(index+1).padStart(2,'0')+' / '+String(activeSlidesV3.length).padStart(2,'0')+'</b><span>'+slide.dataset.title+'</span>';
+    button.onclick=()=>{show(index);toggleOverview()};
+    thumbs.append(button);
+  });
+
+  frags=function(){return [...activeSlidesV3[cur].querySelectorAll('[data-fragment]')]};
+  show=function(index){
+    const safeIndex=Math.max(0,Math.min(activeSlidesV3.length-1,index));
+    const target=activeSlidesV3[safeIndex];
+    oldShowV2(previousActive.indexOf(target));
+    cur=safeIndex;
+    activeSlidesV3.forEach((slide,i)=>slide.classList.toggle('active',i===cur));
+    frags().forEach(fragment=>fragment.classList.add('hide'));
+    count.textContent=String(cur+1).padStart(2,'0')+' / '+String(activeSlidesV3.length).padStart(2,'0');
+    bar.style.width=((cur+1)/activeSlidesV3.length*100)+'%';
+  };
+  next=function(){const fragment=frags().find(item=>item.classList.contains('hide'));if(fragment){fragment.classList.remove('hide','frag-in');void fragment.offsetWidth;fragment.classList.add('frag-in')}else show(cur+1)};
+  prev=function(){const visible=frags().filter(item=>!item.classList.contains('hide'));if(visible.length)visible.at(-1).classList.add('hide');else show(cur-1)};
+
+  let liveTick=0;
+  setInterval(()=>{
+    if(!window.echarts)return;
+    const mainEl=document.getElementById('echartsMain'),gaugeEl=document.getElementById('echartsGauge'),radarEl=document.getElementById('echartsRadar'),donutEl=document.getElementById('echartsDonut');
+    const main=mainEl&&echarts.getInstanceByDom(mainEl),gauge=gaugeEl&&echarts.getInstanceByDom(gaugeEl),radar=radarEl&&echarts.getInstanceByDom(radarEl),donut=donutEl&&echarts.getInstanceByDom(donutEl);
+    if(!main||!gauge||!radar||!donut)return;
+    liveTick++;
+    const wave=Math.round(5*Math.sin(liveTick*.82)),wave2=Math.round(4*Math.cos(liveTick*.67));
+    main.setOption({animationDurationUpdate:950,series:[{data:[28+wave,48-wave2,66+wave2,78-wave,70+wave,44-wave2]},{data:[42+wave2,51+wave,67-wave2,81+wave2,91-wave,94]},{data:[22,35+wave2,55+wave,69-wave2,88,90-wave]}]});
+    gauge.setOption({animationDurationUpdate:1000,series:[{data:[{value:86+wave2}]}]});
+    radar.setOption({animationDurationUpdate:1000,series:[{data:[{value:[92-wave2,88+wave,84-wave,90+wave2,95-wave2],areaStyle:{color:'rgba(68,215,174,.28)'},lineStyle:{color:'#44d7ae',width:3},itemStyle:{color:'#baffea'}}]}]});
+    donut.setOption({animationDurationUpdate:1000,series:[{data:[{value:38+wave,name:'视觉',itemStyle:{color:'#8b8cff'}},{value:34-wave2,name:'内容',itemStyle:{color:'#27d9f5'}},{value:18+wave2,name:'交互',itemStyle:{color:'#44d7ae'}},{value:10-wave,name:'验证',itemStyle:{color:'#ffc76a'}}]}]});
+  },1600);
+
+  const finalParamsV3=new URLSearchParams(location.search);
+  const finalSlideV3=Number.parseInt(finalParamsV3.get('slide')||'1',10);
+  show(Number.isFinite(finalSlideV3)?finalSlideV3-1:0);
+  if(finalParamsV3.get('reveal')==='all')frags().forEach(fragment=>fragment.classList.remove('hide'));
+})();
+</script>
+<style>
+/* Revision 4: onboarding copy, explicit rows and consolidated navigation. */
+.overview-v3{grid-template-columns:2.66fr 1.34fr;gap:24px}
+.overview-guide{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:9px;padding:4px 0}
+.overview-guide>h3{margin:0 0 3px;font:800 26px Outfit;color:#f7f9ff}
+.guide-step{display:grid;grid-template-columns:38px 1fr;gap:11px;align-items:start}
+.guide-num{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--violet),var(--cyan));color:white;font:800 15px Outfit;box-shadow:0 0 18px rgba(39,217,245,.2)}
+.guide-step h4{margin:0 0 2px;font:800 20px Outfit;color:#f5f8ff}
+.guide-step p{margin:0;color:var(--muted);font-size:17px;line-height:1.38}
+.overview-art-v3{height:470px}
+.modea-v3 .modea-step-head{display:flex;align-items:center;gap:10px}
+.modea-v3 .modea-step-head .num{display:grid;place-items:center;flex:0 0 36px}
+.modea-v3 .modea-step-head h3{display:block;margin:0!important;line-height:1.15}
+.presenter-layout{grid-template-columns:1.18fr .82fr;gap:26px}
+.key-console{height:640px;padding:36px}
+.presenter-grid{grid-template-columns:1fr;gap:13px}
+.presenter-card{padding:16px 20px}
+.presenter-card h3{font-size:25px;margin-bottom:4px}
+.presenter-card p{font-size:20px!important;line-height:1.42!important}
+</style>
+<script>
+(()=>{
+  const overviewSlide=document.querySelectorAll('.slide')[1];
+  const overviewLower=overviewSlide.querySelector('.overview-v3');
+  overviewLower.innerHTML='<figure class="overview-art-v3 zoom" data-treatment="t-float"><img src="assets/generate-html-ppt-intro/mode-a-four-stage-overview-v3.png" alt="从想法、设计、内容到演示交付的四阶段流程" data-treatment="t-float" data-zoom></figure><section class="overview-guide"><h3>第一次使用，Skill 会带你走完 4 步</h3><div class="guide-step"><i class="guide-num">01</i><div><h4>说清想法</h4><p>给出主题、观众、使用场景与时长；有资料就一起提供。</p></div></div><div class="guide-step"><i class="guide-num">02</i><div><h4>确认设计</h4><p>回答 7 个问题，用真实内容比较 2–3 种候选风格，确定字体与品牌色。</p></div></div><div class="guide-step"><i class="guide-num">03</i><div><h4>搭骨架、填内容</h4><p>先确认 1920×1080 灰度布局，再批量写入文案、图表和图片。</p></div></div><div class="guide-step"><i class="guide-num">04</i><div><h4>验证并交付</h4><p>检查溢出、翻页、全览与全屏，最后得到可长期保存的单文件 HTML 演示。</p></div></div></section>';
+
+  const modeASlide=[...document.querySelectorAll('.slide')].find(slide=>slide.dataset.title==='Mode A：从零创作');
+  modeASlide.querySelectorAll('.step').forEach(step=>{
+    if(step.querySelector('.modea-step-head'))return;
+    const row=document.createElement('div');
+    row.className='modea-step-head';
+    step.insertBefore(row,step.firstChild);
+    row.append(step.querySelector('.num'),step.querySelector('h3'));
+  });
+
+  const slidesV4=[...document.querySelectorAll('.slide')];
+  const showV3=show;
+  const clamp=index=>Math.max(0,Math.min(slidesV4.length-1,index));
+  const navigate=index=>{
+    const safe=clamp(index);
+    showV3(safe);
+    cur=safe;
+    slidesV4.forEach((slide,i)=>slide.classList.toggle('active',i===safe));
+    count.textContent=String(safe+1).padStart(2,'0')+' / '+String(slidesV4.length).padStart(2,'0');
+    bar.style.width=((safe+1)/slidesV4.length*100)+'%';
+  };
+  show=navigate;
+  prev=()=>navigate(cur-1);
+  next=()=>navigate(cur+1);
+  const controls=document.querySelectorAll('nav.controls .ctrl');
+  controls[0].onclick=prev;
+  controls[1].onclick=next;
+
+  const paramsV4=new URLSearchParams(location.search);
+  const requested=Number.parseInt(paramsV4.get('slide')||'1',10);
+  navigate(Number.isFinite(requested)?requested-1:0);
+  if(paramsV4.get('nav')==='prev')setTimeout(prev,120);
+  if(paramsV4.get('nav')==='next')setTimeout(next,120);
+})();
+</script>
+<style>
+/* Revision 5: beginner-first token efficiency and grayscale wireframe pages. */
+.token-page .head{height:165px;min-height:165px;flex:0 0 165px}
+.token-page .head>p{max-width:690px}
+.token-layout{height:704px;display:grid;grid-template-columns:1.58fr .42fr;gap:24px;min-height:0}
+.token-visual{margin:0;min-width:0;height:704px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:transparent}
+.token-visual img{display:block;width:100%;height:100%;object-fit:contain}
+.token-explain{display:flex;flex-direction:column;justify-content:center;gap:14px}
+.token-step{padding:17px 18px;border:1px solid var(--line);border-left:5px solid var(--cyan);border-radius:17px;background:rgba(20,31,65,.78)}
+.token-step:nth-child(2){border-left-color:var(--violet)}
+.token-step:nth-child(3){border-left-color:var(--green)}
+.token-step h3{display:flex;align-items:center;gap:10px;margin:0 0 5px;font:800 23px Outfit}
+.token-step i{display:grid;place-items:center;width:31px;height:31px;border-radius:50%;background:var(--grad);font:800 14px Outfit;font-style:normal}
+.token-step p{margin:0;color:var(--muted);font-size:20px;line-height:1.45}
+.token-saving{padding:20px 18px;border:1px solid rgba(68,215,174,.45);border-radius:17px;background:linear-gradient(135deg,rgba(68,215,174,.14),rgba(39,217,245,.06))}
+.token-saving strong{display:block;margin-bottom:5px;color:#cffff0;font:800 30px Outfit}
+.token-saving span{color:var(--muted);font-size:19px;line-height:1.45}
+.wireframe-page{gap:14px}
+.wireframe-title{height:142px;flex:0 0 142px;display:flex;align-items:end;justify-content:space-between;gap:36px}
+.wireframe-title h2{margin:8px 0 0;font:800 54px/1.04 Outfit;letter-spacing:-.035em}
+.wireframe-title p{max-width:600px;margin:0 0 4px;color:var(--muted);font-size:23px;line-height:1.5;text-align:right}
+.wireframe-showcase{height:735px;display:grid;grid-template-columns:1.46fr .54fr;gap:24px;min-height:0}
+.wireframe-hero{position:relative;height:735px;margin:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:transparent}
+.wireframe-hero img{display:block;width:100%;height:100%;object-fit:contain}
+.wire-label{position:absolute;padding:8px 14px;border:1px solid rgba(39,217,245,.45);border-radius:999px;background:rgba(8,16,40,.9);color:#d8faff;font:800 17px Outfit;box-shadow:0 8px 24px rgba(0,0,0,.22)}
+.wire-label.title-zone{left:45%;top:10%}
+.wire-label.image-zone{left:22%;top:37%}
+.wire-label.chart-zone{right:23%;top:37%}
+.wire-label.card-zone{left:46%;bottom:12%}
+.outline-wire{height:735px;padding:22px 20px;border:1px solid var(--line);border-radius:22px;background:rgba(16,25,54,.78);display:flex;flex-direction:column;gap:12px;overflow:hidden}
+.outline-wire h3{margin:0;font:800 26px Outfit;color:#f4f8ff}
+.outline-wire>p{margin:0 0 2px;color:var(--muted);font-size:18px;line-height:1.45}
+.outline-wire img{display:block;width:100%;min-height:0;flex:1;object-fit:contain;cursor:zoom-in}
+.head>div:first-child,.wireframe-title>div:first-child{min-width:0;flex:1}
+.head>p,.wireframe-title>p{flex:0 0 auto}
+</style>
+<script>
+(()=>{
+  const progressive=[...document.querySelectorAll('.slide')].find(slide=>slide.dataset.title==='渐进式上下文加载');
+  progressive.dataset.title='极高 Token 效率';
+  progressive.querySelector('.frame').className='frame token-page';
+  progressive.querySelector('.frame').innerHTML='<div class="head anim" style="--d:.06s"><div><div class="eyebrow">PROGRESSIVE CONTEXT</div><h2>先读索引，<br>只读取 1 份设计规则。</h2></div><p>35+ 套设计语言不会一次塞进上下文：先用轻量元数据完成匹配，再单点读取选中的 design.md。</p></div><div class="token-layout"><figure class="token-visual zoom anim" style="--d:.16s" data-treatment="t-float"><img src="assets/generate-html-ppt-intro/progressive-token-efficiency-v3.png" alt="35套设计手册先通过索引筛选，只读取一份设计规则以节省Token" data-treatment="t-float" data-zoom></figure><aside class="token-explain anim" style="--d:.28s"><article class="token-step"><h3><i>01</i>先看轻量索引</h3><p>只读风格名称、调性和适用场景。</p></article><article class="token-step"><h3><i>02</i>选中一个方向</h3><p>根据主题匹配最合适的设计语言。</p></article><article class="token-step"><h3><i>03</i>只读这一份</h3><p>加载唯一 design.md，其余 34+ 份保持关闭。</p></article><div class="token-saving"><strong>极高 Token 效率</strong><span>上下文更短、更聚焦，也更不容易被无关规则干扰。</span></div></aside></div>';
+
+  const beforeWireframeInsert=[...document.querySelectorAll('.slide')];
+  const showBeforeWireframe=show;
+  const modeASource=beforeWireframeInsert.find(slide=>slide.dataset.title==='Mode A：从零创作');
+  const wireframe=modeASource.cloneNode(true);
+  wireframe.classList.remove('active');
+  modeASource.parentNode.insertBefore(wireframe,modeASource);
+  wireframe.dataset.title='灰度骨架锁定结构';
+  wireframe.querySelector('.frame').className='frame wireframe-page';
+  wireframe.querySelector('.frame').innerHTML='<div class="wireframe-title anim" style="--d:.06s"><div><div class="eyebrow">GRAYSCALE WIREFRAME</div><h2>先用灰度骨架，锁住整页结构。</h2></div><p>附件是“规范 + 5 页大纲”，不是骨架图本身；但它正好能作为搭骨架前的结构输入。</p></div><div class="wireframe-showcase"><figure class="wireframe-hero zoom anim" style="--d:.18s" data-treatment="t-float"><img src="assets/generate-html-ppt-intro/grayscale-wireframe-lock-v1.png" alt="包含标题区图片区图表区和卡片区的灰度演示页面骨架" data-treatment="t-float" data-zoom><span class="wire-label title-zone">标题区</span><span class="wire-label image-zone">图片区</span><span class="wire-label chart-zone">图表区</span><span class="wire-label card-zone">卡片区</span></figure><aside class="outline-wire anim" style="--d:.3s"><h3>文字大纲 → 5 页内容骨架</h3><p>先把附件里的页面角色抽出来，再决定每页区域比例。</p><img src="assets/generate-html-ppt-intro/grayscale-outline-five-slides.svg" alt="从附件提炼的封面、三列卡片、主视觉、图文分栏和总结页五种灰度布局" data-treatment="t-float" data-zoom></aside></div>';
+
+  const refreshedSlides=[...document.querySelectorAll('.slide')];
+  refreshedSlides.forEach((slide,index)=>{slide.id='s'+(index+1);slide.classList.add('dark')});
+  thumbs.innerHTML='';
+  refreshedSlides.forEach((slide,index)=>{
+    const button=document.createElement('button');
+    button.className='thumb';
+    button.innerHTML='<b>'+String(index+1).padStart(2,'0')+' / '+String(refreshedSlides.length).padStart(2,'0')+'</b><span>'+slide.dataset.title+'</span>';
+    button.onclick=()=>{show(index);toggleOverview()};
+    thumbs.append(button);
+  });
+
+  const clampFinal=index=>Math.max(0,Math.min(refreshedSlides.length-1,index));
+  const navigateFinal=index=>{
+    const safe=clampFinal(index);
+    const target=refreshedSlides[safe];
+    const priorIndex=target===wireframe?beforeWireframeInsert.indexOf(modeASource):beforeWireframeInsert.indexOf(target);
+    if(priorIndex>=0)showBeforeWireframe(priorIndex);
+    cur=safe;
+    refreshedSlides.forEach((slide,i)=>slide.classList.toggle('active',i===safe));
+    [...target.querySelectorAll('[data-fragment]')].forEach(fragment=>fragment.classList.add('hide'));
+    count.textContent=String(safe+1).padStart(2,'0')+' / '+String(refreshedSlides.length).padStart(2,'0');
+    bar.style.width=((safe+1)/refreshedSlides.length*100)+'%';
+  };
+  frags=()=>[...refreshedSlides[cur].querySelectorAll('[data-fragment]')];
+  show=navigateFinal;
+  next=()=>{const fragment=frags().find(item=>item.classList.contains('hide'));if(fragment){fragment.classList.remove('hide','frag-in');void fragment.offsetWidth;fragment.classList.add('frag-in')}else navigateFinal(cur+1)};
+  prev=()=>{const visible=frags().filter(item=>!item.classList.contains('hide'));if(visible.length)visible.at(-1).classList.add('hide');else navigateFinal(cur-1)};
+  const controlButtons=document.querySelectorAll('nav.controls .ctrl');
+  controlButtons[0].onclick=prev;
+  controlButtons[1].onclick=next;
+
+  const fitTitle=heading=>{
+    if(heading.closest('.final'))return;
+    heading.querySelectorAll('br').forEach(br=>br.replaceWith(document.createTextNode('')));
+    heading.style.whiteSpace='nowrap';
+    heading.style.fontSize='';
+    const maxWidth=heading.parentElement.clientWidth;
+    let size=Number.parseFloat(getComputedStyle(heading).fontSize);
+    while(heading.scrollWidth>maxWidth&&size>42){size-=1;heading.style.fontSize=size+'px'}
+    if(heading.scrollWidth>maxWidth)heading.style.whiteSpace='normal';
+  };
+  const fitAllTitles=()=>refreshedSlides.forEach(slide=>slide.querySelectorAll('.head h2,.wireframe-title h2').forEach(fitTitle));
+  requestAnimationFrame(fitAllTitles);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAllTitles);
+
+  const finalParams=new URLSearchParams(location.search);
+  const requestedFinal=Number.parseInt(finalParams.get('slide')||'1',10);
+  navigateFinal(Number.isFinite(requestedFinal)?requestedFinal-1:0);
+  if(finalParams.get('reveal')==='all')frags().forEach(fragment=>fragment.classList.remove('hide'));
+})();
+</script></body></html>
