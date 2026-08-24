@@ -69,6 +69,9 @@ Presentations are generated using a **Design System Specification (`design.md`)*
 9. **主要内容大字号高可读性规范 (High-Legibility Large Font Standard · NON-NEGOTIABLE)**: 杜绝 12px~14px 细碎小字感。在 1920×1080 舞台下，卡片正文与段落不低于 `20px~22px`，副标题 `22px~26px`，卡片标题 `26px~28px`，分类徽章 `16px~18px`，数据大字 `56px~72px`，表格与代码 `19px~21px`，保证大屏演说与移动/笔记本视口缩放下的极佳易读性。
 10. **图片/图标/序号徽章与文字单行同行并排规范 (Inline Icon, Badge & Title Standard · NON-NEGOTIABLE)**: 在卡片（`.card` / `.b-card` / `.feat-card`）、架构层级（`.stack-row` / `.tier-card`）、流水线步骤（`.pipeline-step` / `.step`）、功能列表等模块中，**图片、图标、Emoji 或序号徽章与对应的标题文字必须处于同一行展示（`display: flex; align-items: center; gap: 10px~14px;` 或在 `<h3>` 内前置 `<span class="badge">` / `<span class="icon-box">`），严禁无故上下拆成两行展示**。**唯一豁免例外**：仅当图片/图标与文字极长、在一行内确实无法完整容纳导致溢出或排版坍塌时，才可酌情拆为两行展示。
 11. **全局色彩基调统一与防频闪规范 (Unified Global Color Palette & Anti-Flicker Standard · NON-NEGOTIABLE)**: 整套演示文稿必须保持全局色彩世界观的高度纯净与一致，**默认采用 100% 全套统一纯深色（Unified Dark Mode）或 100% 全套统一纯浅色（Unified Light Mode）**。**严禁逐页黑白无故交替闪烁（Anti-Pattern: 严禁一页深一页浅导致观众视觉眩光与频闪疲劳）**。唯一豁免结构：长篇大型演说中允许仅对封面/封底/章节过渡大幕页采用深色聚焦，而正文内容页（90%+）必须保持绝对统一的底色基调。
+12. **首页主题视觉居中 (Cover Subject Visual Centering · NON-NEGOTIABLE)**: 封面的主标题、说明与关键数据/主视觉必须作为一个完整主题组落在导航安全区的视觉中心，不能因 `padding-top`、大额 `margin-top`、`justify-content:flex-end` 或顶部空白被压到页面下半部。用 `data-cover-subject` 标记主题组；左右分栏封面按左右两列的组合包围盒验收，不要求文字本身强制居中对齐。
+13. **禁止中空卡片与镂空面板 (No Hollow Panels · NON-NEGOTIABLE)**: 正文卡片、数据面板和分栏容器不得用固定高度、`height:100%` 或 `space-between` 把少量内容分别甩到顶部与底部，制造大面积无信息空带。背景、边框和被拉高的容器不算内容；内容少时应缩短面板并将内容组整体居中，或补充真实图表、流程、对比、图片与结构化信息。
+14. **禁止区块间镂空与全页空白带 (No Inter-Section Dead Zones · NON-NEGOTIABLE)**: 普通正文页的真实语义内容在纵向上必须形成连续阅读节奏；页眉与主内容、主内容模块之间不得出现同时超过 **160px** 和画布高度 **14%** 的连续全宽空白带。整体内容触达页面底部或卡片内部充实，都不能抵消中间断层。优先收紧 grid/flex 行高、`margin`、`padding`、空占位行和 `justify-content:space-between`，或用真实图表、流程、对比、图片承接信息；仅 `cover|closing|divider` 可保留有意负空间。
 
 ---
 
@@ -163,7 +166,9 @@ Prepare visual assets before building wireframes:
            - **Badge / 分类标签** (`.eyebrow-pill` / `.kicker` / `.cover-badge` 如 `DESIGN CANVAS`) 与主标题间距：`16px ~ 28px`（开阔舒展，坚决不局促挤压）
            - **主标题** (`h1` / `.slide-title` / `.cover-title` 如 `写 Skill 前先回答四个问题`) 与副标题/金句引导语间距：`20px ~ 32px`
            - **副标题 / 金句引导语** (`.slide-subtitle` / `.lead` / `.cover-sub` 如 `"想清楚问题，比直接写代码更重要" —— 四问设计画布`) 与下方元素（`.cover-stats` / `.cover-divider` / `.hero-middle-bridge` / 作者信息）间距：`36px ~ 56px`
-         - **推荐排版**：使用 `.cover-frame` 或 `.slide.hero` 居中或左对齐开阔容器，充分释放纵向呼吸空间与高端大气的视觉门面质感。
+         - **主题组标记与视觉中心**：将主标题、说明、关键数据/主视觉的共同外层写成 `data-cover-subject`。这个主题组的真实语义内容包围盒中心，应落在扣除底部导航后的安全区中心上下 **8%** 范围内；顶部品牌栏、日期和底部页脚不要放进该标记。
+         - **推荐排版**：使用 `.cover-frame` 或 `.slide.hero` 构建开阔容器，并让 `data-cover-subject` 主题组在安全区内垂直居中。文字可居中，也可采用左文右数据的分栏；“主题居中”指组合构图居中，不等于强制 `text-align:center`。
+         - **禁止做法**：不要用大额 `padding-top` / `margin-top`、空占位层、`justify-content:flex-end` 把主题组推到页面下半部；也不要把 `height:100%` 的空包装器本身当作已居中，验收以包装器内真实标题、正文、数据与主视觉的包围盒为准。
        - **🔵 场景 B：正文内容页（Content Slides / 过程页 / 章节页）—— 严格执行页眉三要素紧凑压缩 (Compact Header)**:
          - **三要素界定**：Badge/分类徽章 (`.eyebrow-pill` / `.kicker` / `.slide-label`)、主标题 (`h1` / `h2` / `.slide-title`)、副标题/金句引导语 (`.slide-subtitle` / `.tagline` / `.lead`)。
          - **空间占比上限**：页眉三要素组合的总高度**严格控制在 <= 200px (约占 1080p 画布的 18%~22%)**，杜绝多层 20px+ 外边距堆叠。
@@ -329,6 +334,9 @@ Prepare visual assets before building wireframes:
 
    - **Apply Layout Density Strategy (防止中间尴尬中空与过度拉伸)**:
      - *space-between 滥用规避*: 严禁对内容高度较矮（<200px）的中间组件无脑使用 `.between` (`space-between`)，否则会导致元素被甩到最顶和最底，中间形成 200~400px 巨大尴尬空白。
+     - *禁止中空卡片/面板*: 任何带背景、边框或阴影的内容容器，内部最大的连续无语义空带不得同时超过 **180px** 和容器高度的 **28%**。检查顶部留白、子元素之间的空带和底部留白；空卡片、拉高的背景层、装饰渐变与边框不算语义内容。内容不足时优先移除固定高度/`height:100%`/`min-height`，改为 `height:auto; align-self:start`，或将真实内容紧凑成组后在版面中居中。
+     - *禁止区块间/全页中部空白带*: 对普通正文页，把可见文字、图片、图表、表格、代码和信息图的纵向区间合并后检查相邻区间。任意内部连续空带若同时超过 **160px** 和画布高度的 **14%**，即为区块间镂空；尤其要检查 `.header-split` / `.header-compact` 到首个卡片网格之间。不得因为页面底部另有流程条、卡片或页脚就放行中间断层。
+     - *面板标记*: 对自定义内容面板优先添加 `data-panel`，以便 `validate-fluid-deck.mjs` 检查内部空带；模板已有的 `card` / `panel` / `metric` 等类会被自动识别。
      - *垂直集中分组 (Scheme 1 / center-group)*: 优先使用 `.slide-content.center-group` (`justify-content: center; gap: 40px;`) 或 `.slide-content` (`justify-content: flex-start; gap: 40px;`)，紧密分组标题、中间连通桥与卡片，四周留出自然呼吸 Margins。
      - *中间连通桥 (Middle Bridge Block)*: 
        - 封面/Hero Slide：在标题与底部 Stats 之间加入 `.hero-middle-bridge` 芯片标签行（如 `✦ Viewport 视口无缝同步` 等），消除中空断层。
@@ -412,6 +420,9 @@ Once the wireframe is approved:
    - **No fake fill**: an empty card, an oversized container, a blank device frame, a decorative gradient, or a duplicated label does not count as content occupancy. If a panel is taller than its meaningful children by more than 40%, either fill it with real information or reduce/remove the panel.
    - **Explicit exceptions only**: a cover, closing slide, or a one-statement chapter divider may use intentional negative space. Mark it with `data-density-exempt="cover|closing|divider"` and keep the composition visibly intentional. Data, workflow, comparison, capability, and product slides are never exempt.
    - **Visual review evidence**: inspect a stable rendered frame of every slide (wait for entry animation first). Check for large disconnected lower blank regions, empty panels, accidental card stretching, overflow, overlap, and navigation collisions. If automated rendering is unavailable, obtain a browser screenshot/visual review instead; do not report the deck as fully verified from HTML/CSS source alone.
+   - **Cover subject centering**: the cover must contain one `data-cover-subject` wrapper. Measure the real semantic descendants inside it—not the wrapper's own full-height box—and keep their combined vertical center within 8% of the navigation-safe area's center. Reject a cover whose topic block sits visibly in the lower or upper half because of empty spacing.
+   - **No hollow panels**: inspect each visible bordered/tinted/shadowed content panel. If its largest continuous blank band exceeds both 180px and 28% of panel height, reduce the container, regroup the content, or add meaningful information. A panel that only places a title at the top and notes/list rows at the bottom with a large empty middle is a release failure.
+   - **No inter-section dead zones**: on every non-exempt body slide, merge the vertical bounds of visible semantic content and inspect gaps between adjacent groups. A continuous internal gap over both 160px and 14% of stage height is a release failure—even when panels below it reach the navigation-safe line. Close the gap by regrouping the composition or adding meaningful connecting content; do not add decorative filler.
    - Fixed 16:9 stage scaling (`updateScale()` on window resize).
    - Seamless Viewport Background synchronization (`--viewport-bg`).
    - **Unified Global Color Theme**: Verify that all slides maintain a consistent global theme (100% unified dark or 100% unified light), with zero arbitrary slide-by-slide black/white flickering.

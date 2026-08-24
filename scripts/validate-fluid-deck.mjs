@@ -47,7 +47,7 @@ async function loadPlaywright() {
 // is the stable part.
 function extractSlides() {
   const slides = [];
-  const openRe = /<(div|section|article)\b[^>]*class="[^"]*\bslide\b[^"]*"[^>]*>/gi;
+  const openRe = /<(div|section|article)\b[^>]*class="[^"]*\bslide\b(?!-)[^"]*"[^>]*>/gi;
   let match;
   while ((match = openRe.exec(html)) !== null) {
     const start = match.index;
@@ -85,6 +85,13 @@ const slides = extractSlides();
 
 if (!slides.length) {
   errors.push('No <div class="slide"> pages found. This validator targets fluid-layout templates (Beautiful Modern, Cyberpunk Dark). If your deck uses a Swiss / 8-Bit / Emerald / Neo-Grid layout, run its style-specific validator instead.');
+}
+
+const firstSlideClasses = slides[0]?.tag.match(/\bclass="([^"]*)"/)?.[1]?.split(/\s+/) || [];
+const firstSlideIsCover = firstSlideClasses.includes('hero') || firstSlideClasses.includes('cover') || /\bdata-density-exempt="cover"/.test(slides[0]?.tag || '');
+const firstSlideHasCoverSubject = /\bdata-cover-subject(?:\s|=|>)/.test(slides[0]?.html || '');
+if (firstSlideIsCover && !firstSlideHasCoverSubject) {
+  errors.push('Slide 1: cover/hero slide is missing data-cover-subject. Mark the wrapper around the real title, narrative copy, and supporting data/visuals so visual centering can be verified.');
 }
 
 const ids = [];
@@ -134,18 +141,13 @@ if (ids.length) {
   }
 }
 
-// Theme rhythm: no more than 3 consecutive same theme
-let run = 1;
+// Unified light or dark is valid. Reject repeated light/dark flipping instead.
+let themeTransitions = 0;
 for (let i = 1; i < themes.length; i++) {
-  if (themes[i] === themes[i - 1]) {
-    run++;
-    if (run > 3) {
-      errors.push(`Theme rhythm: more than 3 consecutive ${themes[i]} slides starting around slide ${i - 1}.`);
-      break;
-    }
-  } else {
-    run = 1;
-  }
+  if (themes[i] !== themes[i - 1]) themeTransitions++;
+}
+if (themes.length >= 4 && themeTransitions >= 3) {
+  errors.push(`Theme consistency: detected ${themeTransitions} light/dark switches across ${themes.length} slides. Use a unified global tone; reserve contrast changes for intentional section boundaries.`);
 }
 
 // Whole-deck checks (ignore comments)
@@ -212,12 +214,59 @@ async function runRenderedDensityGate() {
 
     const measured = await page.evaluate(async () => {
       const slides = [...document.querySelectorAll('.slide')];
-      const meaningful = 'h1,h2,h3,h4,p,li,img,figure,table,pre,code,canvas,svg,.card,.b-card,.feat-card,.pipeline,.step,.stat-card,.data-table,.code-block,.chart,.diagram,.flow,.visual,.media,.image,.illustration';
       const hidden = (el) => {
         const s = getComputedStyle(el);
         return s.display === 'none' || s.visibility === 'hidden' || Number(s.opacity) === 0;
       };
+      const semanticIntervals = (container, excludeSlideChrome = false) => {
+        const rect = container.getBoundingClientRect();
+        const intervals = [];
+        const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+        while (walker.nextNode()) {
+          const node = walker.currentNode;
+          if (!node.textContent.trim()) continue;
+          const parent = node.parentElement;
+          if (!parent || hidden(parent) || parent.closest('.controls-bar,.deck-overview,.lightbox')) continue;
+          if (excludeSlideChrome && parent.closest('.footer,.slide-footer,.page-footer,.page-number,.chrome-min,.deck-chrome')) continue;
+          const range = document.createRange();
+          range.selectNodeContents(node);
+          for (const r of range.getClientRects()) {
+            if (r.width > 3 && r.height > 3) intervals.push([Math.max(rect.top, r.top), Math.min(rect.bottom, r.bottom)]);
+          }
+        }
+        for (const el of container.querySelectorAll('img,figure,table,pre,canvas,svg,.chart,.diagram,.flow,.visual,.media,.image,.illustration')) {
+          if (hidden(el)) continue;
+          if (excludeSlideChrome && el.closest('.footer,.slide-footer,.page-footer,.page-number,.chrome-min,.deck-chrome')) continue;
+          const r = el.getBoundingClientRect();
+          if (r.width > 3 && r.height > 3) intervals.push([Math.max(rect.top, r.top), Math.min(rect.bottom, r.bottom)]);
+        }
+        return intervals.filter(([a, b]) => b > a).sort((a, b) => a[0] - b[0]);
+      };
+      const mergeIntervals = (intervals) => {
+        const merged = [];
+        for (const interval of intervals) {
+          const last = merged[merged.length - 1];
+          if (!last || interval[0] > last[1] + 2) merged.push([...interval]);
+          else last[1] = Math.max(last[1], interval[1]);
+        }
+        return merged;
+      };
+      const panelCandidates = (slide) => [...slide.querySelectorAll('[data-panel],div,section,article,aside')].filter((el) => {
+        if (el === slide || el.closest('.controls-bar,.deck-overview,.lightbox')) return false;
+        const cls = typeof el.className === 'string' ? el.className : '';
+        const named = el.hasAttribute('data-panel') || /(?:^|[-_\s])(card|panel|metric|deliverable|insight)(?:$|[-_\s])/.test(cls);
+        if (!named || el.hasAttribute('data-panel-gap-ok')) return false;
+        const r = el.getBoundingClientRect();
+        if (r.width < 220 || r.height < 220) return false;
+        const s = getComputedStyle(el);
+        const hasSurface = s.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)', 'transparent'].includes(s.backgroundColor) ||
+          ['Top', 'Right', 'Bottom', 'Left'].some((side) => parseFloat(s[`border${side}Width`]) > 0 && s[`border${side}Style`] !== 'none') || s.boxShadow !== 'none';
+        return hasSurface && !hidden(el);
+      });
       const out = [];
+      const hollowPanels = [];
+      const interSectionGaps = [];
+      let cover = null;
       for (let index = 0; index < slides.length; index++) {
         const slide = slides[index];
         slides.forEach((s, i) => {
@@ -226,25 +275,77 @@ async function runRenderedDensityGate() {
           s.style.opacity = i === index ? '1' : '0';
         });
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        await new Promise((resolve) => setTimeout(resolve, 700));
         const root = slide.getBoundingClientRect();
-        const boxes = [...slide.querySelectorAll(meaningful)].map((el) => ({ el, r: el.getBoundingClientRect() }))
-          .filter(({ el, r }) => !hidden(el) && r.width > 3 && r.height > 3 && r.bottom > root.top && r.top < root.bottom)
-          .filter(({ el }) => !el.closest('.controls-bar,.deck-overview,.lightbox'));
-        const top = boxes.length ? Math.min(...boxes.map(({ r }) => Math.max(root.top, r.top))) : root.top;
-        const bottom = boxes.length ? Math.max(...boxes.map(({ r }) => Math.min(root.bottom, r.bottom))) : root.top;
+        const slideIntervals = mergeIntervals(semanticIntervals(slide, true));
+        const top = slideIntervals.length ? Math.max(root.top, slideIntervals[0][0]) : root.top;
+        const bottom = slideIntervals.length ? Math.min(root.bottom, slideIntervals[slideIntervals.length - 1][1]) : root.top;
         const ratio = root.height ? (bottom - top) / root.height : 0;
         const bottomGap = Math.max(0, root.bottom - bottom);
-        out.push({ index: index + 1, ratio, bottomGap, exempt: slide.dataset.densityExempt || '', count: boxes.length });
+        const exempt = slide.dataset.densityExempt || '';
+        out.push({ index: index + 1, ratio, bottomGap, exempt, count: slideIntervals.length });
+
+        if (!exempt && slideIntervals.length > 1) {
+          let largestGap = null;
+          for (let i = 1; i < slideIntervals.length; i++) {
+            const from = slideIntervals[i - 1][1];
+            const to = slideIntervals[i][0];
+            const gap = to - from;
+            if (!largestGap || gap > largestGap.gap) largestGap = { gap, from, to };
+          }
+          if (largestGap && largestGap.gap > 160 && largestGap.gap / root.height > 0.14) {
+            interSectionGaps.push({
+              slide: index + 1,
+              gap: largestGap.gap,
+              ratio: largestGap.gap / root.height,
+              from: largestGap.from - root.top,
+              to: largestGap.to - root.top,
+            });
+          }
+        }
+
+        if (index === 0 && (slide.classList.contains('hero') || slide.classList.contains('cover') || slide.dataset.densityExempt === 'cover')) {
+          const subject = slide.querySelector('[data-cover-subject]');
+          if (subject) {
+            const intervals = mergeIntervals(semanticIntervals(subject));
+            if (intervals.length) {
+              const subjectTop = intervals[0][0];
+              const subjectBottom = intervals[intervals.length - 1][1];
+              const safeTop = root.top + 80;
+              const safeBottom = root.bottom - 130;
+              const safeCenter = (safeTop + safeBottom) / 2;
+              const offsetRatio = Math.abs((subjectTop + subjectBottom) / 2 - safeCenter) / (safeBottom - safeTop);
+              cover = { offsetRatio, subjectTop: subjectTop - root.top, subjectBottom: subjectBottom - root.top };
+            } else {
+              cover = { offsetRatio: null, subjectTop: null, subjectBottom: null };
+            }
+          }
+        }
+
+        for (const panel of panelCandidates(slide)) {
+          const r = panel.getBoundingClientRect();
+          const s = getComputedStyle(panel);
+          const top = r.top + parseFloat(s.paddingTop || 0);
+          const bottom = r.bottom - parseFloat(s.paddingBottom || 0);
+          const intervals = mergeIntervals(semanticIntervals(panel).map(([a, b]) => [Math.max(top, a), Math.min(bottom, b)]).filter(([a, b]) => b > a));
+          let maxGap = intervals.length ? Math.max(0, intervals[0][0] - top, bottom - intervals[intervals.length - 1][1]) : bottom - top;
+          for (let i = 1; i < intervals.length; i++) maxGap = Math.max(maxGap, intervals[i][0] - intervals[i - 1][1]);
+          const innerHeight = Math.max(1, bottom - top);
+          if (maxGap > 180 && maxGap / innerHeight > 0.28) {
+            const label = panel.getAttribute('data-panel') || (typeof panel.className === 'string' ? panel.className.trim().replace(/\s+/g, '.') : panel.tagName.toLowerCase());
+            hollowPanels.push({ slide: index + 1, label: label || panel.tagName.toLowerCase(), maxGap, ratio: maxGap / innerHeight });
+          }
+        }
       }
       slides.forEach((s, i) => {
         s.style.visibility = '';
         s.style.opacity = '';
         s.classList.toggle('active', i === 0);
       });
-      return out;
+      return { density: out, cover, hollowPanels, interSectionGaps };
     });
 
-    for (const m of measured) {
+    for (const m of measured.density) {
       if (m.exempt && !['cover', 'closing', 'divider'].includes(m.exempt)) {
         errors.push(`Slide ${m.index}: invalid data-density-exempt="${m.exempt}". Only cover, closing, or divider are permitted.`);
       }
@@ -254,6 +355,19 @@ async function runRenderedDensityGate() {
       if (!m.exempt && m.ratio < 0.72 && m.bottomGap > 170) {
         errors.push(`Slide ${m.index}: density gate failed — meaningful content occupies ${Math.round(m.ratio * 100)}% of stage height with ${Math.round(m.bottomGap)}px lower blank space. Add meaningful visual content or redesign the composition; do not stretch empty panels.`);
       }
+    }
+    if (firstSlideIsCover && firstSlideHasCoverSubject) {
+      if (!measured.cover || measured.cover.offsetRatio === null) {
+        errors.push('Slide 1: data-cover-subject contains no measurable semantic content. Put the real title, narrative copy, and supporting data/visuals inside it.');
+      } else if (measured.cover.offsetRatio > 0.08) {
+        errors.push(`Slide 1: cover subject is not visually centered — semantic group spans y=${Math.round(measured.cover.subjectTop)}..${Math.round(measured.cover.subjectBottom)} and its center is ${Math.round(measured.cover.offsetRatio * 100)}% of the safe-area height away from center (maximum 8%). Remove top/bottom spacer pressure and center the combined subject group.`);
+      }
+    }
+    for (const panel of measured.hollowPanels) {
+      errors.push(`Slide ${panel.slide}: hollow panel "${panel.label}" has a ${Math.round(panel.maxGap)}px continuous blank band (${Math.round(panel.ratio * 100)}% of its inner height). Remove stretched height/space-between, regroup the content, or add meaningful visual information.`);
+    }
+    for (const gap of measured.interSectionGaps) {
+      errors.push(`Slide ${gap.slide}: inter-section dead zone spans y=${Math.round(gap.from)}..${Math.round(gap.to)} — ${Math.round(gap.gap)}px (${Math.round(gap.ratio * 100)}% of stage height). Tighten header-to-content/grid spacing, remove empty rows/spacers, or add meaningful connecting content; bottom-aligned panels do not compensate for a hollow middle.`);
     }
     await context.close();
   } finally {
